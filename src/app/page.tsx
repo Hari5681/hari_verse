@@ -6,6 +6,7 @@ import { AnimatePresence } from 'framer-motion';
 import type { PersonalizedProposalOutput } from '@/ai/flows/personalized-proposal-reveal';
 import { getPersonalizedContent } from '@/app/actions';
 import { saveResponse } from './firestore-test/actions';
+import { sendResponseEmail } from '@/lib/email';
 import { useToast } from '@/hooks/use-toast';
 
 import AudioPlayer from '@/components/common/AudioPlayer';
@@ -174,17 +175,17 @@ export default function Home() {
   const handleGenderSelect = (selectedGender: 'male' | 'female') => {
     setGender(selectedGender);
     setStep('name-prompt');
-    startTransition(async () => {
-      await saveResponse({ name: 'User', gender: selectedGender, answer: `Selected gender: ${selectedGender}` });
-    });
+    const data = { name: 'N/A', gender: selectedGender, answer: `Selected gender: ${selectedGender}` };
+    saveResponse(data);
+    sendResponseEmail(data);
   }
 
   const handleNameSubmit = (name: string) => {
     setUserName(name);
     setStep('intro');
-    startTransition(async () => {
-      await saveResponse({ name: name, gender, answer: 'Started Quiz' });
-    });
+    const data = { name, gender, answer: 'Started Quiz' };
+    saveResponse(data);
+    sendResponseEmail(data);
   };
 
   const handleStart = () => {
@@ -202,8 +203,10 @@ export default function Home() {
     const replyText = questions[gender!][questionIndex].replies[answer];
     setCurrentReply(replyText);
 
-    startTransition(async () => {
-      await saveResponse({ name: userName, gender, question: questionText, answer: answer });
+    startTransition(() => {
+      const data = { name: userName, gender, question: questionText, answer };
+      saveResponse(data);
+      sendResponseEmail(data);
     });
     
     const nextStep = `reply${questionIndex + 1}` as Step;
@@ -221,8 +224,10 @@ export default function Home() {
   }
 
   const handleCommentSubmit = (comment: string) => {
-    startTransition(async () => {
-      await saveResponse({ name: userName, gender, comment, answer: 'User left a comment.' });
+    startTransition(() => {
+      const data = { name: userName, gender, comment, answer: 'User left a comment.' };
+      saveResponse(data);
+      sendResponseEmail(data);
     });
      if (gender === 'female') {
       setStep('pre-storybook');
@@ -232,8 +237,10 @@ export default function Home() {
   }
   
   const handlePreStorybookContinue = (response: boolean) => {
-    startTransition(async () => {
-        await saveResponse({ name: userName, gender, answer: `Wants to see story: ${response ? 'Yes' : 'No'}` });
+    startTransition(() => {
+        const data = { name: userName, gender, answer: `Wants to see story: ${response ? 'Yes' : 'No'}` };
+        saveResponse(data);
+        sendResponseEmail(data);
     });
     if (response) {
         setStep('storybook');
@@ -274,8 +281,10 @@ export default function Home() {
 
     const finalAnswer = response ? 'Yes' : 'No';
 
-    startTransition(async () => {
-      await saveResponse({ name: userName, gender, question: 'Final Proposal', answer: finalAnswer });
+    startTransition(() => {
+      const data = { name: userName, gender, question: 'Final Proposal', answer: finalAnswer };
+      saveResponse(data);
+      sendResponseEmail(data);
     });
   };
 
