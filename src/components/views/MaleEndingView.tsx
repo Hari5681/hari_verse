@@ -8,11 +8,19 @@ import { useEffect, useState } from 'react';
 
 const MaleEndingView = () => {
   const [animationData, setAnimationData] = useState<LottieComponentProps['animationData'] | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    // This effect runs only on the client, after the component has mounted.
+    setIsClient(true);
+    
     const loadAnimation = async () => {
-      const anim = await import('@/../public/lottie/glowing-star.json');
-      setAnimationData(anim.default);
+      try {
+        const anim = await import('@/../public/lottie/glowing-star.json');
+        setAnimationData(anim.default);
+      } catch (error) {
+        console.error("Failed to load animation", error);
+      }
     };
     loadAnimation();
   }, []);
@@ -24,7 +32,9 @@ const MaleEndingView = () => {
       transition={{ duration: 0.7, type: 'spring' }}
       className="flex flex-col items-center justify-center gap-6 text-center"
     >
-      {animationData && <Lottie animationData={animationData} loop={true} style={{ width: 200, height: 200 }} />}
+      <div style={{ height: '200px', width: '200px' }}>
+        {isClient && animationData && <Lottie animationData={animationData} loop={true} style={{ width: 200, height: 200 }} />}
+      </div>
       <AnimatedText
         text="Stay strong, bro 👑."
         className="text-2xl sm:text-3xl font-headline text-primary-foreground"
@@ -42,5 +52,3 @@ const MaleEndingView = () => {
 };
 
 export default MaleEndingView;
-
-    
