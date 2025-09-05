@@ -6,6 +6,8 @@ import type { PersonalizedProposalOutput } from '@/ai/flows/personalized-proposa
 import { getPersonalizedContent } from '@/app/actions';
 import { saveResponse } from './firestore-test/actions'; // Re-using the action
 import { useToast } from '@/hooks/use-toast';
+import emailjs from '@emailjs/browser';
+
 
 import AudioPlayer from '@/components/common/AudioPlayer';
 import Footer from '@/components/common/Footer';
@@ -161,10 +163,38 @@ export default function Home() {
   const handleProposalResponse = (response: boolean) => {
     setProposalResponse(response);
     setStep('response');
+
+    const finalAnswer = response ? 'Yes' : 'No';
+
     // Save final decision to Firestore
     startTransition(async () => {
-      await saveResponse({ name: 'User', answer: response ? 'Yes' : 'No' });
+      await saveResponse({ name: 'User', answer: finalAnswer });
     });
+
+    // Send email via EmailJS
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+    if (serviceId && templateId && publicKey) {
+      const templateParams = {
+        to_name: 'Hari',
+        from_name: 'The HariVerse App',
+        message: `The user has responded! Their answer was: ${finalAnswer}`,
+        all_answers: answers.join(', '),
+      };
+
+      emailjs.send(serviceId, templateId, templateParams, publicKey)
+        .then((result) => {
+            console.log('EmailJS success:', result.text);
+            toast({ title: 'Response sent!', description: 'Your decision has been emailed.' });
+        }, (error) => {
+            console.error('EmailJS error:', error.text);
+            toast({ variant: 'destructive', title: 'Email Error', description: 'Could not send the email.' });
+        });
+    } else {
+      console.warn('EmailJS environment variables are not set.');
+    }
   };
 
   const renderStep = () => {
