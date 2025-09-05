@@ -34,17 +34,15 @@ export async function saveResponse(input: SaveResponseInput) {
       return { success: true, message: `Response saved for ${input.name}. Email not configured.` };
     }
 
-    const emailParams = {
-        to_name: 'Hari',
-        from_name: 'The HariVerse App',
-        message: `New response from ${input.name}: "${input.answer}"`,
-        all_answers: `Single event: ${input.answer}`
-    };
-
-    console.log("Attempting to send response email with params:", emailParams);
-    // This is a conceptual representation for sending email via a server action.
-    // The actual sending would be done via an API call here.
+    // This is a conceptual representation.
+    // In a real app, you would make an API call to your backend,
+    // which would then use the EmailJS SDK/API to send the email.
+    // Exposing sending logic directly in a server action like this is not typical for EmailJS browser SDK.
+    // However, for this project's structure, we'll log that it would be sent.
     
+    console.log(`Email would be sent with service: ${serviceId}, template: ${templateId}`);
+    console.log(`Params: name=${input.name}, answer=${input.answer}`);
+
     return { success: true, message: `Thank you, ${input.name}! Your response has been noted.` };
 
   } catch (error) {
