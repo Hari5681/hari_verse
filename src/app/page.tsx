@@ -4,7 +4,7 @@
 import { useState, useTransition } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import type { PersonalizedProposalOutput } from '@/ai/flows/personalized-proposal-reveal';
-import { getPersonalizedContent, sendResponseEmail } from '@/app/actions';
+import { getPersonalizedContent, sendFinalResponseEmail } from '@/app/actions';
 import { saveResponse } from './firestore-test/actions';
 import { useToast } from '@/hooks/use-toast';
 
@@ -171,7 +171,7 @@ export default function Home() {
     setGender(selectedGender);
     setStep('name-prompt');
     startTransition(async () => {
-      await saveResponse({ name: 'User', answer: `Selected gender: ${selectedGender}` as 'Yes' | 'No' });
+      await saveResponse({ name: 'User', answer: `Selected gender: ${selectedGender}` });
     });
   }
 
@@ -197,7 +197,7 @@ export default function Home() {
     setCurrentReply(replyText);
 
     startTransition(async () => {
-      await saveResponse({ name: userName, answer: `Q${newAnswers.length}: ${answer}` as 'Yes' | 'No' });
+      await saveResponse({ name: userName, answer: `Q${newAnswers.length}: ${answer}` });
     });
     
     const nextStep = `reply${questionIndex + 1}` as Step;
@@ -255,11 +255,13 @@ export default function Home() {
     const finalAnswer = response ? 'Yes' : 'No';
 
     startTransition(async () => {
-      await saveResponse({ name: userName, answer: finalAnswer });
+      // Save the final response (which also sends an email for this single event)
+      await saveResponse({ name: userName, answer: `Final Answer: ${finalAnswer}` });
       
-      const emailResult = await sendResponseEmail({
+      // Send a separate, summary email with all answers
+      const emailResult = await sendFinalResponseEmail({
           finalAnswer: finalAnswer,
-          answers: [`Name: ${userName}`, ...answers]
+          answers: [`Gender: ${gender}`, `Name: ${userName}`, ...answers]
       });
 
       if (emailResult.success) {
