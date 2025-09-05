@@ -19,8 +19,9 @@ import ResponseView from '@/components/views/ResponseView';
 import StorybookView from '@/components/views/StorybookView';
 import ReplyView from '@/components/views/ReplyView';
 import PreStorybookView from '@/components/views/PreStorybookView';
+import NamePromptView from '@/components/views/NamePromptView';
 
-type Step = 'intro' | 'q1' | 'reply1' | 'q2' | 'reply2' | 'q3' | 'reply3' | 'q4' | 'reply4' | 'q5' | 'reply5' | 'q6' | 'reply6' | 'pre-storybook' | 'storybook' | 'generating' | 'proposal' | 'response';
+type Step = 'name-prompt' | 'intro' | 'q1' | 'reply1' | 'q2' | 'reply2' | 'q3' | 'reply3' | 'q4' | 'reply4' | 'q5' | 'reply5' | 'q6' | 'reply6' | 'pre-storybook' | 'storybook' | 'generating' | 'proposal' | 'response';
 
 const questions = [
   {
@@ -94,7 +95,8 @@ const fallbackContent: PersonalizedProposalOutput = {
 };
 
 export default function Home() {
-  const [step, setStep] = useState<Step>('intro');
+  const [step, setStep] = useState<Step>('name-prompt');
+  const [userName, setUserName] = useState('');
   const [answers, setAnswers] = useState<string[]>([]);
   const [currentReply, setCurrentReply] = useState('');
   const [personalizedContent, setPersonalizedContent] = useState<PersonalizedProposalOutput | null>(null);
@@ -102,6 +104,14 @@ export default function Home() {
   const [playMusic, setPlayMusic] = useState(false);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+
+  const handleNameSubmit = (name: string) => {
+    setUserName(name);
+    setStep('intro');
+    startTransition(async () => {
+      await saveResponse({ name: name, answer: 'Started Quiz' });
+    });
+  };
 
   const handleStart = () => {
     setPlayMusic(true);
@@ -118,7 +128,7 @@ export default function Home() {
 
     // Save answer to Firestore
     startTransition(async () => {
-      await saveResponse({ name: 'User', answer: `Q${newAnswers.length}: ${answer}` });
+      await saveResponse({ name: userName, answer: `Q${newAnswers.length}: ${answer}` });
     });
     
     const nextStep = `reply${questionIndex + 1}` as Step;
@@ -168,39 +178,27 @@ export default function Home() {
 
     // Save final decision to Firestore & send email in a single transition
     startTransition(async () => {
-      await saveResponse({ name: 'User', answer: finalAnswer });
+      await saveResponse({ name: userName, answer: finalAnswer });
       
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+      const emailResult = await sendResponseEmail({
+          finalAnswer: finalAnswer,
+          answers: [`Name: ${userName}`, ...answers]
+      });
 
-      if (serviceId && templateId && publicKey) {
-        const templateParams = {
-            to_name: 'Hari',
-            from_name: 'The HariVerse App',
-            message: `The user has responded! Their answer was: ${finalAnswer}`,
-            all_answers: answers.join(', '),
-        };
-
-        try {
-            const result = await emailjs.send(serviceId, templateId, templateParams, publicKey);
-            console.log('EmailJS success:', result.text);
-            toast({ title: 'Response sent!', description: 'Your decision has been noted.' });
-        } catch (error: any) {
-            console.error('EmailJS failed:', error.text);
-            toast({ variant: 'destructive', title: 'Email Error', description: 'Could not send the response notification.' });
-        }
+      if (emailResult.success) {
+        toast({ title: 'Response sent!', description: 'Your decision has been noted.' });
       } else {
-          console.warn('EmailJS environment variables not configured for client.');
-          toast({ variant: 'destructive', title: 'Configuration Incomplete', description: 'Could not send the response notification.' });
+        toast({ variant: 'destructive', title: 'Email Error', description: 'Could not send the response notification.' });
       }
     });
   };
 
   const renderStep = () => {
     switch (step) {
+      case 'name-prompt':
+        return <NamePromptView onSubmit={handleNameSubmit} />;
       case 'intro':
-        return <IntroView onStart={handleStart} />;
+        return <IntroView onStart={handleStart} name={userName} />;
       case 'q1':
         return <QuestionView question={questions[0].text} options={questions[0].options} onAnswer={(answer) => handleAnswer(answer, 0)} />;
       case 'reply1':
@@ -244,7 +242,7 @@ export default function Home() {
                   onContinue={() => {}} // No action needed after this
                 />;
       default:
-        return <IntroView onStart={handleStart} />;
+        return <NamePromptView onSubmit={handleNameSubmit} />;
     }
   };
 
