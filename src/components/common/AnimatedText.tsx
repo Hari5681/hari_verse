@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 const sentenceVariants = {
   hidden: { opacity: 1 },
@@ -32,6 +33,17 @@ interface AnimatedTextProps {
 }
 
 const AnimatedText = ({ text, className }: AnimatedTextProps) => {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    // Render a static version on the server
+    return <h1 className={className}>{text}</h1>;
+  }
+
   return (
     <motion.h1
       className={className}
