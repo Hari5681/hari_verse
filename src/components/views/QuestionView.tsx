@@ -24,7 +24,6 @@ const optionsContainerVariants = {
     opacity: 1,
     transition: {
       staggerChildren: 0.15,
-      delayChildren: 0.5,
     },
   },
 };
@@ -37,15 +36,6 @@ const optionItemVariants = {
 const QuestionView = ({ question, options, onAnswer }: QuestionViewProps) => {
   const [showOptions, setShowOptions] = useState(false);
   const [isAnswered, setIsAnswered] = useState(false);
-
-  useEffect(() => {
-    // Show options after the question has had a moment to animate in
-    const timer = setTimeout(() => {
-      setShowOptions(true);
-    }, 1200); // Increased delay for a more natural pause
-
-    return () => clearTimeout(timer);
-  }, [question]);
 
   const handleSelectAnswer = (answer: string) => {
     setIsAnswered(true);
@@ -61,7 +51,7 @@ const QuestionView = ({ question, options, onAnswer }: QuestionViewProps) => {
       variants={questionVariants}
       className="flex flex-col items-center justify-center gap-8"
     >
-      <AnimatedText text={question} className="text-3xl sm:text-4xl font-headline text-primary-foreground text-center" />
+      <AnimatedText text={question} className="text-3xl sm:text-4xl font-headline text-primary-foreground text-center" onAnimationComplete={() => setShowOptions(true)} />
       
       <AnimatePresence>
         {showOptions && !isAnswered && (
@@ -108,3 +98,4 @@ const QuestionView = ({ question, options, onAnswer }: QuestionViewProps) => {
 };
 
 export default QuestionView;
+

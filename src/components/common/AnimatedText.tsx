@@ -1,6 +1,7 @@
+
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, AnimationProps } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 const sentenceVariants = {
@@ -30,9 +31,10 @@ const letterVariants = {
 interface AnimatedTextProps {
   text: string;
   className?: string;
+  onAnimationComplete?: () => void;
 }
 
-const AnimatedText = ({ text, className }: AnimatedTextProps) => {
+const AnimatedText = ({ text, className, onAnimationComplete }: AnimatedTextProps) => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -50,6 +52,7 @@ const AnimatedText = ({ text, className }: AnimatedTextProps) => {
       variants={sentenceVariants}
       initial="hidden"
       animate="visible"
+      onAnimationComplete={onAnimationComplete}
       aria-label={text}
     >
       {text.split('').map((char, index) => (
