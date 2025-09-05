@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import type { PersonalizedProposalOutput } from '@/ai/flows/personalized-proposal-reveal';
-import { getPersonalizedContent } from '@/app/actions';
+import { getPersonalizedContent, sendResponseEmail } from '@/app/actions';
 import { saveResponse } from './firestore-test/actions'; // Re-using the action
 import { useToast } from '@/hooks/use-toast';
 import emailjs from '@emailjs/browser';
@@ -166,35 +166,35 @@ export default function Home() {
 
     const finalAnswer = response ? 'Yes' : 'No';
 
-    // Save final decision to Firestore
+    // Save final decision to Firestore & send email in a single transition
     startTransition(async () => {
       await saveResponse({ name: 'User', answer: finalAnswer });
-    });
+      
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
 
-    // Send email via EmailJS
-    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+      if (serviceId && templateId && publicKey) {
+        const templateParams = {
+            to_name: 'Hari',
+            from_name: 'The HariVerse App',
+            message: `The user has responded! Their answer was: ${finalAnswer}`,
+            all_answers: answers.join(', '),
+        };
 
-    if (serviceId && templateId && publicKey) {
-      const templateParams = {
-        to_name: 'Hari',
-        from_name: 'The HariVerse App',
-        message: `The user has responded! Their answer was: ${finalAnswer}`,
-        all_answers: answers.join(', '),
-      };
-
-      emailjs.send(serviceId, templateId, templateParams, publicKey)
-        .then((result) => {
+        try {
+            const result = await emailjs.send(serviceId, templateId, templateParams, publicKey);
             console.log('EmailJS success:', result.text);
-            toast({ title: 'Response sent!', description: 'Your decision has been emailed.' });
-        }, (error) => {
-            console.error('EmailJS error:', error.text);
-            toast({ variant: 'destructive', title: 'Email Error', description: 'Could not send the email.' });
-        });
-    } else {
-      console.warn('EmailJS environment variables are not set.');
-    }
+            toast({ title: 'Response sent!', description: 'Your decision has been noted.' });
+        } catch (error: any) {
+            console.error('EmailJS failed:', error.text);
+            toast({ variant: 'destructive', title: 'Email Error', description: 'Could not send the response notification.' });
+        }
+      } else {
+          console.warn('EmailJS environment variables not configured for client.');
+          toast({ variant: 'destructive', title: 'Configuration Incomplete', description: 'Could not send the response notification.' });
+      }
+    });
   };
 
   const renderStep = () => {
