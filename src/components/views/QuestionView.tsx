@@ -37,7 +37,7 @@ const QuestionView = ({ question, options, onAnswer }: QuestionViewProps) => {
     >
       <AnimatedText text={question} className="text-3xl sm:text-4xl font-headline text-primary-foreground text-center" />
       <motion.div 
-        className="flex flex-col sm:flex-row gap-4 mt-4"
+        className="flex flex-col gap-4 mt-4 w-full items-center"
         variants={containerVariants}
       >
         {options.map((option, index) => (
@@ -46,8 +46,9 @@ const QuestionView = ({ question, options, onAnswer }: QuestionViewProps) => {
             variants={itemVariants}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            className="w-full max-w-sm"
           >
-            <Button onClick={() => onAnswer(option)} size="lg" variant="secondary" className="font-headline w-full sm:w-auto">
+            <Button onClick={() => onAnswer(option)} size="lg" variant="secondary" className="font-headline w-full h-auto py-3 whitespace-normal">
               {option}
             </Button>
           </motion.div>

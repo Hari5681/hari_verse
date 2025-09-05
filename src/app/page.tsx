@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useTransition } from 'react';
@@ -16,21 +15,72 @@ import GeneratingView from '@/components/views/GeneratingView';
 import ProposalView from '@/components/views/ProposalView';
 import ResponseView from '@/components/views/ResponseView';
 import StorybookView from '@/components/views/StorybookView';
+import ReplyView from '@/components/views/ReplyView';
 
-type Step = 'intro' | 'q1' | 'q2' | 'q3' | 'storybook' | 'generating' | 'proposal' | 'response';
+type Step = 'intro' | 'q1' | 'reply1' | 'q2' | 'reply2' | 'q3' | 'reply3' | 'q4' | 'reply4' | 'q5' | 'reply5' | 'q6' | 'reply6' | 'storybook' | 'generating' | 'proposal' | 'response';
 
 const questions = [
   {
-    text: "Do you like little surprises in life?",
-    options: ["Yes 🌸", "Sometimes 🤔", "Not really 😅"]
+    id: 'q1',
+    text: "Do you think every person has only one true love, or maybe it’s still waiting for us?",
+    options: ["💖 One true love forever", "🌼 Maybe still waiting", "😅 Not sure, I’m confused"],
+    replies: {
+      "💖 One true love forever": "Ohh so you believe in destiny type love… interesting 👀.",
+      "🌼 Maybe still waiting": "Same here… sometimes it feels like love is shy, hiding somewhere 😂.",
+      "😅 Not sure, I’m confused": "Same here… sometimes it feels like love is shy, hiding somewhere 😂."
+    }
   },
   {
-    text: "What makes you feel special the most?",
-    options: ["Sweet words 💕", "Time together ⏳", "Unexpected gestures ✨"]
+    id: 'q2',
+    text: "If someone asked you who’s closest to your heart right now, what would you say?",
+    options: ["👩‍👩‍👧 Family", "👯‍♀️ Friends", "💓 Maybe someone special 👀"],
+     replies: {
+      "👩‍👩‍👧 Family": "Cute 🥰 family love is the strongest.",
+      "👯‍♀️ Friends": "Cute 🥰 friends love is the strongest.",
+      "💓 Maybe someone special 👀": "Waaait 👀 who’s that lucky person?"
+    }
   },
   {
-    text: "Do you believe in love stories that start small and grow big?",
-    options: ["Of course 💖", "Maybe 🌼", "Not sure yet 🌙"]
+    id: 'q3',
+    text: "If love was like food, which one would you choose?",
+    options: ["🍫 Sweet like chocolate", "🌶️ Spicy like biryani", "🍵 Warm and calm like tea", "😂 Street food — messy but fun"],
+    replies: {
+      "🍫 Sweet like chocolate": "Hah, so you like the sweet & calm type of love 😌.",
+      "🌶️ Spicy like biryani": "Ahh you’re dangerous, full masala type love 😅.",
+      "🍵 Warm and calm like tea": "Hah, so you like the sweet & calm type of love 😌.",
+      "😂 Street food — messy but fun": "Ahh you’re dangerous, full masala type love 😅."
+    }
+  },
+  {
+      id: 'q4',
+      text: "Do you think love is already in your life, or still on the way?",
+      options: ["💘 Already in my life", "🚶 On the way", "🤷 Still searching"],
+      replies: {
+          "💘 Already in my life": "...",
+          "🚶 On the way": "Hmm maybe it’s closer than you think 😏.",
+          "🤷 Still searching": "Hmm maybe it’s closer than you think 😏."
+      }
+  },
+  {
+      id: 'q5',
+      text: "If someone secretly liked you for 2 years, how should they confess?",
+      options: ["🌹 With flowers and courage", "📖 By writing a cute story/letter", "🤭 Just say it directly, simple and honest"],
+      replies: {
+          "🌹 With flowers and courage": "Interesting… just asking randomly… not like anyone’s doing that or something 😅.",
+          "📖 By writing a cute story/letter": "Interesting… just asking randomly… not like anyone’s doing that or something 😅.",
+          "🤭 Just say it directly, simple and honest": "Interesting… just asking randomly… not like anyone’s doing that or something 😅."
+      }
+  },
+  {
+      id: 'q6',
+      text: "If someone says ‘I like you’ every day 100 times, how will you feel?",
+      options: ["🤗 Over the moon happy", "🙈 Shy but smiling", "😂 Block them after 10 times", "🧐 Depends on who it is…"],
+      replies: {
+          "🤗 Over the moon happy": "Good to know! *takes notes*",
+          "🙈 Shy but smiling": "Aww, cute!",
+          "😂 Block them after 10 times": "Oof, okay, I'll be careful then! 😂",
+          "🧐 Depends on who it is…": "Ahh that’s the secret key 👀… hope I’m on the safe side 😅."
+      }
   }
 ];
 
@@ -43,6 +93,7 @@ const fallbackContent: PersonalizedProposalOutput = {
 export default function Home() {
   const [step, setStep] = useState<Step>('intro');
   const [answers, setAnswers] = useState<string[]>([]);
+  const [currentReply, setCurrentReply] = useState('');
   const [personalizedContent, setPersonalizedContent] = useState<PersonalizedProposalOutput | null>(null);
   const [proposalResponse, setProposalResponse] = useState<boolean | null>(null);
   const [playMusic, setPlayMusic] = useState(false);
@@ -54,31 +105,39 @@ export default function Home() {
     setStep('q1');
   };
 
-  const handleAnswer = (answer: string) => {
+  const handleAnswer = (answer: string, questionIndex: number) => {
     const newAnswers = [...answers, answer];
     setAnswers(newAnswers);
+    
+    // @ts-ignore
+    const replyText = questions[questionIndex].replies[answer];
+    setCurrentReply(replyText);
 
     // Save answer to Firestore
     startTransition(async () => {
       await saveResponse({ name: 'User', answer: `Q${newAnswers.length}: ${answer}` });
     });
+    
+    const nextStep = `reply${questionIndex + 1}` as Step;
+    setStep(nextStep);
+  };
 
-    if (step === 'q1') setStep('q2');
-    else if (step === 'q2') setStep('q3');
-    else if (step === 'q3') {
+  const handleReplyContinue = (questionIndex: number) => {
+    if (questionIndex < questions.length - 1) {
+      const nextStep = `q${questionIndex + 2}` as Step;
+      setStep(nextStep);
+    } else {
       setStep('storybook');
     }
-  };
+  }
   
   const handleStorybookContinue = () => {
     setStep('generating');
     startTransition(async () => {
       const result = await getPersonalizedContent({
-        // The AI flow expects booleans, but we have more nuanced answers.
-        // We'll simplify for the AI, but the real answers are saved in Firestore.
-        likesSurprises: answers[0].includes("Yes"),
-        enjoysStories: answers[1].includes("words") || answers[1].includes("gestures"),
-        believesInMagic: answers[2].includes("Of course"),
+        believesInDestiny: answers[0].includes("One true love"),
+        loveStyle: answers[2], // "Sweet like chocolate", "Spicy like biryani", etc.
+        confessionPreference: answers[4], // "With flowers and courage", etc.
       });
       if (result.success) {
         setPersonalizedContent(result.data);
@@ -108,11 +167,29 @@ export default function Home() {
       case 'intro':
         return <IntroView onStart={handleStart} />;
       case 'q1':
-        return <QuestionView question={questions[0].text} options={questions[0].options} onAnswer={handleAnswer} />;
+        return <QuestionView question={questions[0].text} options={questions[0].options} onAnswer={(answer) => handleAnswer(answer, 0)} />;
+      case 'reply1':
+        return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(0)} />
       case 'q2':
-        return <QuestionView question={questions[1].text} options={questions[1].options} onAnswer={handleAnswer} />;
+        return <QuestionView question={questions[1].text} options={questions[1].options} onAnswer={(answer) => handleAnswer(answer, 1)} />;
+      case 'reply2':
+        return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(1)} />
       case 'q3':
-        return <QuestionView question={questions[2].text} options={questions[2].options} onAnswer={handleAnswer} />;
+        return <QuestionView question={questions[2].text} options={questions[2].options} onAnswer={(answer) => handleAnswer(answer, 2)} />;
+      case 'reply3':
+         return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(2)} />
+      case 'q4':
+        return <QuestionView question={questions[3].text} options={questions[3].options} onAnswer={(answer) => handleAnswer(answer, 3)} />;
+      case 'reply4':
+        return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(3)} />
+      case 'q5':
+        return <QuestionView question={questions[4].text} options={questions[4].options} onAnswer={(answer) => handleAnswer(answer, 4)} />;
+      case 'reply5':
+        return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(4)} />
+      case 'q6':
+        return <QuestionView question={questions[5].text} options={questions[5].options} onAnswer={(answer) => handleAnswer(answer, 5)} />;
+      case 'reply6':
+        return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(5)} />
       case 'storybook':
         return <StorybookView onContinue={handleStorybookContinue} />;
       case 'generating':
