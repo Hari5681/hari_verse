@@ -1,4 +1,5 @@
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
@@ -7,18 +8,28 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 const stories = [
-  "Once upon a time, in a universe of pixels and dreams...",
-  "...two souls found each other across the digital sea.",
-  "They built worlds with laughter and painted skies with shared moments.",
-  "Every day felt like a new, beautiful story unfolding.",
-  "And this, right here, is just the beginning of their forever. ❤️"
+  "Once upon a time, two souls met under ordinary skies 🌌.",
+  "Every little moment felt like magic ✨.",
+  "One heart started beating a little faster… 💓.",
+  "And today, that heart is brave enough to ask…",
 ];
 
-const StorybookView = () => {
+interface StorybookViewProps {
+    onContinue: () => void;
+}
+
+const StorybookView = ({ onContinue }: StorybookViewProps) => {
   return (
-    <div className="w-full max-w-xs sm:max-w-sm animate-fade-in">
+    <motion.div 
+        className="w-full max-w-xs sm:max-w-sm flex flex-col items-center gap-6"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+    >
       <Carousel>
         <CarouselContent>
           {stories.map((story, index) => (
@@ -33,10 +44,22 @@ const StorybookView = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
+        <CarouselPrevious className="text-primary-foreground" />
+        <CarouselNext className="text-primary-foreground" />
       </Carousel>
-    </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1, duration: 1 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Button onClick={onContinue} size="lg" className="font-headline mt-4">
+          Continue
+          <ArrowRight className="ml-2"/>
+        </Button>
+      </motion.div>
+    </motion.div>
   );
 };
 

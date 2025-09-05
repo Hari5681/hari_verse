@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import Lottie from 'lottie-react';
 import { useEffect, useState } from 'react';
 import AnimatedText from '@/components/common/AnimatedText';
+import { ArrowRight } from 'lucide-react';
 
 interface ResponseViewProps {
   isYes: boolean;
@@ -31,6 +32,9 @@ const ResponseView = ({ isYes, affirmativeText, negativeText, onContinue }: Resp
     loadAnimation();
   }, [isYes]);
 
+  // We don't show a "Continue" button anymore in this version.
+  // The journey ends here with the sweet message.
+
   return (
     <motion.div 
       initial={{ opacity: 0, scale: 0.5 }}
@@ -45,11 +49,6 @@ const ResponseView = ({ isYes, affirmativeText, negativeText, onContinue }: Resp
       {isYes && <Confetti />}
       {animationData && <Lottie animationData={animationData} loop={isYes} style={{ width: 200, height: 200 }} />}
       <AnimatedText text={isYes ? affirmativeText : negativeText} className="text-2xl sm:text-3xl font-headline text-primary-foreground leading-relaxed text-center" />
-      <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-        <Button onClick={onContinue} size="lg" className="font-headline mt-4">
-          Continue
-        </Button>
-      </motion.div>
     </motion.div>
   );
 };

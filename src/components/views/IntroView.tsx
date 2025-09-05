@@ -1,6 +1,5 @@
 
 import { Button } from '@/components/ui/button';
-import { Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Lottie from 'lottie-react';
 import animationData from '@/../public/lottie/intro-hearts.json';
@@ -18,33 +17,37 @@ const IntroView = ({ onStart }: IntroViewProps) => {
       transition={{ duration: 0.5 }}
       className="flex flex-col items-center justify-center gap-6"
     >
-      <div className="flex items-center gap-2">
-        <AnimatedText text="Welcome to HariVerse" className="text-4xl sm:text-5xl font-headline text-primary-foreground" />
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ rotate: 360, scale: 1 }}
-          transition={{
-            type: "spring",
-            stiffness: 260,
-            damping: 20,
-            delay: 1.5,
-          }}
+      <Lottie animationData={animationData} loop={true} style={{ width: 200, height: 200, position: 'absolute', top: -80, opacity: 0.4 }} />
+      <div className="flex flex-col items-center gap-2 z-10">
+        <AnimatedText text="Welcome to HariVerse ✨" className="text-4xl sm:text-5xl font-headline text-primary-foreground" />
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 1 }}
+          className="text-lg font-headline text-muted-foreground mt-2"
         >
-          <Sparkles className="w-8 h-8 text-accent" />
-        </motion.div>
+          A little story made just for you.
+        </motion.p>
       </div>
-      <p className="text-lg font-headline text-muted-foreground">
-        A space made with love and creativity.
-      </p>
+      <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2, duration: 1 }}
+          className="text-md font-body text-muted-foreground z-10"
+        >
+          Answer a few questions, and a story will unfold.
+        </motion.p>
       <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2.5, duration: 0.5 }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
-        <Button onClick={onStart} size="lg" className="font-headline mt-4">
+        <Button onClick={onStart} size="lg" className="font-headline mt-4 bg-primary text-primary-foreground hover:bg-primary/90">
           Start
         </Button>
       </motion.div>
-      <Lottie animationData={animationData} loop={true} style={{ width: 200, height: 200, position: 'absolute', bottom: 20, right: 20, opacity: 0.5 }} />
     </motion.div>
   );
 };

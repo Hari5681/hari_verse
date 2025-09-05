@@ -22,7 +22,7 @@ const ProposalView = ({ proposalText, onResponse }: ProposalViewProps) => {
       <AnimatedText text={proposalText} className="text-2xl sm:text-3xl font-headline text-primary-foreground leading-relaxed text-center" />
       <div className="flex gap-4 mt-4">
         <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-            <Button onClick={() => onResponse(true)} size="lg" className="font-headline bg-accent hover:bg-accent/90 text-accent-foreground">
+            <Button onClick={() => onResponse(true)} size="lg" className="font-headline bg-accent text-accent-foreground hover:bg-accent/90">
             Yes 💕
             </Button>
         </motion.div>
