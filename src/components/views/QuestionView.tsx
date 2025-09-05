@@ -4,7 +4,7 @@
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedText from '@/components/common/AnimatedText';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface QuestionViewProps {
   question: string;
@@ -23,6 +23,7 @@ const optionsContainerVariants = {
   visible: {
     opacity: 1,
     transition: {
+      delayChildren: 0.2,
       staggerChildren: 0.15,
     },
   },
@@ -39,7 +40,6 @@ const QuestionView = ({ question, options, onAnswer }: QuestionViewProps) => {
 
   const handleSelectAnswer = (answer: string) => {
     setIsAnswered(true);
-    // Add a short delay to allow click animation to play
     setTimeout(() => onAnswer(answer), 300);
   }
 
@@ -51,7 +51,11 @@ const QuestionView = ({ question, options, onAnswer }: QuestionViewProps) => {
       variants={questionVariants}
       className="flex flex-col items-center justify-center gap-8"
     >
-      <AnimatedText text={question} className="text-3xl sm:text-4xl font-headline text-primary-foreground text-center" onAnimationComplete={() => setShowOptions(true)} />
+      <AnimatedText 
+        text={question} 
+        className="text-3xl sm:text-4xl font-headline text-primary-foreground text-center" 
+        onAnimationComplete={() => setShowOptions(true)} 
+      />
       
       <AnimatePresence>
         {showOptions && !isAnswered && (
@@ -98,4 +102,3 @@ const QuestionView = ({ question, options, onAnswer }: QuestionViewProps) => {
 };
 
 export default QuestionView;
-

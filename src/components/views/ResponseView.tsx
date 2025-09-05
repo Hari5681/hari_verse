@@ -1,13 +1,11 @@
 
 'use client';
 
-import { Button } from '@/components/ui/button';
 import Confetti from '@/components/common/Confetti';
 import { motion } from 'framer-motion';
 import Lottie from 'lottie-react';
 import { useEffect, useState } from 'react';
 import AnimatedText from '@/components/common/AnimatedText';
-import { ArrowRight } from 'lucide-react';
 
 interface ResponseViewProps {
   isYes: boolean;
@@ -30,15 +28,17 @@ const ResponseView = ({ isYes, affirmativeText, negativeText, onContinue }: Resp
       setAnimationData(anim.default);
     };
     loadAnimation();
-  }, [isYes]);
+    
+    const timer = setTimeout(onContinue, 4000);
+    return () => clearTimeout(timer);
 
-  // We don't show a "Continue" button anymore in this version.
-  // The journey ends here with the sweet message.
+  }, [isYes, onContinue]);
 
   return (
     <motion.div 
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.5 }}
       transition={{
         duration: 0.8,
         delay: 0.5,

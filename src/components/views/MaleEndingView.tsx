@@ -6,12 +6,15 @@ import AnimatedText from '../common/AnimatedText';
 import Lottie, { type LottieComponentProps } from 'lottie-react';
 import { useEffect, useState } from 'react';
 
-const MaleEndingView = () => {
+interface MaleEndingViewProps {
+  onContinue: () => void;
+}
+
+const MaleEndingView = ({ onContinue }: MaleEndingViewProps) => {
   const [animationData, setAnimationData] = useState<LottieComponentProps['animationData'] | null>(null);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // This effect runs only on the client, after the component has mounted.
     setIsClient(true);
     
     const loadAnimation = async () => {
@@ -23,12 +26,16 @@ const MaleEndingView = () => {
       }
     };
     loadAnimation();
-  }, []);
+
+    const timer = setTimeout(onContinue, 4000);
+    return () => clearTimeout(timer);
+  }, [onContinue]);
 
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.7, type: 'spring' }}
       className="flex flex-col items-center justify-center gap-6 text-center"
     >
@@ -42,7 +49,7 @@ const MaleEndingView = () => {
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
+        transition={{ delay: 1, duration: 1 }}
         className="text-lg font-headline text-muted-foreground max-w-sm"
       >
         You’re not alone. Your story will find its ending someday.

@@ -290,27 +290,27 @@ export default function Home() {
       case 'intro':
         return <IntroView onStart={handleStart} name={userName} />;
       case 'q1':
-        return <QuestionView question={currentQuestions[0].text} options={currentQuestions[0].options} onAnswer={(answer) => handleAnswer(answer, 0)} onAnimationComplete={() => {}} />;
+        return <QuestionView question={currentQuestions[0].text} options={currentQuestions[0].options} onAnswer={(answer) => handleAnswer(answer, 0)} />;
       case 'reply1':
         return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(0)} />
       case 'q2':
-        return <QuestionView question={currentQuestions[1].text} options={currentQuestions[1].options} onAnswer={(answer) => handleAnswer(answer, 1)} onAnimationComplete={() => {}} />;
+        return <QuestionView question={currentQuestions[1].text} options={currentQuestions[1].options} onAnswer={(answer) => handleAnswer(answer, 1)} />;
       case 'reply2':
         return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(1)} />
       case 'q3':
-        return <QuestionView question={currentQuestions[2].text} options={currentQuestions[2].options} onAnswer={(answer) => handleAnswer(answer, 2)} onAnimationComplete={() => {}} />;
+        return <QuestionView question={currentQuestions[2].text} options={currentQuestions[2].options} onAnswer={(answer) => handleAnswer(answer, 2)} />;
       case 'reply3':
          return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(2)} />
       case 'q4':
-        return <QuestionView question={currentQuestions[3].text} options={currentQuestions[3].options} onAnswer={(answer) => handleAnswer(answer, 3)} onAnimationComplete={() => {}} />;
+        return <QuestionView question={currentQuestions[3].text} options={currentQuestions[3].options} onAnswer={(answer) => handleAnswer(answer, 3)} />;
       case 'reply4':
         return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(3)} />
       case 'q5':
-        return <QuestionView question={currentQuestions[4].text} options={currentQuestions[4].options} onAnswer={(answer) => handleAnswer(answer, 4)} onAnimationComplete={() => {}} />;
+        return <QuestionView question={currentQuestions[4].text} options={currentQuestions[4].options} onAnswer={(answer) => handleAnswer(answer, 4)} />;
       case 'reply5':
         return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(4)} />
       case 'q6':
-        return <QuestionView question={currentQuestions[5].text} options={currentQuestions[5].options} onAnswer={(answer) => handleAnswer(answer, 5)} onAnimationComplete={() => {}} />;
+        return <QuestionView question={currentQuestions[5].text} options={currentQuestions[5].options} onAnswer={(answer) => handleAnswer(answer, 5)} />;
       case 'reply6':
         return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(5)} />
       case 'comment-prompt':
@@ -331,12 +331,12 @@ export default function Home() {
                   isYes={proposalResponse!} 
                   affirmativeText={personalizedContent?.responseAffirmative || fallbackContent.responseAffirmative}
                   negativeText={personalizedContent?.responseNegative || fallbackContent.responseNegative}
-                  onContinue={() => {}}
+                  onContinue={() => setStep('final-thank-you')}
                 />;
       case 'broken-story':
         return <BrokenStoryView onContinue={handleBrokenStoryContinue} />;
       case 'male-ending':
-        return <MaleEndingView />;
+        return <MaleEndingView onContinue={() => setStep('final-thank-you')} />;
       case 'final-thank-you':
         return <FinalThankYouView />;
       default:

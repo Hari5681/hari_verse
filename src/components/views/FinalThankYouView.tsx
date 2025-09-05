@@ -22,7 +22,7 @@ const FinalThankYouView = () => {
         >
             {animationData && <Lottie animationData={animationData} loop={true} style={{ width: 200, height: 200 }} />}
             <AnimatedText
-                text="That's perfectly okay! 🌸"
+                text="Thank you for visiting! 🌸"
                 className="text-2xl sm:text-3xl font-headline text-primary-foreground"
             />
             <motion.p
@@ -31,7 +31,7 @@ const FinalThankYouView = () => {
                 transition={{ delay: 1 }}
                 className="text-lg font-headline text-muted-foreground max-w-sm"
             >
-                Thank you for your time. You’ll always be special to me.
+                You’ll always be special to me.
             </motion.p>
         </motion.div>
     );
