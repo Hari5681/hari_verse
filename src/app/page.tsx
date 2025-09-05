@@ -3,19 +3,13 @@
 
 import { useState, useTransition } from 'react';
 import { AnimatePresence } from 'framer-motion';
-import type { PersonalizedProposalOutput } from '@/ai/flows/personalized-proposal-reveal';
-import { getPersonalizedContent } from '@/app/actions';
 import { saveResponse } from './firestore-test/actions';
 import { sendResponseEmail } from '@/lib/email';
-import { useToast } from '@/hooks/use-toast';
 
 import AudioPlayer from '@/components/common/AudioPlayer';
 import Footer from '@/components/common/Footer';
 import IntroView from '@/components/views/IntroView';
 import QuestionView from '@/components/views/QuestionView';
-import GeneratingView from '@/components/views/GeneratingView';
-import ProposalView from '@/components/views/ProposalView';
-import ResponseView from '@/components/views/ResponseView';
 import StorybookView from '@/components/views/StorybookView';
 import ReplyView from '@/components/views/ReplyView';
 import PreStorybookView from '@/components/views/PreStorybookView';
@@ -38,9 +32,10 @@ type Step =
   | 'q3' 
   | 'reply3' 
   | 'q4' 
+  | 'reply4' 
+  | 'q5'
   | 'reply5' 
   | 'q6'
-  | 'reply4' 
   | 'reply6'
   | 'comment-prompt'
   | 'pre-storybook' 
@@ -162,21 +157,17 @@ export default function Home() {
   const handleGenderSelect = (selectedGender: 'male' | 'female') => {
     setGender(selectedGender);
     setStep('name-prompt');
-    startTransition(() => {
-      const data = { name: 'N/A', gender: selectedGender, answer: `Selected gender: ${selectedGender}` };
-      saveResponse(data);
-      sendResponseEmail(data);
-    });
+    const data = { name: 'N/A', gender: selectedGender, answer: `Selected gender: ${selectedGender}` };
+    startTransition(() => saveResponse(data));
+    sendResponseEmail(data);
   }
 
   const handleNameSubmit = (name: string) => {
     setUserName(name);
     setStep('intro');
-    startTransition(() => {
-      const data = { name, gender, answer: 'Started Quiz' };
-      saveResponse(data);
-      sendResponseEmail(data);
-    });
+    const data = { name, gender, answer: 'Started Quiz' };
+    startTransition(() => saveResponse(data));
+    sendResponseEmail(data);
   };
 
   const handleStart = () => {
@@ -194,11 +185,9 @@ export default function Home() {
     const replyText = questions[gender!][questionIndex].replies[answer];
     setCurrentReply(replyText);
 
-    startTransition(() => {
-      const data = { name: userName, gender, question: questionText, answer };
-      saveResponse(data);
-      sendResponseEmail(data);
-    });
+    const data = { name: userName, gender, question: questionText, answer };
+    startTransition(() => saveResponse(data));
+    sendResponseEmail(data);
     
     const nextStep = `reply${questionIndex + 1}` as Step;
     setStep(nextStep);
@@ -215,20 +204,17 @@ export default function Home() {
   }
 
   const handleCommentSubmit = (comment: string) => {
-    startTransition(() => {
-      const data = { name: userName, gender, comment, answer: 'User left a comment.' };
-      saveResponse(data);
-      sendResponseEmail(data);
-    });
+    const data = { name: userName, gender, comment, answer: 'User left a comment.' };
+    startTransition(() => saveResponse(data));
+    sendResponseEmail(data);
     setStep('pre-storybook');
   }
   
   const handlePreStorybookContinue = (response: boolean) => {
-    startTransition(() => {
-        const data = { name: userName, gender, answer: `Wants to see story: ${response ? 'Yes' : 'No'}` };
-        saveResponse(data);
-        sendResponseEmail(data);
-    });
+    const data = { name: userName, gender, answer: `Wants to see story: ${response ? 'Yes' : 'No'}` };
+    startTransition(() => saveResponse(data));
+    sendResponseEmail(data);
+
     if (response) {
       if (gender === 'female') {
         setStep('storybook');

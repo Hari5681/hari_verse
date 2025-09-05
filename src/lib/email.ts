@@ -1,4 +1,6 @@
 
+'use client';
+
 import emailjs from '@emailjs/browser';
 
 interface EmailData {
@@ -23,7 +25,7 @@ export function sendResponseEmail(data: EmailData) {
         console.warn('EmailJS environment variables not set. Skipping email.');
         return;
     }
-
+    
     // Construct a more detailed message for the email
     let message = `
       New Response from HariVerse ✨\n
