@@ -21,8 +21,8 @@ export function sendResponseEmail(data: EmailData) {
     const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
     const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
 
-    if (!serviceId || !templateId || !publicKey) {
-        console.warn('EmailJS environment variables not set. Skipping email.');
+    if (!serviceId || !templateId || !publicKey || templateId === 'YOUR_TEMPLATE_ID') {
+        console.warn('EmailJS environment variables not set correctly. Please check your .env file. Skipping email.');
         return;
     }
     
@@ -38,7 +38,7 @@ export function sendResponseEmail(data: EmailData) {
     if (data.question) {
         message += `Question: ${data.question}\n`;
         message += `Answer: ${data.answer}\n`;
-    } else if (data.comment) {
+    } else if (data.comment || data.comment === '') { // Handle empty comment submission
         message += `Comment: ${data.comment || 'Not provided'}\n`;
     } else {
         message += `Action: ${data.answer}\n`;
