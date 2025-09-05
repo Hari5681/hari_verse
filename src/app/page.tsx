@@ -22,6 +22,7 @@ import NamePromptView from '@/components/views/NamePromptView';
 import GenderPromptView from '@/components/views/GenderPromptView';
 import MaleEndingView from '@/components/views/MaleEndingView';
 import BrokenStoryView from '@/components/views/BrokenStoryView';
+import CommentPromptView from '@/components/views/CommentPromptView';
 
 
 type Step = 
@@ -39,7 +40,8 @@ type Step =
   | 'q5' 
   | 'reply5' 
   | 'q6' 
-  | 'reply6' 
+  | 'reply6'
+  | 'comment-prompt'
   | 'pre-storybook' 
   | 'storybook' 
   | 'generating' 
@@ -211,11 +213,18 @@ export default function Home() {
       setStep(nextStep);
     } else {
       if (gender === 'female') {
-        setStep('pre-storybook');
+        setStep('comment-prompt');
       } else {
         setStep('broken-story');
       }
     }
+  }
+
+  const handleCommentSubmit = (comment: string) => {
+    startTransition(async () => {
+      await saveResponse({ name: userName, answer: `Comment: ${comment}` });
+    });
+    setStep('pre-storybook');
   }
   
   const handlePreStorybookContinue = () => {
@@ -308,6 +317,8 @@ export default function Home() {
         return <QuestionView question={currentQuestions[5].text} options={currentQuestions[5].options} onAnswer={(answer) => handleAnswer(answer, 5)} onAnimationComplete={() => {}} />;
       case 'reply6':
         return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(5)} />
+      case 'comment-prompt':
+        return <CommentPromptView onSubmit={handleCommentSubmit} />;
       case 'pre-storybook':
         return <PreStorybookView onContinue={handlePreStorybookContinue} />;
       case 'storybook':
