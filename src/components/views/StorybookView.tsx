@@ -12,10 +12,10 @@ import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 const stories = [
-  "Once upon a time, two souls met under ordinary skies 🌌.",
-  "Every little moment felt like magic ✨.",
-  "One heart started beating a little faster… 💓.",
-  "And today, that heart is brave enough to ask…",
+  "Once upon a time, someone felt something special… 💫",
+  "For 2 years, the feeling grew silently 💕",
+  "Every eye contact became a conversation 🌙",
+  "And now… it’s time to ask.",
 ];
 
 interface StorybookViewProps {

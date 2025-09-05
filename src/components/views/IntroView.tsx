@@ -19,33 +19,25 @@ const IntroView = ({ onStart }: IntroViewProps) => {
     >
       <Lottie animationData={animationData} loop={true} style={{ width: 200, height: 200, position: 'absolute', top: -80, opacity: 0.4 }} />
       <div className="flex flex-col items-center gap-2 z-10">
-        <AnimatedText text="Welcome to HariVerse ✨" className="text-4xl sm:text-5xl font-headline text-primary-foreground" />
+        <AnimatedText text="Welcome 🌸" className="text-4xl sm:text-5xl font-headline text-primary-foreground" />
         <motion.p 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5, duration: 1 }}
           className="text-lg font-headline text-muted-foreground mt-2"
         >
-          A little story made just for you.
+          This is a fun little quiz to know more about you 💕
         </motion.p>
       </div>
-      <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 1 }}
-          className="text-md font-body text-muted-foreground z-10"
-        >
-          Answer a few questions, and a story will unfold.
-        </motion.p>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 2.5, duration: 0.5 }}
+        transition={{ delay: 2.0, duration: 0.5 }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
       >
         <Button onClick={onStart} size="lg" className="font-headline mt-4 bg-primary text-primary-foreground hover:bg-primary/90">
-          Start
+          Start Quiz
         </Button>
       </motion.div>
     </motion.div>
