@@ -175,7 +175,7 @@ export default function Home() {
     setGender(selectedGender);
     setStep('name-prompt');
     startTransition(async () => {
-      await saveResponse({ name: 'User', answer: `Selected gender: ${selectedGender}` });
+      await saveResponse({ name: 'User', gender: selectedGender, answer: `Selected gender: ${selectedGender}` });
     });
   }
 
@@ -183,7 +183,7 @@ export default function Home() {
     setUserName(name);
     setStep('intro');
     startTransition(async () => {
-      await saveResponse({ name: name, answer: 'Started Quiz' });
+      await saveResponse({ name: name, gender, answer: 'Started Quiz' });
     });
   };
 
@@ -197,11 +197,13 @@ export default function Home() {
     setAnswers(newAnswers);
     
     // @ts-ignore
+    const questionText = questions[gender!][questionIndex].text;
+    // @ts-ignore
     const replyText = questions[gender!][questionIndex].replies[answer];
     setCurrentReply(replyText);
 
     startTransition(async () => {
-      await saveResponse({ name: userName, answer: `Q${newAnswers.length}: ${answer}` });
+      await saveResponse({ name: userName, gender, question: questionText, answer: answer });
     });
     
     const nextStep = `reply${questionIndex + 1}` as Step;
@@ -224,14 +226,14 @@ export default function Home() {
 
   const handleCommentSubmit = (comment: string) => {
     startTransition(async () => {
-      await saveResponse({ name: userName, answer: `Comment: ${comment}` });
+      await saveResponse({ name: userName, gender, comment, answer: 'User left a comment.' });
     });
     setStep('pre-storybook');
   }
   
   const handlePreStorybookContinue = (response: boolean) => {
     startTransition(async () => {
-        await saveResponse({ name: userName, answer: `Wants to see story: ${response ? 'Yes' : 'No'}` });
+        await saveResponse({ name: userName, gender, answer: `Wants to see story: ${response ? 'Yes' : 'No'}` });
     });
     if (response) {
         setStep('storybook');
@@ -273,7 +275,7 @@ export default function Home() {
     const finalAnswer = response ? 'Yes' : 'No';
 
     startTransition(async () => {
-      await saveResponse({ name: userName, answer: `Final Answer: ${finalAnswer}` });
+      await saveResponse({ name: userName, gender, question: 'Final Proposal', answer: finalAnswer });
     });
   };
 
