@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import type { PersonalizedProposalOutput } from '@/ai/flows/personalized-proposal-reveal';
 import { getPersonalizedContent } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
@@ -115,9 +116,11 @@ export default function Home() {
   return (
     <>
       <div className="flex flex-1 flex-col items-center justify-center text-center">
-        <div className="w-full max-w-md transition-opacity duration-500 ease-in-out">
-          {renderStep()}
-        </div>
+        <AnimatePresence mode="wait">
+            <div key={step} className="w-full max-w-md">
+                {renderStep()}
+            </div>
+        </AnimatePresence>
       </div>
       <Footer />
       <AudioPlayer src="https://cdn.pixabay.com/audio/2022/02/07/audio_33b68d5b59.mp3" play={playMusic} />
