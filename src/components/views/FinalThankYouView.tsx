@@ -10,7 +10,10 @@ const FinalThankYouView = () => {
     const [animationData, setAnimationData] = useState<any>(null);
 
     useEffect(() => {
-        import('@/../public/lottie/waving-flower.json').then(setAnimationData);
+        import('@/../public/lottie/waving-flower.json').then(module => {
+            // Clone the object to make it extensible
+            setAnimationData(JSON.parse(JSON.stringify(module.default)));
+        });
     }, []);
 
     return (
