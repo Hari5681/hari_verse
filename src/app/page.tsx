@@ -216,11 +216,7 @@ export default function Home() {
       const nextStep = `q${questionIndex + 2}` as Step;
       setStep(nextStep);
     } else {
-      if (gender === 'female') {
         setStep('comment-prompt');
-      } else {
-        setStep('broken-story');
-      }
     }
   }
 
@@ -228,7 +224,11 @@ export default function Home() {
     startTransition(async () => {
       await saveResponse({ name: userName, gender, comment, answer: 'User left a comment.' });
     });
-    setStep('pre-storybook');
+     if (gender === 'female') {
+      setStep('pre-storybook');
+    } else {
+      setStep('broken-story');
+    }
   }
   
   const handlePreStorybookContinue = (response: boolean) => {
