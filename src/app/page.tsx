@@ -21,6 +21,7 @@ import PreStorybookView from '@/components/views/PreStorybookView';
 import NamePromptView from '@/components/views/NamePromptView';
 import GenderPromptView from '@/components/views/GenderPromptView';
 import MaleEndingView from '@/components/views/MaleEndingView';
+import BrokenStoryView from '@/components/views/BrokenStoryView';
 
 
 type Step = 
@@ -44,6 +45,7 @@ type Step =
   | 'generating' 
   | 'proposal' 
   | 'response'
+  | 'broken-story'
   | 'male-ending';
 
 const questions = {
@@ -169,7 +171,7 @@ export default function Home() {
     setGender(selectedGender);
     setStep('name-prompt');
     startTransition(async () => {
-      await saveResponse({ name: 'User', answer: `Selected gender: ${selectedGender}` });
+      await saveResponse({ name: 'User', answer: `Selected gender: ${selectedGender}` as 'Yes' | 'No' });
     });
   }
 
@@ -195,7 +197,7 @@ export default function Home() {
     setCurrentReply(replyText);
 
     startTransition(async () => {
-      await saveResponse({ name: userName, answer: `Q${newAnswers.length}: ${answer}` });
+      await saveResponse({ name: userName, answer: `Q${newAnswers.length}: ${answer}` as 'Yes' | 'No' });
     });
     
     const nextStep = `reply${questionIndex + 1}` as Step;
@@ -211,13 +213,17 @@ export default function Home() {
       if (gender === 'female') {
         setStep('pre-storybook');
       } else {
-        setStep('male-ending');
+        setStep('broken-story');
       }
     }
   }
   
   const handlePreStorybookContinue = () => {
     setStep('storybook');
+  }
+
+  const handleBrokenStoryContinue = () => {
+    setStep('male-ending');
   }
 
   const handleStorybookContinue = () => {
@@ -277,27 +283,27 @@ export default function Home() {
       case 'intro':
         return <IntroView onStart={handleStart} name={userName} />;
       case 'q1':
-        return <QuestionView question={currentQuestions[0].text} options={currentQuestions[0].options} onAnswer={(answer) => handleAnswer(answer, 0)} />;
+        return <QuestionView question={currentQuestions[0].text} options={currentQuestions[0].options} onAnswer={(answer) => handleAnswer(answer, 0)} onAnimationComplete={() => {}} />;
       case 'reply1':
         return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(0)} />
       case 'q2':
-        return <QuestionView question={currentQuestions[1].text} options={currentQuestions[1].options} onAnswer={(answer) => handleAnswer(answer, 1)} />;
+        return <QuestionView question={currentQuestions[1].text} options={currentQuestions[1].options} onAnswer={(answer) => handleAnswer(answer, 1)} onAnimationComplete={() => {}} />;
       case 'reply2':
         return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(1)} />
       case 'q3':
-        return <QuestionView question={currentQuestions[2].text} options={currentQuestions[2].options} onAnswer={(answer) => handleAnswer(answer, 2)} />;
+        return <QuestionView question={currentQuestions[2].text} options={currentQuestions[2].options} onAnswer={(answer) => handleAnswer(answer, 2)} onAnimationComplete={() => {}} />;
       case 'reply3':
          return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(2)} />
       case 'q4':
-        return <QuestionView question={currentQuestions[3].text} options={currentQuestions[3].options} onAnswer={(answer) => handleAnswer(answer, 3)} />;
+        return <QuestionView question={currentQuestions[3].text} options={currentQuestions[3].options} onAnswer={(answer) => handleAnswer(answer, 3)} onAnimationComplete={() => {}} />;
       case 'reply4':
         return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(3)} />
       case 'q5':
-        return <QuestionView question={currentQuestions[4].text} options={currentQuestions[4].options} onAnswer={(answer) => handleAnswer(answer, 4)} />;
+        return <QuestionView question={currentQuestions[4].text} options={currentQuestions[4].options} onAnswer={(answer) => handleAnswer(answer, 4)} onAnimationComplete={() => {}} />;
       case 'reply5':
         return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(4)} />
       case 'q6':
-        return <QuestionView question={currentQuestions[5].text} options={currentQuestions[5].options} onAnswer={(answer) => handleAnswer(answer, 5)} />;
+        return <QuestionView question={currentQuestions[5].text} options={currentQuestions[5].options} onAnswer={(answer) => handleAnswer(answer, 5)} onAnimationComplete={() => {}} />;
       case 'reply6':
         return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(5)} />
       case 'pre-storybook':
@@ -318,6 +324,8 @@ export default function Home() {
                   negativeText={personalizedContent?.responseNegative || fallbackContent.responseNegative}
                   onContinue={() => {}}
                 />;
+      case 'broken-story':
+        return <BrokenStoryView onContinue={handleBrokenStoryContinue} />;
       case 'male-ending':
         return <MaleEndingView />;
       default:
