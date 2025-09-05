@@ -25,12 +25,12 @@ interface StorybookViewProps {
 const StorybookView = ({ onContinue }: StorybookViewProps) => {
   return (
     <motion.div 
-        className="w-full max-w-xs sm:max-w-sm flex flex-col items-center gap-6"
+        className="w-full max-w-xs sm:max-w-sm flex flex-col items-center gap-8"
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
     >
-      <Carousel>
+      <Carousel className="w-full">
         <CarouselContent>
           {stories.map((story, index) => (
             <CarouselItem key={index}>
@@ -44,18 +44,18 @@ const StorybookView = ({ onContinue }: StorybookViewProps) => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="text-primary-foreground" />
-        <CarouselNext className="text-primary-foreground" />
+        <CarouselPrevious className="text-primary-foreground -left-4" />
+        <CarouselNext className="text-primary-foreground -right-4" />
       </Carousel>
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 1 }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
-        <Button onClick={onContinue} size="lg" className="font-headline mt-4">
-          Continue
+        <Button onClick={onContinue} size="lg" className="font-headline mt-2">
+          What is it?
           <ArrowRight className="ml-2"/>
         </Button>
       </motion.div>

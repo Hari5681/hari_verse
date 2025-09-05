@@ -16,8 +16,9 @@ import ProposalView from '@/components/views/ProposalView';
 import ResponseView from '@/components/views/ResponseView';
 import StorybookView from '@/components/views/StorybookView';
 import ReplyView from '@/components/views/ReplyView';
+import PreStorybookView from '@/components/views/PreStorybookView';
 
-type Step = 'intro' | 'q1' | 'reply1' | 'q2' | 'reply2' | 'q3' | 'reply3' | 'q4' | 'reply4' | 'q5' | 'reply5' | 'q6' | 'reply6' | 'storybook' | 'generating' | 'proposal' | 'response';
+type Step = 'intro' | 'q1' | 'reply1' | 'q2' | 'reply2' | 'q3' | 'reply3' | 'q4' | 'reply4' | 'q5' | 'reply5' | 'q6' | 'reply6' | 'pre-storybook' | 'storybook' | 'generating' | 'proposal' | 'response';
 
 const questions = [
   {
@@ -127,10 +128,14 @@ export default function Home() {
       const nextStep = `q${questionIndex + 2}` as Step;
       setStep(nextStep);
     } else {
-      setStep('storybook');
+      setStep('pre-storybook');
     }
   }
   
+  const handlePreStorybookContinue = () => {
+    setStep('storybook');
+  }
+
   const handleStorybookContinue = () => {
     setStep('generating');
     startTransition(async () => {
@@ -190,6 +195,8 @@ export default function Home() {
         return <QuestionView question={questions[5].text} options={questions[5].options} onAnswer={(answer) => handleAnswer(answer, 5)} />;
       case 'reply6':
         return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(5)} />
+      case 'pre-storybook':
+        return <PreStorybookView onContinue={handlePreStorybookContinue} />;
       case 'storybook':
         return <StorybookView onContinue={handleStorybookContinue} />;
       case 'generating':
