@@ -4,7 +4,7 @@
 import { useState, useTransition } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import type { PersonalizedProposalOutput } from '@/ai/flows/personalized-proposal-reveal';
-import { getPersonalizedContent, sendFinalResponseEmail } from '@/app/actions';
+import { getPersonalizedContent } from '@/app/actions';
 import { saveResponse } from './firestore-test/actions';
 import { useToast } from '@/hooks/use-toast';
 
@@ -23,6 +23,7 @@ import GenderPromptView from '@/components/views/GenderPromptView';
 import MaleEndingView from '@/components/views/MaleEndingView';
 import BrokenStoryView from '@/components/views/BrokenStoryView';
 import CommentPromptView from '@/components/views/CommentPromptView';
+import FinalThankYouView from '@/components/views/FinalThankYouView';
 
 
 type Step = 
@@ -48,7 +49,8 @@ type Step =
   | 'proposal' 
   | 'response'
   | 'broken-story'
-  | 'male-ending';
+  | 'male-ending'
+  | 'final-thank-you';
 
 const questions = {
   female: [
@@ -227,8 +229,15 @@ export default function Home() {
     setStep('pre-storybook');
   }
   
-  const handlePreStorybookContinue = () => {
-    setStep('storybook');
+  const handlePreStorybookContinue = (response: boolean) => {
+    startTransition(async () => {
+        await saveResponse({ name: userName, answer: `Wants to see story: ${response ? 'Yes' : 'No'}` });
+    });
+    if (response) {
+        setStep('storybook');
+    } else {
+        setStep('final-thank-you');
+    }
   }
 
   const handleBrokenStoryContinue = () => {
@@ -264,20 +273,7 @@ export default function Home() {
     const finalAnswer = response ? 'Yes' : 'No';
 
     startTransition(async () => {
-      // Save the final response (which also sends an email for this single event)
       await saveResponse({ name: userName, answer: `Final Answer: ${finalAnswer}` });
-      
-      // Send a separate, summary email with all answers
-      const emailResult = await sendFinalResponseEmail({
-          finalAnswer: finalAnswer,
-          answers: [`Gender: ${gender}`, `Name: ${userName}`, ...answers]
-      });
-
-      if (emailResult.success) {
-        toast({ title: 'Response sent!', description: 'Your decision has been noted.' });
-      } else {
-        toast({ variant: 'destructive', title: 'Email Error', description: 'Could not send the response notification.' });
-      }
     });
   };
 
@@ -341,6 +337,8 @@ export default function Home() {
         return <BrokenStoryView onContinue={handleBrokenStoryContinue} />;
       case 'male-ending':
         return <MaleEndingView />;
+      case 'final-thank-you':
+        return <FinalThankYouView />;
       default:
         return <GenderPromptView onSelect={handleGenderSelect} />;
     }
@@ -360,6 +358,3 @@ export default function Home() {
     </>
   );
 }
-
-
-    
