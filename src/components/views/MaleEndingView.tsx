@@ -3,11 +3,11 @@
 
 import { motion } from 'framer-motion';
 import AnimatedText from '../common/AnimatedText';
-import Lottie from 'lottie-react';
+import Lottie, { type LottieComponentProps } from 'lottie-react';
 import { useEffect, useState } from 'react';
 
 const MaleEndingView = () => {
-  const [animationData, setAnimationData] = useState<unknown | null>(null);
+  const [animationData, setAnimationData] = useState<LottieComponentProps['animationData'] | null>(null);
 
   useEffect(() => {
     const loadAnimation = async () => {
