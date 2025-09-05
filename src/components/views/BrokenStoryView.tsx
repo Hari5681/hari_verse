@@ -1,4 +1,5 @@
 
+import { Button } from "../ui/button";
 import {
   Carousel,
   CarouselContent,
@@ -7,8 +8,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { motion } from "framer-motion";
-import { useEffect } from "react";
 import { Card, CardContent } from "../ui/card";
+import { ArrowRight } from "lucide-react";
 
 const stories = [
     "Once, a boy loved silently, hiding his feelings 💔.",
@@ -22,12 +23,6 @@ interface BrokenStoryViewProps {
 }
 
 const BrokenStoryView = ({ onContinue }: BrokenStoryViewProps) => {
-    useEffect(() => {
-        const timer = setTimeout(() => {
-          onContinue();
-        }, (stories.length + 1) * 2000); // Wait for all stories to show
-        return () => clearTimeout(timer);
-      }, [onContinue]);
 
   return (
     <motion.div 
@@ -49,7 +44,7 @@ const BrokenStoryView = ({ onContinue }: BrokenStoryViewProps) => {
                     className="p-1"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: index * 2, duration: 1.5 }}
+                    transition={{ delay: index * 0.2, duration: 1.5 }}
                 >
                     <Card className="bg-secondary/50 border-secondary/80">
                     <CardContent className="font-body flex aspect-square items-center justify-center p-6 text-center text-lg sm:text-xl text-secondary-foreground">
@@ -63,6 +58,15 @@ const BrokenStoryView = ({ onContinue }: BrokenStoryViewProps) => {
         <CarouselPrevious className="text-secondary-foreground -left-4" />
         <CarouselNext className="text-secondary-foreground -right-4" />
       </Carousel>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+      >
+        <Button onClick={onContinue} variant="ghost" size="lg">
+          Continue <ArrowRight className="ml-2" />
+        </Button>
+      </motion.div>
     </motion.div>
   );
 };

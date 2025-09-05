@@ -38,17 +38,13 @@ type Step =
   | 'q3' 
   | 'reply3' 
   | 'q4' 
-  | 'reply4' 
-  | 'q5' 
   | 'reply5' 
-  | 'q6' 
+  | 'q6'
+  | 'reply4' 
   | 'reply6'
   | 'comment-prompt'
   | 'pre-storybook' 
-  | 'storybook' 
-  | 'generating' 
-  | 'proposal' 
-  | 'response'
+  | 'storybook'
   | 'broken-story'
   | 'male-ending'
   | 'final-thank-you';
@@ -154,38 +150,33 @@ const questions = {
   ]
 };
 
-const fallbackContent: PersonalizedProposalOutput = {
-  proposalText: "The truth is… you mean a lot to me. Will you be my special one? ❤️",
-  responseAffirmative: "This is the happiest moment for me! Thank you 💖",
-  responseNegative: "That’s alright 🌼, you’ll always be special to me.",
-};
-
 export default function Home() {
   const [step, setStep] = useState<Step>('gender-prompt');
   const [gender, setGender] = useState<'male' | 'female' | null>(null);
   const [userName, setUserName] = useState('');
   const [answers, setAnswers] = useState<string[]>([]);
   const [currentReply, setCurrentReply] = useState('');
-  const [personalizedContent, setPersonalizedContent] = useState<PersonalizedProposalOutput | null>(null);
-  const [proposalResponse, setProposalResponse] = useState<boolean | null>(null);
   const [playMusic, setPlayMusic] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const { toast } = useToast();
 
   const handleGenderSelect = (selectedGender: 'male' | 'female') => {
     setGender(selectedGender);
     setStep('name-prompt');
-    const data = { name: 'N/A', gender: selectedGender, answer: `Selected gender: ${selectedGender}` };
-    saveResponse(data);
-    sendResponseEmail(data);
+    startTransition(() => {
+      const data = { name: 'N/A', gender: selectedGender, answer: `Selected gender: ${selectedGender}` };
+      saveResponse(data);
+      sendResponseEmail(data);
+    });
   }
 
   const handleNameSubmit = (name: string) => {
     setUserName(name);
     setStep('intro');
-    const data = { name, gender, answer: 'Started Quiz' };
-    saveResponse(data);
-    sendResponseEmail(data);
+    startTransition(() => {
+      const data = { name, gender, answer: 'Started Quiz' };
+      saveResponse(data);
+      sendResponseEmail(data);
+    });
   };
 
   const handleStart = () => {
@@ -229,11 +220,7 @@ export default function Home() {
       saveResponse(data);
       sendResponseEmail(data);
     });
-     if (gender === 'female') {
-      setStep('pre-storybook');
-    } else {
-      setStep('broken-story');
-    }
+    setStep('pre-storybook');
   }
   
   const handlePreStorybookContinue = (response: boolean) => {
@@ -243,50 +230,23 @@ export default function Home() {
         sendResponseEmail(data);
     });
     if (response) {
+      if (gender === 'female') {
         setStep('storybook');
+      } else {
+        setStep('broken-story');
+      }
     } else {
         setStep('final-thank-you');
     }
   }
 
-  const handleBrokenStoryContinue = () => {
-    setStep('male-ending');
+  const handleStoryContinue = () => {
+    if (gender === 'male') {
+      setStep('male-ending');
+    } else {
+      setStep('final-thank-you');
+    }
   }
-
-  const handleStorybookContinue = () => {
-    setStep('generating');
-    startTransition(async () => {
-      const result = await getPersonalizedContent({
-        believesInDestiny: answers[0].includes("One true love"),
-        loveStyle: answers[2],
-        confessionPreference: answers[4],
-      });
-      if (result.success) {
-        setPersonalizedContent(result.data);
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: result.error,
-        });
-        setPersonalizedContent(fallbackContent);
-      }
-      setStep('proposal');
-    });
-  }
-
-  const handleProposalResponse = (response: boolean) => {
-    setProposalResponse(response);
-    setStep('response');
-
-    const finalAnswer = response ? 'Yes' : 'No';
-
-    startTransition(() => {
-      const data = { name: userName, gender, question: 'Final Proposal', answer: finalAnswer };
-      saveResponse(data);
-      sendResponseEmail(data);
-    });
-  };
 
   const renderStep = () => {
     if (!gender) {
@@ -329,23 +289,9 @@ export default function Home() {
       case 'pre-storybook':
         return <PreStorybookView onContinue={handlePreStorybookContinue} />;
       case 'storybook':
-        return <StorybookView onContinue={handleStorybookContinue} />;
-      case 'generating':
-        return <GeneratingView />;
-      case 'proposal':
-        return <ProposalView 
-                  proposalText={personalizedContent?.proposalText || fallbackContent.proposalText}
-                  onResponse={handleProposalResponse} 
-                />;
-      case 'response':
-        return <ResponseView 
-                  isYes={proposalResponse!} 
-                  affirmativeText={personalizedContent?.responseAffirmative || fallbackContent.responseAffirmative}
-                  negativeText={personalizedContent?.responseNegative || fallbackContent.responseNegative}
-                  onContinue={() => setStep('final-thank-you')}
-                />;
+        return <StorybookView onContinue={handleStoryContinue} />;
       case 'broken-story':
-        return <BrokenStoryView onContinue={handleBrokenStoryContinue} />;
+        return <BrokenStoryView onContinue={handleStoryContinue} />;
       case 'male-ending':
         return <MaleEndingView onContinue={() => setStep('final-thank-you')} />;
       case 'final-thank-you':

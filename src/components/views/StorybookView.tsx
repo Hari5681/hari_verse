@@ -7,8 +7,9 @@ import {
     CarouselPrevious,
   } from "@/components/ui/carousel"
 import { motion } from "framer-motion";
-import { useEffect } from "react";
 import { Card, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
+import { ArrowRight } from "lucide-react";
   
   const stories = [
     "Once upon a time, someone felt something special… 💫",
@@ -22,14 +23,6 @@ import { Card, CardContent } from "../ui/card";
   }
   
   const StorybookView = ({ onContinue }: StorybookViewProps) => {
-
-    useEffect(() => {
-      const timer = setTimeout(() => {
-        onContinue();
-      }, (stories.length + 1) * 2000); // Wait for all stories to show
-      return () => clearTimeout(timer);
-    }, [onContinue]);
-
 
     return (
       <motion.div 
@@ -52,7 +45,7 @@ import { Card, CardContent } from "../ui/card";
                     className="p-1"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: index * 2, duration: 1.5 }}
+                    transition={{ delay: index * 0.2, duration: 1.5 }}
                 >
                     <Card className="bg-primary/20 border-primary/50">
                     <CardContent className="font-body flex aspect-square items-center justify-center p-6 text-center text-lg sm:text-xl text-primary-foreground">
@@ -66,9 +59,17 @@ import { Card, CardContent } from "../ui/card";
           <CarouselPrevious className="text-primary-foreground -left-4" />
           <CarouselNext className="text-primary-foreground -right-4" />
         </Carousel>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+        >
+          <Button onClick={onContinue} variant="ghost" size="lg">
+            Continue <ArrowRight className="ml-2" />
+          </Button>
+        </motion.div>
       </motion.div>
     );
   };
   
   export default StorybookView;
-  
