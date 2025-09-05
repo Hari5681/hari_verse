@@ -12,12 +12,15 @@ interface MaleEndingViewProps {
 
 const MaleEndingView = ({ onContinue }: MaleEndingViewProps) => {
   const [animationData, setAnimationData] = useState<LottieComponentProps['animationData'] | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     const loadAnimation = async () => {
       try {
         const anim = await import('@/../public/lottie/glowing-star.json');
-        setAnimationData(anim.default);
+        // Deep copy the animation data to make it extensible
+        setAnimationData(JSON.parse(JSON.stringify(anim.default)));
       } catch (error) {
         console.error("Failed to load animation", error);
       }
@@ -37,7 +40,7 @@ const MaleEndingView = ({ onContinue }: MaleEndingViewProps) => {
       className="flex flex-col items-center justify-center gap-6 text-center"
     >
       <div style={{ height: '200px', width: '200px' }}>
-        {animationData && <Lottie animationData={animationData} loop={true} style={{ width: 200, height: 200 }} />}
+        {isClient && animationData && <Lottie animationData={animationData} loop={true} style={{ width: 200, height: 200 }} />}
       </div>
       <AnimatedText
         text="Stay strong, bro 👑."
