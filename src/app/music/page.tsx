@@ -227,4 +227,3 @@ function SongCard({ song, isPlaying, currentSong, onPlayPause }: { song: Song; i
         </div>
     );
 }
-
