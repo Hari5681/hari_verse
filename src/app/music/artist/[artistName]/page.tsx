@@ -2,12 +2,11 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Music, PlayCircle, Download, AlertTriangle, PauseCircle, ArrowLeft } from 'lucide-react';
+import { Music, Play, MoreHorizontal, Share, UserPlus, AlertTriangle, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
 interface Song {
@@ -24,6 +23,7 @@ const getArtistFromTitle = (title: string): string => {
 
 export default function ArtistPage() {
   const params = useParams();
+  const router = useRouter();
   const artistName = params.artistName ? decodeURIComponent(params.artistName as string) : 'Unknown Artist';
 
   const [songs, setSongs] = useState<Song[]>([]);
@@ -74,17 +74,15 @@ export default function ArtistPage() {
     fetchSongs();
   }, [artistName, toast]);
 
-  const handlePlayPause = (song: Song) => {
-    if (currentSong?.key === song.key) {
-      if (isPlaying) {
-        audioRef.current?.pause();
-      } else {
-        audioRef.current?.play();
-      }
-    } else {
-      setCurrentSong(song);
-    }
+  const handlePlaySong = (song: Song) => {
+    setCurrentSong(song);
   };
+  
+  const handlePlayArtistTop = () => {
+    if (songs.length > 0) {
+        setCurrentSong(songs[0]);
+    }
+  }
 
   useEffect(() => {
     if (currentSong && audioRef.current) {
@@ -123,21 +121,44 @@ export default function ArtistPage() {
   }, []);
 
   return (
-    <div className="flex min-h-screen flex-col items-center bg-background p-4 pt-20">
-      <Card className="w-full max-w-7xl bg-transparent border-none">
-        <CardHeader className="relative text-center">
-            <Link href="/music" className="absolute left-0 top-1/2 -translate-y-1/2">
-                <Button variant="ghost" size="icon">
-                    <ArrowLeft className="h-6 w-6" />
+    <div className="flex min-h-screen flex-col bg-background p-4 pt-20">
+      <div className="w-full max-w-7xl mx-auto">
+        <header className="relative flex flex-col items-center md:items-start text-center md:text-left pt-8">
+            <Button variant="ghost" size="icon" className="absolute top-4 left-0" onClick={() => router.push('/music')}>
+                <ArrowLeft className="h-6 w-6" />
+            </Button>
+            <Image 
+                src="https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg"
+                alt={artistName}
+                width={200}
+                height={200}
+                data-ai-hint="artist portrait"
+                className="rounded-full shadow-2xl w-40 h-40 md:w-48 md:h-48 object-cover"
+            />
+            <h1 className="text-5xl md:text-7xl font-bold mt-6">{artistName}</h1>
+            <p className="text-muted-foreground mt-2">Digital Creator</p>
+            <div className="mt-6 flex items-center gap-4">
+                <Button variant="outline" className="rounded-full">
+                    <UserPlus className="mr-2 h-4 w-4" /> Follow
                 </Button>
-            </Link>
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-            <Music className="h-8 w-8 text-primary" />
-          </div>
-          <CardTitle className="mt-4 text-3xl font-bold">{artistName}</CardTitle>
-          <p className="text-muted-foreground">All songs by {artistName}</p>
-        </CardHeader>
-        <CardContent>
+                 <Button variant="ghost" size="icon">
+                    <Share className="h-5 w-5" />
+                </Button>
+                <Button variant="ghost" size="icon">
+                    <MoreHorizontal className="h-5 w-5" />
+                </Button>
+                <Button 
+                    size="icon" 
+                    className="ml-auto md:ml-8 rounded-full bg-green-500 hover:bg-green-600 w-16 h-16 shadow-lg"
+                    onClick={handlePlayArtistTop}
+                >
+                    <Play className="h-8 w-8 fill-current" />
+                </Button>
+            </div>
+        </header>
+
+        <main className="mt-12">
+            <h2 className="text-2xl font-bold mb-4">Popular</h2>
             {error && (
                 <div className="flex flex-col items-center justify-center rounded-lg bg-destructive/10 p-6 text-center text-destructive-foreground">
                     <AlertTriangle className="h-10 w-10 text-destructive" />
@@ -146,16 +167,23 @@ export default function ArtistPage() {
                 </div>
             )}
             {!error && songs.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                    {songs.map((song) => (
-                        <SongCard key={song.key} song={song} isPlaying={isPlaying} currentSong={currentSong} onPlayPause={handlePlayPause} />
+                <div className="flex flex-col gap-2">
+                    {songs.map((song, index) => (
+                        <SongListItem
+                            key={song.key}
+                            song={song}
+                            index={index + 1}
+                            isPlaying={isPlaying && currentSong?.key === song.key}
+                            onPlay={() => handlePlaySong(song)}
+                        />
                     ))}
                 </div>
             ) : (
              !error && <p className="text-center text-muted-foreground">Loading songs for {artistName}...</p>
             )}
-        </CardContent>
-      </Card>
+        </main>
+      </div>
+
       {currentSong && (
         <footer className="fixed bottom-0 left-0 right-0 z-50 mt-8 flex w-full flex-col items-center justify-center border-t border-border bg-background/80 p-4 backdrop-blur-sm">
            <p className="text-sm text-center font-bold mb-2">{currentSong.title}</p>
@@ -169,31 +197,34 @@ export default function ArtistPage() {
 }
 
 
-function SongCard({ song, isPlaying, currentSong, onPlayPause }: { song: Song; isPlaying: boolean; currentSong: Song | null; onPlayPause: (song: Song) => void; }) {
+function SongListItem({ song, index, isPlaying, onPlay }: { song: Song; index: number; isPlaying: boolean; onPlay: () => void; }) {
     return (
-        <div key={song.key} className="group relative rounded-2xl overflow-hidden shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-primary/20">
-          <Image 
-            src={`https://picsum.photos/seed/${song.key}/500/500`} 
-            alt={song.title} 
-            width={500} 
-            height={500}
-            data-ai-hint="song album cover"
-            className="w-full h-auto object-cover aspect-square"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-          <div className="absolute inset-0 flex flex-col justify-end p-4">
-              <h3 className="font-bold text-lg text-white truncate">{song.title.replace(`${song.artist} - `, '')}</h3>
-              <p className="text-sm text-gray-300">{song.artist}</p>
-          </div>
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <button onClick={() => onPlayPause(song)} className="text-white transform transition-transform duration-300 group-hover:scale-110">
-                  {isPlaying && currentSong?.key === song.key ? <PauseCircle size={64} /> : <PlayCircle size={64} />}
-              </button>
-          </div>
-           <a href={song.url} download={song.title} className="absolute top-2 right-2 text-white/70 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                <Download size={20} />
-           </a>
+        <div 
+            className="flex items-center p-2 rounded-md hover:bg-white/10 cursor-pointer group transition-colors"
+            onClick={onPlay}
+        >
+            <div className="w-10 text-center text-muted-foreground group-hover:hidden">{index}</div>
+            <div className="w-10 text-center text-white hidden group-hover:block">
+                <Play className="h-5 w-5 fill-current" />
+            </div>
+            <Image 
+                src={`https://picsum.photos/seed/${song.key}/200/200`}
+                alt={song.title}
+                width={40}
+                height={40}
+                className="rounded-md ml-4"
+                data-ai-hint="song album cover"
+            />
+            <div className="ml-4 flex-grow">
+                <p className={`font-semibold truncate ${isPlaying ? 'text-green-400' : 'text-white'}`}>
+                    {song.title.replace(`${song.artist} - `, '')}
+                </p>
+            </div>
+            <div className="text-muted-foreground text-sm mr-4">
+                <MoreHorizontal className="h-5 w-5" />
+            </div>
         </div>
     );
 }
 
+    
