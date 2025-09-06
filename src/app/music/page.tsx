@@ -195,15 +195,27 @@ export default function MusicPage() {
 
                 <section>
                     <h2 className="text-2xl font-bold mb-4">Languages</h2>
-                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        {languages.map(lang => (
-                            <div key={lang} className="group cursor-pointer">
-                                <div className="relative aspect-square w-full overflow-hidden rounded-full bg-primary/10 flex items-center justify-center">
-                                    <span className="text-lg font-bold text-primary-foreground">{lang}</span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                     <Carousel 
+                        opts={{ align: "start", loop: languages.length > 5 }} 
+                        className="w-full"
+                     >
+                        <CarouselContent className="-ml-4">
+                            {languages.map(lang => (
+                                <CarouselItem key={lang} className="basis-1/3 md:basis-1/4 lg:basis-1/6 pl-4">
+                                    <div className="group flex flex-col items-center text-center gap-2 cursor-pointer">
+                                        <div className="relative w-28 h-28 md:w-32 md:h-32">
+                                            <div className="w-full h-full rounded-full bg-primary/10 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+                                               <span className="text-lg font-bold text-primary-foreground">{lang}</span>
+                                            </div>
+                                        </div>
+                                         <p className="font-semibold text-sm mt-2 truncate w-full">{lang}</p>
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                        <CarouselPrevious className="hidden md:flex"/>
+                        <CarouselNext className="hidden md:flex"/>
+                    </Carousel>
                     <Separator className="my-12"/>
                 </section>
 
