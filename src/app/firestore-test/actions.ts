@@ -14,17 +14,23 @@ interface SaveResponseInput {
 
 /**
  * Server action to save user response to Firestore.
- * @param input The user's response data.
+ * @param data The user's response data.
  * @returns An object with success status and a message.
  */
-export async function saveResponse(input: SaveResponseInput) {
+export async function saveResponse(data: SaveResponseInput) {
   try {
-    const docRef = await addDoc(collection(db, 'responses'), {
-      ...input,
+    const responseToSave = {
+      name: data.name,
+      gender: data.gender,
+      answer: data.answer,
+      question: data.question || null,
+      comment: data.comment || null,
       createdAt: serverTimestamp(),
-    });
+    };
+
+    const docRef = await addDoc(collection(db, 'responses'), responseToSave);
     console.log('Document written to Firestore with ID: ', docRef.id);
-    return { success: true, message: `Response saved for ${input.name}.` };
+    return { success: true, message: `Response saved for ${data.name}.` };
   } catch (error) {
     console.error('Error in saveResponse action: ', error);
     return { success: false, error: 'Something went wrong while saving your response.' };

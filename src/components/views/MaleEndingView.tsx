@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import AnimatedText from '../common/AnimatedText';
 import Lottie, { type LottieComponentProps } from 'lottie-react';
 import { useEffect, useState } from 'react';
+import { Button } from '../ui/button';
+import { ArrowRight } from 'lucide-react';
 
 interface MaleEndingViewProps {
   onContinue: () => void;
@@ -26,10 +28,7 @@ const MaleEndingView = ({ onContinue }: MaleEndingViewProps) => {
       }
     };
     loadAnimation();
-
-    const timer = setTimeout(onContinue, 4000);
-    return () => clearTimeout(timer);
-  }, [onContinue]);
+  }, []);
 
   return (
     <motion.div
@@ -40,7 +39,9 @@ const MaleEndingView = ({ onContinue }: MaleEndingViewProps) => {
       className="flex flex-col items-center justify-center gap-6 text-center"
     >
       <div style={{ height: '200px', width: '200px' }}>
-        {isClient && animationData && <Lottie animationData={animationData} loop={true} style={{ width: 200, height: 200 }} />}
+        {isClient && animationData && (
+            <Lottie animationData={animationData} loop={true} style={{ width: 200, height: 200 }} />
+        )}
       </div>
       <AnimatedText
         text="Stay strong, bro 👑."
@@ -54,6 +55,15 @@ const MaleEndingView = ({ onContinue }: MaleEndingViewProps) => {
       >
         You’re not alone. Your story will find its ending someday.
       </motion.p>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5 }}
+      >
+        <Button onClick={onContinue} variant="ghost" size="lg">
+          Continue <ArrowRight className="ml-2" />
+        </Button>
+      </motion.div>
     </motion.div>
   );
 };

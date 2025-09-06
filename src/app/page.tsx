@@ -152,7 +152,7 @@ export default function Home() {
   const [answers, setAnswers] = useState<string[]>([]);
   const [currentReply, setCurrentReply] = useState('');
   const [playMusic, setPlayMusic] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const handleGenderSelect = (selectedGender: 'male' | 'female') => {
     setGender(selectedGender);
@@ -227,12 +227,17 @@ export default function Home() {
   }
 
   const handleStoryContinue = () => {
-    if (gender === 'male') {
-      setStep('male-ending');
+     if (gender === 'male') {
+        setStep('male-ending');
     } else {
-      setStep('final-thank-you');
+        setStep('final-thank-you');
     }
   }
+
+   const handleMaleEndingContinue = () => {
+    setStep('final-thank-you');
+  };
+
 
   const renderStep = () => {
     if (!gender) {
@@ -279,7 +284,7 @@ export default function Home() {
       case 'broken-story':
         return <BrokenStoryView onContinue={handleStoryContinue} />;
       case 'male-ending':
-        return <MaleEndingView onContinue={() => setStep('final-thank-you')} />;
+        return <MaleEndingView onContinue={handleMaleEndingContinue} />;
       case 'final-thank-you':
         return <FinalThankYouView />;
       default:
