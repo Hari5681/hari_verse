@@ -42,6 +42,7 @@ export const getFeaturedPlaylists = async () => {
     headers: {
       Authorization: `Bearer ${access_token}`,
     },
+    cache: 'no-cache',
   });
 
    if (!response.ok) {
@@ -58,7 +59,8 @@ export const getPlaylist = async (playlistId: string) => {
     const response = await fetch(`${PLAYLIST_ENDPOINT}${playlistId}`, {
         headers: {
             Authorization: `Bearer ${access_token}`,
-        }
+        },
+        cache: 'no-cache',
     });
 
     if (!response.ok) {
