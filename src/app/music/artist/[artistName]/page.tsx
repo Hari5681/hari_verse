@@ -163,7 +163,7 @@ export default function ArtistPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary/20 to-background p-4 pt-20 pb-32">
       <div className="w-full max-w-7xl mx-auto">
-        <header className="relative flex flex-col items-center md:items-start text-center md:text-left pt-8">
+        <header className="relative flex flex-col items-center text-center pt-8">
             <Button variant="ghost" size="icon" className="absolute top-4 left-0" onClick={() => router.push('/music')}>
                 <ArrowLeft className="h-6 w-6" />
             </Button>
@@ -177,7 +177,7 @@ export default function ArtistPage() {
             />
             <h1 className="text-5xl md:text-7xl font-bold mt-6">{artistName}</h1>
             <p className="text-muted-foreground mt-2">Digital Creator</p>
-            <div className="mt-6 flex items-center gap-4 w-full flex-wrap justify-center md:justify-start">
+            <div className="mt-6 flex items-center justify-center gap-4 w-full flex-wrap">
                 <Button 
                     variant={isFollowing ? 'secondary' : 'outline'}
                     className="rounded-full px-6"
@@ -191,7 +191,6 @@ export default function ArtistPage() {
                 <Button variant="ghost" size="icon">
                     <MoreHorizontal className="h-5 w-5" />
                 </Button>
-                <div className="flex-grow md:hidden"></div>
             </div>
         </header>
 
