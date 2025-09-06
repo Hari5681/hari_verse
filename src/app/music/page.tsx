@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
-import { PlayCircle, Download, AlertTriangle, PauseCircle } from 'lucide-react';
+import { PlayCircle, Download, AlertTriangle, PauseCircle, Music } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { Player } from '@/components/music/Player';
@@ -28,6 +28,8 @@ const getArtistFromTitle = (title: string): string => {
   const parts = title.split(' - ');
   return parts.length > 1 ? parts[0].trim() : 'Unknown Artist';
 };
+
+const languages = ['Telugu', 'English', 'Hindi', 'Tamil'];
 
 export default function MusicPage() {
   const [songs, setSongs] = useState<Song[]>([]);
@@ -153,6 +155,14 @@ export default function MusicPage() {
                         <Separator className="my-12"/>
                     </section>
                 )}
+
+                <section>
+                    <h2 className="text-2xl font-bold mb-4">Top Picks</h2>
+                    <div className="flex items-center justify-center h-40 rounded-lg bg-muted/20">
+                        <p className="text-muted-foreground">Coming Soon</p>
+                    </div>
+                    <Separator className="my-12"/>
+                </section>
                 
 
                 {artists.length > 0 && (
@@ -179,12 +189,27 @@ export default function MusicPage() {
                             <CarouselPrevious className="hidden md:flex"/>
                             <CarouselNext className="hidden md:flex"/>
                         </Carousel>
+                         <Separator className="my-12"/>
                     </section>
                 )}
 
+                <section>
+                    <h2 className="text-2xl font-bold mb-4">Languages</h2>
+                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {languages.map(lang => (
+                            <div key={lang} className="group cursor-pointer">
+                                <div className="relative aspect-square w-full overflow-hidden rounded-full bg-primary/10 flex items-center justify-center">
+                                    <span className="text-lg font-bold text-primary-foreground">{lang}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <Separator className="my-12"/>
+                </section>
+
+
                 {otherSongs.length > 0 && (
                    <section>
-                        <Separator className="my-12"/>
                         <h2 className="text-2xl font-bold mb-4">All Songs</h2>
                         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                             {songs.map((song) => (
