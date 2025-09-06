@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -8,6 +9,7 @@ import { SongList } from '@/components/music/SongList';
 import { MusicPlayer } from '@/components/music/MusicPlayer';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 export default function MusicPage() {
   const [modules, setModules] = useState<any>(null);
@@ -107,21 +109,37 @@ export default function MusicPage() {
     playSong(playlist[prevIndex], playlist);
   };
   
-  const renderSection = (title: string, data: (Album | Playlist | Song)[]) => (
+  const renderSection = (title: string, data: (Album | Playlist | Song)[], isCarousel = false) => (
     <section className="mb-12">
       <h2 className="text-3xl font-bold mb-6">{title}</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-        {data.map((item) => (
-          <SongCard key={item.id} item={item} onPlay={handlePlayItem} />
-        ))}
-      </div>
+      {isCarousel ? (
+        <Carousel opts={{ align: "start", loop: true }} className="w-full">
+          <CarouselContent>
+            {data.map((item) => (
+              <CarouselItem key={item.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
+                 <SongCard item={item} onPlay={handlePlayItem} />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="hidden sm:flex" />
+          <CarouselNext className="hidden sm:flex" />
+        </Carousel>
+      ) : (
+        <div className="flex overflow-x-auto space-x-6 pb-4 -mx-4 px-4">
+            {data.map((item) => (
+              <div key={item.id} className="w-40 md:w-48 flex-shrink-0">
+                <SongCard item={item} onPlay={handlePlayItem} />
+              </div>
+            ))}
+        </div>
+      )}
     </section>
   );
 
   return (
     <div className="min-h-screen bg-background text-foreground pt-24 pb-32">
         <div className="container mx-auto px-4">
-            <header className="mb-12">
+            <header className="mb-12 text-center">
                 <h1 className="text-5xl font-extrabold tracking-tight mb-4">HariVerse Music 🎶</h1>
                 <div className="relative max-w-lg mx-auto">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -142,7 +160,7 @@ export default function MusicPage() {
               ) : (
                   modules && (
                       <>
-                          {modules.trending && renderSection('Trending Now', modules.trending.albums)}
+                          {modules.trending && modules.trending.albums && renderSection('Trending Now', modules.trending.albums, true)}
                           {modules.playlists && renderSection('Top Playlists', modules.playlists)}
                           {modules.albums && renderSection('New Albums', modules.albums)}
                       </>
