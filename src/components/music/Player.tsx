@@ -20,6 +20,7 @@ import {
   DialogTrigger,
   DialogClose,
 } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
 
 interface Song {
   key: string;
@@ -85,7 +86,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
       if (isPlaying) {
         audioRef.current.pause();
       } else {
-        audio.current.play();
+        audioRef.current.play();
       }
     }
   };
@@ -102,13 +103,14 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
 
   // A simple check to see if the text is long. In a real app, you might measure it.
   const isTitleLong = songTitle.length > 25;
+  const isMiniTitleLong = songTitle.length > 20;
 
 
   return (
     <Dialog>
       <div className="fixed bottom-0 left-0 right-0 z-50">
         <DialogTrigger asChild>
-          <div className="h-16 cursor-pointer border-t border-border/50 bg-background/80 px-4 backdrop-blur-lg md:h-20 animate-fade-in-up">
+          <div className="h-16 cursor-pointer border-t border-border/50 bg-background/80 px-4 backdrop-blur-lg md:h-20">
             <div className="container mx-auto flex h-full items-center justify-between gap-4">
               <div className="flex items-center gap-3 overflow-hidden md:w-1/4">
                 <Image
@@ -119,8 +121,8 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                   className="rounded-md flex-shrink-0 md:w-12 md:h-12"
                   data-ai-hint="song album cover"
                 />
-                <div className="overflow-hidden">
-                  <p className="truncate font-bold text-sm">{songTitle}</p>
+                <div className="overflow-hidden whitespace-nowrap">
+                  <p className={cn("font-bold text-sm", isMiniTitleLong ? "animate-marquee" : "truncate")}>{songTitle}</p>
                   <p className="truncate text-xs text-muted-foreground">
                     {song.artist}
                   </p>
@@ -138,7 +140,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                       e.stopPropagation();
                       onPrev();
                     }}
-                    className="text-muted-foreground transition-colors hover:text-foreground hidden sm:block"
+                    className="text-muted-foreground transition-colors hover:text-foreground"
                   >
                     <SkipBack size={20} />
                   </button>
@@ -185,14 +187,14 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
             <div className="w-6" /> {/* Placeholder for spacing */}
           </header>
 
-          <main className="flex flex-1 flex-col items-center justify-start gap-4 text-center sm:gap-8 px-4 pt-8 sm:pt-12">
-            <div className="w-full max-w-xs sm:max-w-md animate-fade-in-up">
+          <main className="flex flex-1 flex-col items-center justify-start gap-4 text-center sm:gap-8 px-4 pt-8 sm:pt-12 animate-fade-in-up">
+            <div className="w-full max-w-xs sm:max-w-md">
               <Image
                 src={imageUrl}
                 alt={song.title}
                 width={500}
                 height={500}
-                className="aspect-square w-full max-w-[65vw] sm:max-w-md mx-auto rounded-lg shadow-2xl"
+                className="aspect-square w-full max-w-[65vw] sm:max-w-md mx-auto rounded-lg shadow-2xl transition-transform duration-500 group-data-[state=open]:scale-100"
                 data-ai-hint="song album cover"
               />
               <div className="flex items-center justify-between mt-6 sm:mt-8">
