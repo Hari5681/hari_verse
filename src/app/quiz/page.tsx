@@ -203,7 +203,6 @@ export default function QuizPage() {
     setStep('question');
   };
 
-_DBL_QUOTE_
   const handleAnswer = (answer: string) => {
     const newAnswers = [...answers, answer];
     setAnswers(newAnswers);
