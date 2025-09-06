@@ -9,12 +9,19 @@ import { Music, PlayCircle, Download, AlertTriangle, PauseCircle } from 'lucide-
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { Player } from '@/components/music/Player';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+
 
 interface Song {
   key: string;
   title: string;
   url: string;
   artist: string;
+}
+
+interface Artist {
+    name: string;
+    imageUrl: string;
 }
 
 const getArtistFromTitle = (title: string): string => {
@@ -24,6 +31,7 @@ const getArtistFromTitle = (title: string): string => {
 
 export default function MusicPage() {
   const [songs, setSongs] = useState<Song[]>([]);
+  const [artists, setArtists] = useState<Artist[]>([]);
   const [playlist, setPlaylist] = useState<Song[]>([]);
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -45,11 +53,25 @@ export default function MusicPage() {
             setError('No songs found. Please upload .mp3 files to your R2 bucket.');
             setSongs([]);
         } else {
-            const songsWithArtists = data.songs.map((song: Omit<Song, 'artist'>) => ({
+            const songsWithArtists: Song[] = data.songs.map((song: Omit<Song, 'artist'>) => ({
                 ...song,
                 artist: getArtistFromTitle(song.title)
             }));
             setSongs(songsWithArtists);
+            
+            const uniqueArtists = songsWithArtists.reduce((acc, song) => {
+                if (!acc.find(a => a.name === song.artist)) {
+                    acc.push({
+                         name: song.artist,
+                         // A placeholder for artist image. In a real app, you'd fetch this.
+                         imageUrl: song.artist === 'Lana Del Rey' 
+                            ? 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
+                            : `https://picsum.photos/seed/${song.artist}/500/500`
+                    });
+                }
+                return acc;
+            }, [] as Artist[]);
+            setArtists(uniqueArtists);
         }
       } catch (error: any) {
         console.error("Fetch songs error:", error);
@@ -85,8 +107,7 @@ export default function MusicPage() {
     setCurrentSong(playlist[prevIndex]);
   };
 
-  const lanaDelReySongs = songs.filter(song => song.artist === 'Lana Del Rey');
-  const otherSongs = songs.filter(song => song.artist !== 'Lana Del Rey');
+  const otherSongs = songs.filter(song => song.artist !== 'Lana Del Rey' || !artists.some(a => a.name === 'Lana Del Rey'));
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-background p-4 pt-20">
@@ -109,22 +130,30 @@ export default function MusicPage() {
             )}
             {!error && songs.length > 0 ? (
                 <div className="space-y-12">
-                    {lanaDelReySongs.length > 0 && (
+                    {artists.length > 0 && (
                         <section>
                             <h2 className="text-2xl font-bold mb-4">Artists</h2>
-                             <Link href={`/music/artist/${encodeURIComponent('Lana Del Rey')}`} passHref>
-                                <Card className="cursor-pointer bg-card/50 transition-all hover:scale-[1.02] hover:shadow-primary/20">
-                                    <CardHeader>
-                                        <div className="flex items-center gap-4">
-                                            <Image src="https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg" width={100} height={100} alt="Lana Del Rey" className="rounded-full" data-ai-hint="artist portrait" />
-                                            <div>
-                                                <CardTitle className="text-2xl">Lana Del Rey</CardTitle>
-                                                <p className="text-muted-foreground">Featured Artist</p>
-                                            </div>
-                                        </div>
-                                    </CardHeader>
-                                </Card>
-                            </Link>
+                             <Carousel 
+                                opts={{ align: "start", loop: artists.length > 5 }} 
+                                className="w-full"
+                             >
+                                <CarouselContent className="-ml-4">
+                                    {artists.map((artist) => (
+                                        <CarouselItem key={artist.name} className="basis-1/3 md:basis-1/4 lg:basis-1/6 pl-4">
+                                            <Link href={`/music/artist/${encodeURIComponent(artist.name)}`} passHref>
+                                                <div className="group flex flex-col items-center text-center gap-2 cursor-pointer">
+                                                    <div className="relative w-28 h-28 md:w-32 md:h-32">
+                                                        <Image src={artist.imageUrl} layout="fill" alt={artist.name} className="rounded-full object-cover transition-all duration-300 group-hover:scale-110" data-ai-hint="artist portrait" />
+                                                    </div>
+                                                    <p className="font-semibold text-sm mt-2 truncate w-full">{artist.name}</p>
+                                                </div>
+                                            </Link>
+                                        </CarouselItem>
+                                    ))}
+                                </CarouselContent>
+                                <CarouselPrevious className="hidden md:flex"/>
+                                <CarouselNext className="hidden md:flex"/>
+                            </Carousel>
                         </section>
                     )}
 
@@ -133,8 +162,8 @@ export default function MusicPage() {
                             <Separator className="my-12"/>
                             <h2 className="text-2xl font-bold mb-4">All Songs</h2>
                             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                                {otherSongs.map((song) => (
-                                    <SongCard key={song.key} song={song} currentSong={currentSong} onPlay={() => handlePlaySong(song, otherSongs)} />
+                                {songs.map((song) => (
+                                    <SongCard key={song.key} song={song} currentSong={currentSong} onPlay={() => handlePlaySong(song, songs)} />
                                 ))}
                             </div>
                         </section>
