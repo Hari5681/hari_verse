@@ -9,6 +9,30 @@ import Confetti from '../common/Confetti';
 import { Instagram, Linkedin, Link as LinkIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.3,
+      delayChildren: 1.5,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: 'spring',
+      stiffness: 100,
+    },
+  },
+};
+
+
 const FinalThankYouView = () => {
     const [animationData, setAnimationData] = useState<any>(null);
 
@@ -42,26 +66,26 @@ const FinalThankYouView = () => {
                     You’ll always be special to me.
                 </motion.p>
                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.5, duration: 0.5 }}
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
                     className="flex items-center gap-4 mt-4"
                 >
-                    <a href="https://www.hariportfolio.com" target="_blank" rel="noopener noreferrer">
+                    <motion.a variants={itemVariants} href="https://www.hariportfolio.xyz" target="_blank" rel="noopener noreferrer">
                         <Button variant="ghost" size="icon" aria-label="Portfolio">
                             <LinkIcon className="w-5 h-5 text-muted-foreground" />
                         </Button>
-                    </a>
-                    <a href="https://www.linkedin.com/in/hari5681" target="_blank" rel="noopener noreferrer">
+                    </motion.a>
+                    <motion.a variants={itemVariants} href="https://www.linkedin.com/in/hari5681" target="_blank" rel="noopener noreferrer">
                          <Button variant="ghost" size="icon" aria-label="LinkedIn">
                             <Linkedin className="w-5 h-5 text-muted-foreground" />
                         </Button>
-                    </a>
-                    <a href="https://www.instagram.com/hari.krishna.00" target="_blank" rel="noopener noreferrer">
+                    </motion.a>
+                    <motion.a variants={itemVariants} href="https://www.instagram.com/hari.krishna.00" target="_blank" rel="noopener noreferrer">
                          <Button variant="ghost" size="icon" aria-label="Instagram">
                             <Instagram className="w-5 h-5 text-muted-foreground" />
                         </Button>
-                    </a>
+                    </motion.a>
                 </motion.div>
             </motion.div>
         </div>
