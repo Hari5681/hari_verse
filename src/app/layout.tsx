@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Toaster } from "@/components/ui/toaster"
 import './globals.css';
 import AnimatedBackground from '@/components/common/AnimatedBackground';
+import Header from '@/components/common/Header';
 
 export const metadata: Metadata = {
   title: 'HariVerse Proposal',
@@ -23,9 +24,10 @@ export default function RootLayout({
       </head>
       <body className="font-body bg-background text-foreground antialiased">
         <AnimatedBackground />
-        <div className="relative flex min-h-screen w-full flex-col items-center justify-center p-4">
+        <Header />
+        <main className="relative flex min-h-screen w-full flex-col items-center justify-center p-4 pt-20 sm:pt-24">
           {children}
-        </div>
+        </main>
         <Toaster />
       </body>
     </html>
