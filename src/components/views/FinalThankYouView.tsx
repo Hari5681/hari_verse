@@ -6,11 +6,14 @@ import AnimatedText from '../common/AnimatedText';
 import Lottie from 'lottie-react';
 import { useEffect, useState } from 'react';
 import Confetti from '../common/Confetti';
+import { Instagram, Linkedin, Link as LinkIcon } from 'lucide-react';
+import { Button } from '../ui/button';
 
 const FinalThankYouView = () => {
     const [animationData, setAnimationData] = useState<any>(null);
 
     useEffect(() => {
+        // Using a deep copy to prevent the "object is not extensible" error with Lottie
         import('@/../public/lottie/celebration.json').then(module => {
             setAnimationData(JSON.parse(JSON.stringify(module.default)));
         });
@@ -38,6 +41,28 @@ const FinalThankYouView = () => {
                 >
                     You’ll always be special to me.
                 </motion.p>
+                 <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 1.5, duration: 0.5 }}
+                    className="flex items-center gap-4 mt-4"
+                >
+                    <a href="https://www.hariportfolio.com" target="_blank" rel="noopener noreferrer">
+                        <Button variant="ghost" size="icon" aria-label="Portfolio">
+                            <LinkIcon className="w-5 h-5 text-muted-foreground" />
+                        </Button>
+                    </a>
+                    <a href="https://www.linkedin.com/in/hari5681" target="_blank" rel="noopener noreferrer">
+                         <Button variant="ghost" size="icon" aria-label="LinkedIn">
+                            <Linkedin className="w-5 h-5 text-muted-foreground" />
+                        </Button>
+                    </a>
+                    <a href="https://www.instagram.com/hari.krishna.00" target="_blank" rel="noopener noreferrer">
+                         <Button variant="ghost" size="icon" aria-label="Instagram">
+                            <Instagram className="w-5 h-5 text-muted-foreground" />
+                        </Button>
+                    </a>
+                </motion.div>
             </motion.div>
         </div>
     );
