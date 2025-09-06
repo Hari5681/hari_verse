@@ -27,12 +27,12 @@ export async function GET() {
       new ListObjectsV2Command({ Bucket: bucketName })
     );
 
-    const songs = list.Contents?.map(item => {
+    const songs = list.Contents?.filter(item => item.Key).map(item => {
       // Ensure the key is URL-encoded
-      const url = `${publicUrl}/${encodeURIComponent(item.Key || '')}`;
+      const url = `${publicUrl}/${encodeURIComponent(item.Key!)}`;
       return {
         key: item.Key,
-        title: item.Key?.split('/').pop()?.replace(/\.mp3/i, '') || 'Unknown Title',
+        title: item.Key!.split('/').pop()?.replace(/\.mp3/i, '') || 'Unknown Title',
         url: url,
       };
     });
