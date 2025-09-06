@@ -4,7 +4,6 @@
 import { useState, useTransition } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { saveResponse } from './firestore-test/actions';
-import { sendResponseEmail } from '@/lib/email';
 
 import AudioPlayer from '@/components/common/AudioPlayer';
 import Footer from '@/components/common/Footer';
@@ -21,11 +20,14 @@ import CommentPromptView from '@/components/views/CommentPromptView';
 import FinalThankYouView from '@/components/views/FinalThankYouView';
 import QuizSelectionView from '@/components/views/QuizSelectionView';
 import ResultsView from '@/components/views/ResultsView';
+import AdventureView from '@/components/views/AdventureView';
+import ComingSoonView from '@/components/views/ComingSoonView';
 
 
 type Step = 
   | 'gender-prompt' 
   | 'name-prompt'
+  | 'adventure-selection'
   | 'quiz-selection'
   | 'intro' 
   | 'question'
@@ -36,9 +38,11 @@ type Step =
   | 'storybook'
   | 'broken-story'
   | 'male-ending'
-  | 'final-thank-you';
+  | 'final-thank-you'
+  | 'coming-soon';
 
 type QuizType = 'survey' | 'funny' | 'gk';
+type AdventureType = 'quiz' | 'music' | 'movies' | 'ai-tools';
 
 const questions = {
   survey_female: [
@@ -153,6 +157,7 @@ const questions = {
 
 export default function Home() {
   const [step, setStep] = useState<Step>('gender-prompt');
+  const [adventureType, setAdventureType] = useState<AdventureType | null>(null);
   const [quizType, setQuizType] = useState<QuizType | null>(null);
   const [gender, setGender] = useState<'male' | 'female' | null>(null);
   const [userName, setUserName] = useState('');
@@ -176,16 +181,23 @@ export default function Home() {
     setStep('name-prompt');
     const data = { name: 'N/A', gender: selectedGender, answer: `Selected gender: ${selectedGender}` };
     startTransition(() => saveResponse(data));
-    sendResponseEmail(data);
   }
 
   const handleNameSubmit = (name: string) => {
     setUserName(name);
-    setStep('quiz-selection');
+    setStep('adventure-selection');
     const data = { name, gender, answer: 'Submitted Name' };
     startTransition(() => saveResponse(data));
-    sendResponseEmail(data);
   };
+
+  const handleAdventureSelect = (type: AdventureType) => {
+    setAdventureType(type);
+    if (type === 'quiz') {
+      setStep('quiz-selection');
+    } else {
+      setStep('coming-soon');
+    }
+  }
   
   const handleQuizSelect = (type: QuizType) => {
     setQuizType(type);
@@ -211,7 +223,6 @@ export default function Home() {
 
     const data = { name: userName, gender, question: currentQuestion.text, answer };
     startTransition(() => saveResponse(data));
-    sendResponseEmail(data);
 
     if (quizType === 'survey') {
       // @ts-ignore
@@ -246,7 +257,6 @@ export default function Home() {
   const handleCommentSubmit = (comment: string) => {
     const data = { name: userName, gender, comment, answer: 'User left a comment.' };
     startTransition(() => saveResponse(data));
-    sendResponseEmail(data);
 
     // If coming from results, go to thank you. Otherwise, pre-storybook.
     if(quizType !== 'survey') {
@@ -257,8 +267,9 @@ export default function Home() {
   }
 
   const handleRestart = () => {
-    // Reset to quiz selection, keeping name and gender
-    setStep('quiz-selection');
+    // Reset to adventure selection, keeping name and gender
+    setStep('adventure-selection');
+    setAdventureType(null);
     setQuizType(null);
     setAnswers([]);
     setCurrentQuestionIndex(0);
@@ -270,7 +281,6 @@ export default function Home() {
   const handlePreStorybookContinue = (response: boolean) => {
     const data = { name: userName, gender, answer: `Wants to see story: ${response ? 'Yes' : 'No'}` };
     startTransition(() => saveResponse(data));
-    sendResponseEmail(data);
 
     if (response) {
       if (gender === 'female') {
@@ -304,6 +314,8 @@ export default function Home() {
         return <GenderPromptView onSelect={handleGenderSelect} />;
       case 'name-prompt':
         return <NamePromptView onSubmit={handleNameSubmit} />;
+      case 'adventure-selection':
+        return <AdventureView onSelect={handleAdventureSelect} />;
       case 'quiz-selection':
         return <QuizSelectionView onSelect={handleQuizSelect} />;
       case 'intro':
@@ -337,6 +349,8 @@ export default function Home() {
         return <MaleEndingView onContinue={handleMaleEndingContinue} />;
       case 'final-thank-you':
         return <FinalThankYouView onRestart={handleRestart} />;
+       case 'coming-soon':
+        return <ComingSoonView onBack={handleRestart} />;
       default:
         return <GenderPromptView onSelect={handleGenderSelect} />;
     }
@@ -346,7 +360,7 @@ export default function Home() {
     <>
       <div className="flex flex-1 flex-col items-center justify-center text-center">
         <AnimatePresence mode="wait">
-            <div key={step} className="w-full max-w-md">
+            <div key={step} className="w-full max-w-lg px-4">
                 {renderStep()}
             </div>
         </AnimatePresence>
