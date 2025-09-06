@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -9,6 +10,7 @@ import { Music, Play, MoreHorizontal, Share, UserPlus, AlertTriangle, ArrowLeft 
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Player } from '@/components/music/Player';
+import PlayingAnimation from '@/components/music/PlayingAnimation';
 
 interface Song {
   key: string;
@@ -265,7 +267,7 @@ function SongListItem({ song, index, isPlaying, onPlay }: { song: Song; index: n
                 </p>
             </div>
             <div className="text-muted-foreground text-sm mr-4">
-                <MoreHorizontal className="h-5 w-5" />
+                {isPlaying ? <PlayingAnimation /> : <MoreHorizontal className="h-5 w-5" />}
             </div>
         </div>
     );

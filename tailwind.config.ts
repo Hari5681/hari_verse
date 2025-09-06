@@ -95,7 +95,19 @@ const config = {
           '0%': { transform: 'translateX(0%)' },
           '20%': { transform: 'translateX(0%)' },
           '100%': { transform: 'translateX(-120%)' },
-        }
+        },
+        bar1: {
+          '0%, 100%': { height: '0.5rem' },
+          '50%': { height: '1.25rem' },
+        },
+        bar2: {
+          '0%, 100%': { height: '1rem' },
+          '50%': { height: '0.25rem' },
+        },
+        bar3: {
+          '0%, 100%': { height: '0.75rem' },
+          '50%': { height: '1.1rem' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -104,6 +116,9 @@ const config = {
         "fade-in-down": "fade-in-down 0.5s ease-out forwards",
         "marquee": 'marquee 10s linear infinite',
         "marquee-delayed": 'marquee-delayed 15s linear infinite',
+        bar1: 'bar1 1.2s infinite ease-in-out',
+        bar2: 'bar2 1.2s infinite ease-in-out',
+        bar3: 'bar3 1.2s infinite ease-in-out',
       },
     },
   },
