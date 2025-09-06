@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Music, Play, MoreHorizontal, Share, UserPlus, AlertTriangle, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
+import { Player } from '@/components/music/Player';
 
 interface Song {
   key: string;
@@ -38,6 +39,7 @@ export default function ArtistPage() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -90,22 +92,52 @@ export default function ArtistPage() {
     }
   }
 
-  useEffect(() => {
-    if (currentSong && audioRef.current) {
-        const audio = audioRef.current;
-        audio.src = currentSong.url;
-        audio.play().catch(e => {
-            console.error("Error playing audio:", e);
-            const errorMessage = (e as Error).message || "The selected song could not be played.";
-            setError(errorMessage);
-            toast({
-                variant: "destructive",
-                title: "Playback Error",
-                description: errorMessage,
-            });
-        });
+  const handleNext = () => {
+    if (!currentSong || songs.length === 0) return;
+    const currentIndex = songs.findIndex(s => s.key === currentSong.key);
+    const nextIndex = (currentIndex + 1) % songs.length;
+    setCurrentSong(songs[nextIndex]);
+  };
+  
+  const handlePrev = () => {
+    if (!currentSong || songs.length === 0) return;
+    const currentIndex = songs.findIndex(s => s.key === currentSong.key);
+    const prevIndex = (currentIndex - 1 + songs.length) % songs.length;
+    setCurrentSong(songs[prevIndex]);
+  };
+  
+  const handleFollow = () => {
+    setIsFollowing(!isFollowing);
+    toast({
+        title: isFollowing ? `Unfollowed ${artistName}` : `Followed ${artistName}`,
+        description: isFollowing ? "You'll no longer get updates." : "You'll now get updates from this artist.",
+    })
+  }
+
+  const handleShare = async () => {
+    const shareData = {
+        title: `Check out ${artistName} on HariVerse`,
+        text: `Listen to ${artistName}'s music on HariVerse!`,
+        url: window.location.href
     }
-  }, [currentSong, toast]);
+    try {
+        if (navigator.share) {
+            await navigator.share(shareData);
+            toast({ title: 'Shared successfully!' });
+        } else {
+            await navigator.clipboard.writeText(window.location.href);
+            toast({ title: 'Link Copied!', description: 'Artist page URL has been copied to your clipboard.' });
+        }
+    } catch(err) {
+        console.error("Share error:", err);
+        toast({
+            variant: "destructive",
+            title: 'Sharing failed',
+            description: 'Could not share at this moment.'
+        })
+    }
+  }
+
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -113,7 +145,7 @@ export default function ArtistPage() {
     
     const handlePlayEvent = () => setIsPlaying(true);
     const handlePauseEvent = () => setIsPlaying(false);
-    const handleEndedEvent = () => setIsPlaying(false);
+    const handleEndedEvent = () => handleNext();
     
     audio.addEventListener('play', handlePlayEvent);
     audio.addEventListener('pause', handlePauseEvent);
@@ -124,10 +156,10 @@ export default function ArtistPage() {
       audio.removeEventListener('pause', handlePauseEvent);
       audio.removeEventListener('ended', handleEndedEvent);
     }
-  }, []);
+  }, [handleNext]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background p-4 pt-20">
+    <div className="flex min-h-screen flex-col bg-background p-4 pt-20 pb-32">
       <div className="w-full max-w-7xl mx-auto">
         <header className="relative flex flex-col items-center md:items-start text-center md:text-left pt-8">
             <Button variant="ghost" size="icon" className="absolute top-4 left-0" onClick={() => router.push('/music')}>
@@ -143,11 +175,15 @@ export default function ArtistPage() {
             />
             <h1 className="text-5xl md:text-7xl font-bold mt-6">{artistName}</h1>
             <p className="text-muted-foreground mt-2">Digital Creator</p>
-            <div className="mt-6 flex items-center gap-4">
-                <Button variant="outline" className="rounded-full">
-                    <UserPlus className="mr-2 h-4 w-4" /> Follow
+            <div className="mt-6 flex items-center gap-4 w-full">
+                <Button 
+                    variant={isFollowing ? 'secondary' : 'outline'}
+                    className="rounded-full px-6"
+                    onClick={handleFollow}
+                >
+                    {isFollowing ? 'Following' : 'Follow'}
                 </Button>
-                 <Button variant="ghost" size="icon">
+                 <Button variant="ghost" size="icon" onClick={handleShare}>
                     <Share className="h-5 w-5" />
                 </Button>
                 <Button variant="ghost" size="icon">
@@ -189,15 +225,16 @@ export default function ArtistPage() {
             )}
         </main>
       </div>
-
+        
       {currentSong && (
-        <footer className="fixed bottom-0 left-0 right-0 z-50 mt-8 flex w-full flex-col items-center justify-center border-t border-border bg-background/80 p-4 backdrop-blur-sm">
-           <p className="text-sm text-center font-bold mb-2">{currentSong.title}</p>
-           <audio controls autoPlay ref={audioRef} className="w-full max-w-2xl">
-              Your browser does not support the audio element.
-           </audio>
-        </footer>
+        <Player
+          audioRef={audioRef}
+          song={currentSong}
+          onNext={handleNext}
+          onPrev={handlePrev}
+        />
       )}
+      <audio ref={audioRef} />
     </div>
   );
 }
