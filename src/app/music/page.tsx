@@ -290,26 +290,34 @@ function RecentlyPlayedSongCard({ song, onPlay }: { song: Song; onPlay: () => vo
 
 function TopPickSongCard({ song, index, onPlay }: { song: Song; index: number; onPlay: () => void; }) {
     return (
-        <div onClick={onPlay} className="group cursor-pointer">
-            <div className="relative aspect-square w-full overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105">
+        <div 
+            onClick={onPlay} 
+            className="group cursor-pointer flex items-center gap-4 p-2 rounded-lg transition-all duration-300 hover:bg-white/10"
+        >
+            <div className="text-lg font-bold w-8 text-center text-muted-foreground">
+                <span className="text-primary">#</span>{index}
+            </div>
+            <div className="relative w-16 h-16 flex-shrink-0">
                 <Image
                     src={`https://picsum.photos/seed/${song.key}/200/200`}
                     alt={song.title}
-                    width={200}
-                    height={200}
-                    className="w-full h-full object-cover"
+                    width={64}
+                    height={64}
+                    className="w-full h-full object-cover rounded-md"
                     data-ai-hint="song album cover"
                 />
-                <div className="absolute top-2 left-2 bg-black/50 text-white text-sm font-bold w-6 h-6 flex items-center justify-center rounded-full">
-                    {index}
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <PlayCircle size={48} className="text-white" />
+                 <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <PlayCircle size={32} className="text-white" />
                 </div>
             </div>
-            <p className="mt-2 text-sm font-semibold truncate text-foreground">
-                {song.title.replace(`${song.artist} - `, '')}
-            </p>
+            <div className="overflow-hidden">
+                <p className="text-sm font-semibold truncate text-foreground">
+                    {song.title.replace(`${song.artist} - `, '')}
+                </p>
+                <p className="text-xs truncate text-muted-foreground">
+                    {song.artist}
+                </p>
+            </div>
         </div>
     );
 }
