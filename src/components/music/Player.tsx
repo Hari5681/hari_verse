@@ -100,16 +100,16 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
         <DialogTrigger asChild>
           <div className="h-24 cursor-pointer border-t border-border/50 bg-background/80 px-4 backdrop-blur-lg">
             <div className="container mx-auto flex h-full items-center justify-between">
-              <div className="flex w-1/4 items-center gap-4">
+              <div className="flex w-1/4 items-center gap-4 overflow-hidden">
                 <Image
                   src={imageUrl}
                   alt={song.title}
                   width={64}
                   height={64}
-                  className="rounded-md"
+                  className="rounded-md flex-shrink-0"
                   data-ai-hint="song album cover"
                 />
-                <div>
+                <div className="overflow-hidden">
                   <p className="truncate font-bold">{songTitle}</p>
                   <p className="truncate text-sm text-muted-foreground">
                     {song.artist}
@@ -162,29 +162,29 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
       </div>
 
       <DialogContent className="h-full max-h-full w-full max-w-full !rounded-none !border-none bg-gradient-to-b from-primary/30 to-background p-0">
-        <div className="flex h-full flex-col p-6 pt-12">
+        <div className="flex h-full flex-col p-4 sm:p-6 sm:pt-12">
           <header className="flex items-center justify-between">
             <DialogClose>
               <X className="h-6 w-6 opacity-70" />
             </DialogClose>
-            <p className="font-semibold">{songTitle}</p>
+            <p className="font-semibold truncate px-4">{songTitle}</p>
             <div className="w-6" /> {/* Placeholder for spacing */}
           </header>
 
-          <main className="flex flex-1 flex-col items-center justify-center gap-8 text-center">
+          <main className="flex flex-1 flex-col items-center justify-center gap-4 sm:gap-8 text-center px-4">
             <Image
               src={imageUrl}
               alt={song.title}
               width={500}
               height={500}
-              className="aspect-square w-full max-w-md rounded-lg shadow-2xl"
+              className="aspect-square w-full max-w-xs sm:max-w-md rounded-lg shadow-2xl mt-4 sm:mt-0"
               data-ai-hint="song album cover"
             />
-            <div className="w-full max-w-md">
+            <div className="w-full max-w-xs sm:max-w-md">
               <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-2xl font-bold">{songTitle}</h2>
-                  <p className="text-muted-foreground">{song.artist}</p>
+                <div className="text-left">
+                  <h2 className="text-xl sm:text-2xl font-bold truncate">{songTitle}</h2>
+                  <p className="text-muted-foreground truncate">{song.artist}</p>
                 </div>
                 <button onClick={() => setIsLiked(!isLiked)}>
                   <Heart
@@ -211,7 +211,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center justify-between">
+              <div className="mt-4 flex items-center justify-around sm:justify-between">
                 <button className="text-muted-foreground transition-colors hover:text-foreground">
                   <Shuffle className="h-5 w-5" />
                 </button>
@@ -223,12 +223,12 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                 </button>
                 <button
                   onClick={togglePlay}
-                  className="rounded-full bg-white p-4 text-background"
+                  className="rounded-full bg-white p-3 sm:p-4 text-background"
                 >
                   {isPlaying ? (
-                    <PauseIcon className="h-8 w-8" />
+                    <PauseIcon className="h-7 w-7 sm:h-8 sm:w-8" />
                   ) : (
-                    <PlayIcon className="h-8 w-8" />
+                    <PlayIcon className="h-7 w-7 sm:h-8 sm:w-8" />
                   )}
                 </button>
                 <button
