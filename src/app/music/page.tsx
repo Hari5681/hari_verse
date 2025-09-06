@@ -227,13 +227,6 @@ export default function MusicPage() {
   return (
     <div className="flex min-h-screen flex-col items-center bg-background p-4 pt-20">
       <Card className="w-full max-w-7xl border-none bg-transparent">
-        <CardHeader className="text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-            <Music className="h-8 w-8 text-primary" />
-          </div>
-          <CardTitle className="mt-4 text-3xl font-bold">HariVerse Music</CardTitle>
-          <p className="text-muted-foreground">Your personal library & trending music</p>
-        </CardHeader>
         <CardContent className="pb-32">
             {error && (
                 <div className="mb-8 flex flex-col items-center justify-center rounded-lg bg-destructive/10 p-6 text-center text-destructive-foreground">
