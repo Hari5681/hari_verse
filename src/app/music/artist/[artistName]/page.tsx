@@ -2,12 +2,13 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Music, PlayCircle, Download, AlertTriangle, PauseCircle } from 'lucide-react';
+import { Music, PlayCircle, Download, AlertTriangle, PauseCircle, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Separator } from '@/components/ui/separator';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 interface Song {
   key: string;
@@ -16,14 +17,15 @@ interface Song {
   artist: string;
 }
 
-// Simple parser to extract artist from title like "Artist - Song"
 const getArtistFromTitle = (title: string): string => {
   const parts = title.split(' - ');
   return parts.length > 1 ? parts[0].trim() : 'Unknown Artist';
 };
 
+export default function ArtistPage() {
+  const params = useParams();
+  const artistName = params.artistName ? decodeURIComponent(params.artistName as string) : 'Unknown Artist';
 
-export default function MusicPage() {
   const [songs, setSongs] = useState<Song[]>([]);
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -43,13 +45,18 @@ export default function MusicPage() {
         }
 
         if (!data.songs || data.songs.length === 0) {
-            setError('No songs found. Please upload .mp3 files to your R2 bucket.');
             setSongs([]);
         } else {
-            const songsWithArtists = data.songs.map((song: Omit<Song, 'artist'>) => ({
-                ...song,
-                artist: getArtistFromTitle(song.title)
-            }));
+            const songsWithArtists = data.songs
+                .map((song: Omit<Song, 'artist'>) => ({
+                    ...song,
+                    artist: getArtistFromTitle(song.title)
+                }))
+                .filter((song: Song) => song.artist === artistName);
+            
+            if (songsWithArtists.length === 0) {
+                setError(`No songs found for ${artistName}.`);
+            }
             setSongs(songsWithArtists);
         }
       } catch (error: any) {
@@ -65,8 +72,8 @@ export default function MusicPage() {
     };
 
     fetchSongs();
-  }, [toast]);
-  
+  }, [artistName, toast]);
+
   const handlePlayPause = (song: Song) => {
     if (currentSong?.key === song.key) {
       if (isPlaying) {
@@ -78,7 +85,7 @@ export default function MusicPage() {
       setCurrentSong(song);
     }
   };
-  
+
   useEffect(() => {
     if (currentSong && audioRef.current) {
         const audio = audioRef.current;
@@ -95,7 +102,7 @@ export default function MusicPage() {
         });
     }
   }, [currentSong, toast]);
-  
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -115,18 +122,20 @@ export default function MusicPage() {
     }
   }, []);
 
-  const lanaDelReySongs = songs.filter(song => song.artist === 'Lana Del Rey');
-  const otherSongs = songs.filter(song => song.artist !== 'Lana Del Rey');
-
   return (
     <div className="flex min-h-screen flex-col items-center bg-background p-4 pt-20">
       <Card className="w-full max-w-7xl bg-transparent border-none">
-        <CardHeader className="text-center">
+        <CardHeader className="relative text-center">
+            <Link href="/music" className="absolute left-0 top-1/2 -translate-y-1/2">
+                <Button variant="ghost" size="icon">
+                    <ArrowLeft className="h-6 w-6" />
+                </Button>
+            </Link>
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
             <Music className="h-8 w-8 text-primary" />
           </div>
-          <CardTitle className="mt-4 text-3xl font-bold">HariVerse Music</CardTitle>
-          <p className="text-muted-foreground">Your personal collection from Cloudflare R2</p>
+          <CardTitle className="mt-4 text-3xl font-bold">{artistName}</CardTitle>
+          <p className="text-muted-foreground">All songs by {artistName}</p>
         </CardHeader>
         <CardContent>
             {error && (
@@ -134,44 +143,16 @@ export default function MusicPage() {
                     <AlertTriangle className="h-10 w-10 text-destructive" />
                     <h3 className="mt-4 text-lg font-semibold">An Error Occurred</h3>
                     <p className="mt-1 text-sm">{error}</p>
-                    <p className="mt-2 text-xs opacity-70">Please check your .env file, Cloudflare R2 settings, and ensure songs are uploaded.</p>
                 </div>
             )}
             {!error && songs.length > 0 ? (
-                <div className="space-y-12">
-                    {lanaDelReySongs.length > 0 && (
-                        <section>
-                            <h2 className="text-2xl font-bold mb-4">Artists</h2>
-                             <Link href={`/music/artist/${encodeURIComponent('Lana Del Rey')}`}>
-                                <Card className="bg-card/50 cursor-pointer transition-all hover:shadow-primary/20 hover:scale-[1.02]">
-                                    <CardHeader>
-                                        <div className="flex items-center gap-4">
-                                            <Image src="https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg" width={100} height={100} alt="Lana Del Rey" className="rounded-full" data-ai-hint="artist portrait" />
-                                            <div>
-                                                <CardTitle className="text-2xl">Lana Del Rey</CardTitle>
-                                                <p className="text-muted-foreground">Featured Artist</p>
-                                            </div>
-                                        </div>
-                                    </CardHeader>
-                                </Card>
-                            </Link>
-                        </section>
-                    )}
-
-                    {otherSongs.length > 0 && (
-                       <section>
-                            <Separator className="my-12"/>
-                            <h2 className="text-2xl font-bold mb-4">All Songs</h2>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                                {otherSongs.map((song) => (
-                                    <SongCard key={song.key} song={song} isPlaying={isPlaying} currentSong={currentSong} onPlayPause={handlePlayPause} />
-                                ))}
-                            </div>
-                        </section>
-                    )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                    {songs.map((song) => (
+                        <SongCard key={song.key} song={song} isPlaying={isPlaying} currentSong={currentSong} onPlayPause={handlePlayPause} />
+                    ))}
                 </div>
             ) : (
-             !error && <p className="text-center text-muted-foreground">Loading songs...</p>
+             !error && <p className="text-center text-muted-foreground">Loading songs for {artistName}...</p>
             )}
         </CardContent>
       </Card>
@@ -195,7 +176,7 @@ function SongCard({ song, isPlaying, currentSong, onPlayPause }: { song: Song; i
             src={`https://picsum.photos/seed/${song.key}/500/500`} 
             alt={song.title} 
             width={500} 
-            height={500} 
+            height={500}
             data-ai-hint="song album cover"
             className="w-full h-auto object-cover aspect-square"
           />
@@ -215,3 +196,4 @@ function SongCard({ song, isPlaying, currentSong, onPlayPause }: { song: Song; i
         </div>
     );
 }
+
