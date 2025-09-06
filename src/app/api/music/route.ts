@@ -28,8 +28,7 @@ export async function GET() {
     );
 
     const songs = list.Contents?.filter(item => item.Key).map(item => {
-      // Ensure the key is URL-encoded
-      const url = `${publicUrl}/${encodeURIComponent(item.Key!)}`;
+      const url = `${publicUrl}/${item.Key!}`;
       return {
         key: item.Key,
         title: item.Key!.split('/').pop()?.replace(/\.mp3/i, '') || 'Unknown Title',
