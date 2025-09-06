@@ -4,11 +4,10 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Music, PlayCircle, Download, AlertTriangle, PauseCircle, X } from 'lucide-react';
+import { Music, PlayCircle, Download, AlertTriangle, PauseCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
 
 interface Song {
   key: string;
@@ -148,7 +147,7 @@ export default function MusicPage() {
                                     <Card className="bg-card/50 cursor-pointer transition-all hover:shadow-primary/20 hover:scale-[1.02]">
                                         <CardHeader>
                                             <div className="flex items-center gap-4">
-                                                <Image src="https://picsum.photos/seed/lana-del-rey/150/150" width={100} height={100} alt="Lana Del Rey" className="rounded-full" data-ai-hint="artist portrait" />
+                                                <Image src="https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg" width={100} height={100} alt="Lana Del Rey" className="rounded-full" data-ai-hint="artist portrait" />
                                                 <div>
                                                     <CardTitle className="text-2xl">Lana Del Rey</CardTitle>
                                                     <p className="text-muted-foreground">Featured Artist</p>
