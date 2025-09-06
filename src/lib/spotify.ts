@@ -25,7 +25,6 @@ const getAccessToken = async () => {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: 'grant_type=client_credentials',
-    cache: 'no-cache',
   });
 
   if (!response.ok) {
