@@ -328,5 +328,3 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
     </Dialog>
   );
 }
-
-    
