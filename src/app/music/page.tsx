@@ -154,7 +154,6 @@ export default function MusicPage() {
                     </section>
                 )}
                 
-                <h2 className="text-2xl font-bold -mb-8">Your Library</h2>
 
                 {artists.length > 0 && (
                     <section>
