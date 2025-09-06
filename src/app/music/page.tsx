@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
-import { PlayCircle, Download, AlertTriangle, PauseCircle, Music } from 'lucide-react';
+import { PlayCircle, Download, AlertTriangle, PauseCircle, Music, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { Player } from '@/components/music/Player';
@@ -147,11 +147,16 @@ export default function MusicPage() {
                  {recentlyPlayed.length > 0 && (
                     <section>
                         <h2 className="text-2xl font-bold mb-4">Recently Played</h2>
-                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                            {recentlyPlayed.slice(0, 5).map((song) => (
-                                <RecentlyPlayedSongCard key={`recent-${song.key}`} song={song} onPlay={() => handlePlaySong(song, recentlyPlayed)} />
-                            ))}
-                        </div>
+                        <div className="flex flex-col gap-2">
+                           {recentlyPlayed.slice(0, 5).map((song, index) => (
+                               <RecentlyPlayedSongItem
+                                   key={`recent-${song.key}`}
+                                   song={song}
+                                   index={index + 1}
+                                   onPlay={() => handlePlaySong(song, recentlyPlayed)}
+                               />
+                           ))}
+                       </div>
                         <Separator className="my-12"/>
                     </section>
                 )}
@@ -264,27 +269,28 @@ export default function MusicPage() {
   );
 }
 
-function RecentlyPlayedSongCard({ song, onPlay }: { song: Song; onPlay: () => void; }) {
+function RecentlyPlayedSongItem({ song, index, onPlay }: { song: Song; index: number; onPlay: () => void; }) {
     return (
         <div 
             onClick={onPlay} 
-            className="group cursor-pointer"
+            className="group flex items-center p-2 rounded-md hover:bg-white/10 cursor-pointer transition-colors"
         >
-            <div className="relative aspect-square w-full overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105">
-                <Image
-                    src={`https://picsum.photos/seed/${song.key}/200/200`}
-                    alt={song.title}
-                    width={200}
-                    height={200}
-                    className="w-full h-full object-cover"
-                    data-ai-hint="song album cover"
-                />
-                 <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <PlayCircle size={48} className="text-white" />
+            <div className="flex-shrink-0 flex items-center justify-center w-10 text-center">
+                <span className="text-muted-foreground group-hover:hidden">{index}</span>
+                 <div className="text-white hidden group-hover:flex items-center justify-center">
+                    <Play className="h-5 w-5 fill-current" />
                 </div>
             </div>
-            <div className="mt-2">
-                <p className="text-sm font-semibold truncate text-foreground">
+            <Image
+                src={`https://picsum.photos/seed/${song.key}/200/200`}
+                alt={song.title}
+                width={40}
+                height={40}
+                className="rounded-md ml-4 flex-shrink-0"
+                data-ai-hint="song album cover"
+            />
+            <div className="ml-4 flex-grow">
+                <p className="font-semibold truncate text-foreground">
                     {song.title.replace(`${song.artist} - `, '')}
                 </p>
                 <p className="text-xs truncate text-muted-foreground">
