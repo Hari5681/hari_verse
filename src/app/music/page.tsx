@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Music, PlayCircle, Download, AlertTriangle } from 'lucide-react';
+import { Music, PlayCircle, Download, AlertTriangle, PauseCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 
@@ -25,23 +25,26 @@ export default function MusicPage() {
       try {
         setError(null);
         const response = await fetch('/api/music');
-        if (!response.ok) {
-           const errorData = await response.json();
-           throw new Error(errorData.error || 'Failed to fetch songs');
-        }
         const data = await response.json();
+        
+        if (!response.ok) {
+           throw new Error(data.error || 'Failed to fetch songs');
+        }
+
         if (!data.songs || data.songs.length === 0) {
-            setError('No songs found in the bucket. Please upload songs to your R2 bucket.');
+            setError('No songs found. Please upload .mp3 files to your R2 bucket.');
+            setSongs([]);
         } else {
             setSongs(data.songs);
         }
       } catch (error: any) {
-        console.error(error);
-        setError(error.message || 'An unexpected error occurred.');
+        console.error("Fetch songs error:", error);
+        const errorMessage = error.message || 'An unexpected error occurred while fetching songs.';
+        setError(errorMessage);
         toast({
             variant: "destructive",
-            title: "Error fetching music",
-            description: error.message || 'Please check the console for more details.',
+            title: "Error Fetching Music",
+            description: errorMessage,
         })
       }
     };
@@ -49,12 +52,12 @@ export default function MusicPage() {
     fetchSongs();
   }, [toast]);
   
-  const handlePlay = (song: Song) => {
+  const handlePlayPause = (song: Song) => {
     if (currentSong?.key === song.key) {
       if (isPlaying) {
         audioRef.current?.pause();
       } else {
-        audio_current?.play();
+        audioRef.current?.play();
       }
     } else {
       setCurrentSong(song);
@@ -67,10 +70,12 @@ export default function MusicPage() {
         audio.src = currentSong.url;
         audio.play().catch(e => {
             console.error("Error playing audio:", e);
+            const errorMessage = (e as Error).message || "The selected song could not be played.";
+            setError(errorMessage);
             toast({
                 variant: "destructive",
                 title: "Playback Error",
-                description: "The selected song could not be played.",
+                description: errorMessage,
             });
         });
     }
@@ -82,13 +87,16 @@ export default function MusicPage() {
     
     const handlePlayEvent = () => setIsPlaying(true);
     const handlePauseEvent = () => setIsPlaying(false);
+    const handleEndedEvent = () => setIsPlaying(false);
     
     audio.addEventListener('play', handlePlayEvent);
     audio.addEventListener('pause', handlePauseEvent);
+    audio.addEventListener('ended', handleEndedEvent);
     
     return () => {
       audio.removeEventListener('play', handlePlayEvent);
       audio.removeEventListener('pause', handlePauseEvent);
+      audio.removeEventListener('ended', handleEndedEvent);
     }
   }, []);
 
@@ -109,7 +117,7 @@ export default function MusicPage() {
                     <AlertTriangle className="h-10 w-10 text-destructive" />
                     <h3 className="mt-4 text-lg font-semibold">An Error Occurred</h3>
                     <p className="mt-1 text-sm">{error}</p>
-                    <p className="mt-2 text-xs opacity-70">Please check your .env file and Cloudflare R2 settings.</p>
+                    <p className="mt-2 text-xs opacity-70">Please check your .env file, Cloudflare R2 settings, and ensure songs are uploaded.</p>
                 </div>
             )}
             {!error && songs.length > 0 ? (
@@ -117,8 +125,8 @@ export default function MusicPage() {
                 <div key={song.key} className="flex items-center justify-between rounded-lg bg-secondary/30 p-4 transition-all hover:bg-secondary/60">
                   <p className="font-semibold">{song.title}</p>
                   <div className="flex items-center gap-4">
-                    <button onClick={() => handlePlay(song)} className="text-primary hover:text-primary/80">
-                      <PlayCircle size={28} />
+                    <button onClick={() => handlePlayPause(song)} className="text-primary hover:text-primary/80">
+                      {isPlaying && currentSong?.key === song.key ? <PauseCircle size={28} /> : <PlayCircle size={28} />}
                     </button>
                     <a href={song.url} download={song.title} className="text-primary hover:text-primary/80">
                       <Download size={24} />
