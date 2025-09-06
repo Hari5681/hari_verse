@@ -4,6 +4,7 @@
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { User, UserRound } from 'lucide-react';
+import AnimatedText from '../common/AnimatedText';
 
 interface GenderPromptViewProps {
   onSelect: (gender: 'male' | 'female') => void;
@@ -17,11 +18,9 @@ const GenderPromptView = ({ onSelect }: GenderPromptViewProps) => {
       transition={{ duration: 0.7, type: 'spring' }}
       className="flex flex-col items-center justify-center gap-8 text-center"
     >
-      <h1 className="text-3xl sm:text-4xl font-headline text-primary-foreground">
-        Welcome to HariVerse ✨
-      </h1>
-       <p className="text-lg font-headline text-muted-foreground mt-2">
-          A fun quiz made just for you.
+      <AnimatedText text="Please select your gender" className="text-3xl sm:text-4xl font-headline text-primary-foreground" />
+       <p className="text-lg font-headline text-muted-foreground -mt-4">
+          This helps tailor the story for you.
         </p>
       <div className="flex gap-4 mt-4">
         <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
@@ -40,5 +39,3 @@ const GenderPromptView = ({ onSelect }: GenderPromptViewProps) => {
 };
 
 export default GenderPromptView;
-
-    

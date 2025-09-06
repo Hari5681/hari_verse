@@ -15,7 +15,7 @@ interface QuestionViewProps {
 const questionVariants = {
   hidden: { opacity: 0, y: -20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, type: 'spring' } },
-  exit: { opacity: 0, transition: { duration: 0.3 } },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.3 } },
 };
 
 const optionsContainerVariants = {
@@ -40,6 +40,7 @@ const QuestionView = ({ question, options, onAnswer }: QuestionViewProps) => {
 
   const handleSelectAnswer = (answer: string) => {
     setIsAnswered(true);
+    // Short delay to show feedback before advancing
     setTimeout(() => onAnswer(answer), 300);
   }
 
@@ -58,12 +59,11 @@ const QuestionView = ({ question, options, onAnswer }: QuestionViewProps) => {
       />
       
       <AnimatePresence>
-        {showOptions && !isAnswered && (
+        {showOptions && (
           <motion.div 
             className="flex flex-col gap-4 mt-4 w-full items-center"
             initial="hidden"
-            animate="visible"
-            exit={{ opacity: 0, y: 10 }}
+            animate={isAnswered ? "hidden" : "visible"}
             variants={optionsContainerVariants}
           >
             {options.map((option, index) => (
@@ -79,6 +79,7 @@ const QuestionView = ({ question, options, onAnswer }: QuestionViewProps) => {
                   size="lg" 
                   variant="secondary" 
                   className="font-headline w-full h-auto py-3 whitespace-normal overflow-hidden"
+                  disabled={isAnswered}
                 >
                    {option}
                    <motion.span

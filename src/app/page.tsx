@@ -19,24 +19,18 @@ import MaleEndingView from '@/components/views/MaleEndingView';
 import BrokenStoryView from '@/components/views/BrokenStoryView';
 import CommentPromptView from '@/components/views/CommentPromptView';
 import FinalThankYouView from '@/components/views/FinalThankYouView';
+import QuizSelectionView from '@/components/views/QuizSelectionView';
+import ResultsView from '@/components/views/ResultsView';
 
 
 type Step = 
+  | 'quiz-selection'
   | 'gender-prompt' 
   | 'name-prompt' 
   | 'intro' 
-  | 'q1' 
-  | 'reply1' 
-  | 'q2' 
-  | 'reply2' 
-  | 'q3' 
-  | 'reply3' 
-  | 'q4' 
-  | 'reply4' 
-  | 'q5'
-  | 'reply5' 
-  | 'q6'
-  | 'reply6'
+  | 'question'
+  | 'reply'
+  | 'results'
   | 'comment-prompt'
   | 'pre-storybook' 
   | 'storybook'
@@ -44,8 +38,10 @@ type Step =
   | 'male-ending'
   | 'final-thank-you';
 
+type QuizType = 'survey' | 'funny' | 'gk';
+
 const questions = {
-  female: [
+  survey_female: [
     {
       id: 'q1',
       text: "Do you think every person has only one true love, or maybe it’s still waiting for us?",
@@ -109,7 +105,7 @@ const questions = {
       }
     }
   ],
-  male: [
+  survey_male: [
     {
       id: 'q1',
       text: "What’s more painful?",
@@ -142,17 +138,46 @@ const questions = {
         "⏳ Turn back time": "To fix mistakes or re-live the good times? 🤔"
       }
     }
+  ],
+  funny: [
+    { id: 'q1', text: "Why don't scientists trust atoms?", options: ["They're always lying", "They make up everything", "They have too much energy"], correctAnswer: "They make up everything" },
+    { id: 'q2', text: "What do you call a fake noodle?", options: ["An Impasta", "A Faux-silli", "A Spaghetto"], correctAnswer: "An Impasta" },
+    { id: 'q3', text: "Why did the scarecrow win an award?", options: ["He was outstanding in his field", "He was the best dressed", "He had a lot of straw-power"], correctAnswer: "He was outstanding in his field" },
+  ],
+  gk: [
+    { id: 'q1', text: "What is the capital of Japan?", options: ["Kyoto", "Osaka", "Tokyo"], correctAnswer: "Tokyo" },
+    { id: 'q2', text: "How many planets are in our solar system?", options: ["7", "8", "9"], correctAnswer: "8" },
+    { id: 'q3', text: "What is the largest mammal in the world?", options: ["Elephant", "Blue Whale", "Giraffe"], correctAnswer: "Blue Whale" },
   ]
 };
 
 export default function Home() {
-  const [step, setStep] = useState<Step>('gender-prompt');
+  const [step, setStep] = useState<Step>('quiz-selection');
+  const [quizType, setQuizType] = useState<QuizType | null>(null);
   const [gender, setGender] = useState<'male' | 'female' | null>(null);
   const [userName, setUserName] = useState('');
   const [answers, setAnswers] = useState<string[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [score, setScore] = useState(0);
   const [currentReply, setCurrentReply] = useState('');
   const [playMusic, setPlayMusic] = useState(false);
   const [, startTransition] = useTransition();
+
+  const getQuestionSet = () => {
+    if (quizType === 'survey') {
+      return gender === 'female' ? questions.survey_female : questions.survey_male;
+    }
+    return questions[quizType!] || [];
+  }
+
+  const handleQuizSelect = (type: QuizType) => {
+    setQuizType(type);
+    if (type === 'survey') {
+      setStep('gender-prompt');
+    } else {
+      setStep('name-prompt');
+    }
+  };
 
   const handleGenderSelect = (selectedGender: 'male' | 'female') => {
     setGender(selectedGender);
@@ -172,34 +197,46 @@ export default function Home() {
 
   const handleStart = () => {
     setPlayMusic(true);
-    setStep('q1');
+    setStep('question');
   };
 
-  const handleAnswer = (answer: string, questionIndex: number) => {
+  const handleAnswer = (answer: string) => {
     const newAnswers = [...answers, answer];
     setAnswers(newAnswers);
-    
-    // @ts-ignore
-    const questionText = questions[gender!][questionIndex].text;
-    // @ts-ignore
-    const replyText = questions[gender!][questionIndex].replies[answer];
-    setCurrentReply(replyText);
 
-    const data = { name: userName, gender, question: questionText, answer };
+    const questionSet = getQuestionSet();
+    const currentQuestion = questionSet[currentQuestionIndex];
+
+    const data = { name: userName, gender, question: currentQuestion.text, answer };
     startTransition(() => saveResponse(data));
     sendResponseEmail(data);
-    
-    const nextStep = `reply${questionIndex + 1}` as Step;
-    setStep(nextStep);
+
+    if (quizType === 'survey') {
+      // @ts-ignore
+      const replyText = currentQuestion.replies[answer];
+      setCurrentReply(replyText);
+      setStep('reply');
+    } else {
+      // @ts-ignore
+      if (answer === currentQuestion.correctAnswer) {
+        setScore(prev => prev + 1);
+      }
+      if (currentQuestionIndex < questionSet.length - 1) {
+        setCurrentQuestionIndex(prev => prev + 1);
+        // Stays on 'question' step, but QuestionView will get new props
+      } else {
+        setStep('results');
+      }
+    }
   };
 
-  const handleReplyContinue = (questionIndex: number) => {
-    // @ts-ignore
-    if (questionIndex < questions[gender!].length - 1) {
-      const nextStep = `q${questionIndex + 2}` as Step;
-      setStep(nextStep);
+  const handleReplyContinue = () => {
+    const questionSet = getQuestionSet();
+    if (currentQuestionIndex < questionSet.length - 1) {
+      setCurrentQuestionIndex(prev => prev + 1);
+      setStep('question');
     } else {
-        setStep('comment-prompt');
+      setStep('comment-prompt');
     }
   }
 
@@ -238,43 +275,44 @@ export default function Home() {
     setStep('final-thank-you');
   };
 
+  const handleRestart = () => {
+    setStep('quiz-selection');
+    setQuizType(null);
+    setGender(null);
+    setUserName('');
+    setAnswers([]);
+    setCurrentQuestionIndex(0);
+    setScore(0);
+    setCurrentReply('');
+    setPlayMusic(false);
+  }
+
 
   const renderStep = () => {
-    if (!gender) {
-      return <GenderPromptView onSelect={handleGenderSelect} />;
-    }
-    
-    const currentQuestions = questions[gender] || [];
+    const questionSet = getQuestionSet();
+    const currentQuestion = questionSet ? questionSet[currentQuestionIndex] : null;
 
     switch (step) {
+      case 'quiz-selection':
+        return <QuizSelectionView onSelect={handleQuizSelect} />;
+      case 'gender-prompt':
+        return <GenderPromptView onSelect={handleGenderSelect} />;
       case 'name-prompt':
         return <NamePromptView onSubmit={handleNameSubmit} />;
       case 'intro':
         return <IntroView onStart={handleStart} name={userName} />;
-      case 'q1':
-        return <QuestionView question={currentQuestions[0].text} options={currentQuestions[0].options} onAnswer={(answer) => handleAnswer(answer, 0)} />;
-      case 'reply1':
-        return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(0)} />
-      case 'q2':
-        return <QuestionView question={currentQuestions[1].text} options={currentQuestions[1].options} onAnswer={(answer) => handleAnswer(answer, 1)} />;
-      case 'reply2':
-        return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(1)} />
-      case 'q3':
-        return <QuestionView question={currentQuestions[2].text} options={currentQuestions[2].options} onAnswer={(answer) => handleAnswer(answer, 2)} />;
-      case 'reply3':
-         return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(2)} />
-      case 'q4':
-        return <QuestionView question={currentQuestions[3].text} options={currentQuestions[3].options} onAnswer={(answer) => handleAnswer(answer, 3)} />;
-      case 'reply4':
-        return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(3)} />
-      case 'q5':
-        return <QuestionView question={currentQuestions[4].text} options={currentQuestions[4].options} onAnswer={(answer) => handleAnswer(answer, 4)} />;
-      case 'reply5':
-        return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(4)} />
-      case 'q6':
-        return <QuestionView question={currentQuestions[5].text} options={currentQuestions[5].options} onAnswer={(answer) => handleAnswer(answer, 5)} />;
-      case 'reply6':
-        return <ReplyView reply={currentReply} onContinue={() => handleReplyContinue(5)} />
+      case 'question':
+        if (!currentQuestion) return null;
+        return <QuestionView 
+                  key={currentQuestionIndex} // Force re-render on new question
+                  question={currentQuestion.text} 
+                  options={currentQuestion.options} 
+                  onAnswer={handleAnswer} 
+                />;
+      case 'reply':
+        return <ReplyView reply={currentReply} onContinue={handleReplyContinue} />
+      case 'results':
+        return <ResultsView score={score} total={questionSet.length} onRestart={handleRestart} />;
       case 'comment-prompt':
         return <CommentPromptView onSubmit={handleCommentSubmit} />;
       case 'pre-storybook':
@@ -288,7 +326,7 @@ export default function Home() {
       case 'final-thank-you':
         return <FinalThankYouView />;
       default:
-        return <GenderPromptView onSelect={handleGenderSelect} />;
+        return <QuizSelectionView onSelect={handleQuizSelect} />;
     }
   };
 
@@ -306,3 +344,4 @@ export default function Home() {
     </>
   );
 }
+
