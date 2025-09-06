@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { saveResponse } from '../firestore-test/actions';
 
@@ -12,7 +12,6 @@ import QuestionView from '@/components/views/QuestionView';
 import StorybookView from '@/components/views/StorybookView';
 import ReplyView from '@/components/views/ReplyView';
 import PreStorybookView from '@/components/views/PreStorybookView';
-import NamePromptView from '@/components/views/NamePromptView';
 import GenderPromptView from '@/components/views/GenderPromptView';
 import MaleEndingView from '@/components/views/MaleEndingView';
 import BrokenStoryView from '@/components/views/BrokenStoryView';
@@ -20,14 +19,11 @@ import CommentPromptView from '@/components/views/CommentPromptView';
 import FinalThankYouView from '@/components/views/FinalThankYouView';
 import QuizSelectionView from '@/components/views/QuizSelectionView';
 import ResultsView from '@/components/views/ResultsView';
-import AdventureView from '@/components/views/AdventureView';
-import ComingSoonView from '@/components/views/ComingSoonView';
+import { useRouter } from 'next/navigation';
 
 
 type Step = 
   | 'gender-prompt' 
-  | 'name-prompt'
-  | 'adventure-selection'
   | 'quiz-selection'
   | 'intro' 
   | 'question'
@@ -38,11 +34,9 @@ type Step =
   | 'storybook'
   | 'broken-story'
   | 'male-ending'
-  | 'final-thank-you'
-  | 'coming-soon';
+  | 'final-thank-you';
 
 type QuizType = 'survey' | 'funny' | 'gk';
-type AdventureType = 'quiz' | 'music' | 'movies' | 'ai-tools';
 
 const questions = {
   survey_female: [
@@ -156,8 +150,8 @@ const questions = {
 };
 
 export default function QuizPage() {
-  const [step, setStep] = useState<Step>('name-prompt');
-  const [adventureType, setAdventureType] = useState<AdventureType | null>(null);
+  const router = useRouter();
+  const [step, setStep] = useState<Step>('gender-prompt');
   const [quizType, setQuizType] = useState<QuizType | null>(null);
   const [gender, setGender] = useState<'male' | 'female' | null>(null);
   const [userName, setUserName] = useState('');
@@ -167,6 +161,17 @@ export default function QuizPage() {
   const [currentReply, setCurrentReply] = useState('');
   const [playMusic, setPlayMusic] = useState(false);
   const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    // On page load, get the user's name from localStorage.
+    const savedName = localStorage.getItem('userName');
+    if (savedName) {
+      setUserName(savedName);
+    } else {
+      // If there's no name, they shouldn't be on this page. Redirect to home.
+      router.push('/');
+    }
+  }, [router]);
 
   const getQuestionSet = () => {
     if (!quizType) return [];
@@ -178,25 +183,9 @@ export default function QuizPage() {
 
   const handleGenderSelect = (selectedGender: 'male' | 'female') => {
     setGender(selectedGender);
-    setStep('name-prompt');
-    const data = { name: 'N/A', gender: selectedGender, answer: `Selected gender: ${selectedGender}` };
-    startTransition(() => saveResponse(data));
-  }
-
-  const handleNameSubmit = (name: string) => {
-    setUserName(name);
     setStep('quiz-selection');
-    const data = { name, gender, answer: 'Submitted Name' };
+    const data = { name: userName, gender: selectedGender, answer: `Selected gender: ${selectedGender}` };
     startTransition(() => saveResponse(data));
-  };
-
-  const handleAdventureSelect = (type: AdventureType) => {
-    setAdventureType(type);
-    if (type === 'quiz') {
-      setStep('quiz-selection');
-    } else {
-      setStep('coming-soon');
-    }
   }
   
   const handleQuizSelect = (type: QuizType) => {
@@ -214,6 +203,7 @@ export default function QuizPage() {
     setStep('question');
   };
 
+_DBL_QUOTE_
   const handleAnswer = (answer: string) => {
     const newAnswers = [...answers, answer];
     setAnswers(newAnswers);
@@ -236,7 +226,6 @@ export default function QuizPage() {
       }
       if (currentQuestionIndex < questionSet.length - 1) {
         setCurrentQuestionIndex(prev => prev + 1);
-        // Stays on 'question' step for a re-render
       } else {
         setStep('results');
       }
@@ -249,7 +238,6 @@ export default function QuizPage() {
       setCurrentQuestionIndex(prev => prev + 1);
       setStep('question');
     } else {
-      // End of survey
       setStep('comment-prompt');
     }
   }
@@ -257,19 +245,11 @@ export default function QuizPage() {
   const handleCommentSubmit = (comment: string) => {
     const data = { name: userName, gender, comment, answer: 'User left a comment.' };
     startTransition(() => saveResponse(data));
-
-    // If coming from results, go to thank you. Otherwise, pre-storybook.
-    if(quizType !== 'survey') {
-      setStep('final-thank-you');
-    } else {
-      setStep('pre-storybook');
-    }
+    setStep('final-thank-you');
   }
 
   const handleRestart = () => {
-    // Reset to adventure selection, keeping name and gender
     setStep('quiz-selection');
-    setAdventureType(null);
     setQuizType(null);
     setAnswers([]);
     setCurrentQuestionIndex(0);
@@ -309,9 +289,12 @@ export default function QuizPage() {
     const questionSet = getQuestionSet();
     const currentQuestion = questionSet ? questionSet[currentQuestionIndex] : null;
 
+    // Don't render anything until the user's name is loaded
+    if (!userName) return null;
+
     switch (step) {
-      case 'name-prompt':
-        return <NamePromptView onSubmit={handleNameSubmit} />;
+      case 'gender-prompt':
+        return <GenderPromptView onSelect={handleGenderSelect} />;
       case 'quiz-selection':
         return <QuizSelectionView onSelect={handleQuizSelect} />;
       case 'intro':
@@ -319,7 +302,7 @@ export default function QuizPage() {
       case 'question':
         if (!currentQuestion) return null;
         return <QuestionView 
-                  key={`${quizType}-${currentQuestionIndex}`} // Force re-render on new question/quiz
+                  key={`${quizType}-${currentQuestionIndex}`}
                   question={currentQuestion.text} 
                   options={currentQuestion.options} 
                   onAnswer={handleAnswer} 
@@ -344,11 +327,9 @@ export default function QuizPage() {
       case 'male-ending':
         return <MaleEndingView onContinue={handleMaleEndingContinue} />;
       case 'final-thank-you':
-        return <FinalThankYouView onRestart={handleRestart} />;
-       case 'coming-soon':
-        return <ComingSoonView onBack={handleRestart} />;
+        return <FinalThankYouView onRestart={() => router.push('/')} />;
       default:
-        return <NamePromptView onSubmit={handleNameSubmit} />;
+        return <GenderPromptView onSelect={handleGenderSelect} />;
     }
   };
 
