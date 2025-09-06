@@ -69,7 +69,7 @@ export interface Playlist {
 }
 
 export const getModules = async () => {
-  const response = await fetch(`${API_BASE}/modules?language=hindi,english`);
+  const response = await fetch(`${API_BASE}/modules?language=hindi,english`, { cache: 'no-store' });
   if (!response.ok) {
     throw new Error('Failed to fetch modules');
   }
@@ -78,7 +78,7 @@ export const getModules = async () => {
 };
 
 export const searchSongs = async (query: string) => {
-    const response = await fetch(`${API_BASE}/search/songs?query=${encodeURIComponent(query)}&limit=10`);
+    const response = await fetch(`${API_BASE}/search/songs?query=${encodeURIComponent(query)}&limit=10`, { cache: 'no-store' });
     if (!response.ok) {
         throw new Error('Failed to search songs');
     }
@@ -87,7 +87,7 @@ export const searchSongs = async (query: string) => {
 };
 
 export const getAlbumDetails = async (albumId: string) => {
-    const response = await fetch(`${API_BASE}/albums?id=${albumId}`);
+    const response = await fetch(`${API_BASE}/albums?id=${albumId}`, { cache: 'no-store' });
     if (!response.ok) {
         throw new Error('Failed to fetch album details');
     }
@@ -96,7 +96,7 @@ export const getAlbumDetails = async (albumId: string) => {
 };
 
 export const getPlaylistDetails = async (playlistId: string) => {
-    const response = await fetch(`${API_BASE}/playlists?id=${playlistId}`);
+    const response = await fetch(`${API_BASE}/playlists?id=${playlistId}`, { cache: 'no-store' });
      if (!response.ok) {
         throw new Error('Failed to fetch playlist details');
     }
