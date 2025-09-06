@@ -1,6 +1,8 @@
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Music, PlayCircle, Download, AlertTriangle, PauseCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -102,7 +104,7 @@ export default function MusicPage() {
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-background p-4 pt-20">
-      <Card className="w-full max-w-5xl bg-background/50 backdrop-blur-sm">
+      <Card className="w-full max-w-7xl bg-transparent border-none">
         <CardHeader className="text-center">
           <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
             <Music className="h-8 w-8 text-primary" />
@@ -120,21 +122,31 @@ export default function MusicPage() {
                 </div>
             )}
             {!error && songs.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                     {songs.map((song) => (
-                        <Card key={song.key} className="group flex flex-col justify-between bg-secondary/30 transition-all hover:bg-secondary/60">
-                             <CardHeader className="flex-row items-center justify-between p-4">
-                                <p className="font-semibold truncate flex-1">{song.title}</p>
-                                <a href={song.url} download={song.title} className="text-primary hover:text-primary/80 opacity-0 group-hover:opacity-100 transition-opacity">
-                                  <Download size={20} />
-                                </a>
-                            </CardHeader>
-                            <CardContent className="p-4 pt-0 flex items-center justify-center">
-                                <button onClick={() => handlePlayPause(song)} className="text-primary hover:text-primary/80">
-                                    {isPlaying && currentSong?.key === song.key ? <PauseCircle size={48} /> : <PlayCircle size={48} />}
-                                </button>
-                            </CardContent>
-                        </Card>
+                        <div key={song.key} className="group relative rounded-2xl overflow-hidden shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-primary/20">
+                          <Image 
+                            src={`https://picsum.photos/seed/${song.key}/500/500`} 
+                            alt={song.title} 
+                            width={500} 
+                            height={500} 
+                            data-ai-hint="song album cover"
+                            className="w-full h-auto object-cover aspect-square"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                          <div className="absolute inset-0 flex flex-col justify-end p-4">
+                              <h3 className="font-bold text-lg text-white truncate">{song.title}</h3>
+                              <p className="text-sm text-gray-300">Hari's Mix</p>
+                          </div>
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <button onClick={() => handlePlayPause(song)} className="text-white transform transition-transform duration-300 group-hover:scale-110">
+                                  {isPlaying && currentSong?.key === song.key ? <PauseCircle size={64} /> : <PlayCircle size={64} />}
+                              </button>
+                          </div>
+                           <a href={song.url} download={song.title} className="absolute top-2 right-2 text-white/70 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Download size={20} />
+                           </a>
+                        </div>
                     ))}
                 </div>
             ) : (
