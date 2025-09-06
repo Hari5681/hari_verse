@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Button } from '../ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
 import { Menu, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -57,11 +57,14 @@ const Header = () => {
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="right" className="w-full max-w-xs bg-background/80 backdrop-blur-xl">
-                            <div className="flex flex-col items-start gap-4 p-4">
-                                <Link href="/" className="flex items-center gap-2 mb-4" onClick={closeMobileMenu}>
+                            <SheetHeader className="p-4 border-b border-border/50">
+                                <SheetTitle className="sr-only">Mobile Menu</SheetTitle>
+                                <Link href="/" className="flex items-center gap-2" onClick={closeMobileMenu}>
                                     <Sparkles className="w-6 h-6 text-primary" />
                                     <span className="text-xl font-bold font-headline text-primary-foreground">HariVerse</span>
                                 </Link>
+                            </SheetHeader>
+                            <div className="flex flex-col items-start gap-4 p-4">
                                 {navItems.map((item) => (
                                     <Button key={item.href} asChild variant="link" className="w-full justify-start text-lg">
                                         <Link href={item.href} onClick={closeMobileMenu} className={cn(
