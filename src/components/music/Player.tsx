@@ -85,7 +85,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
       if (isPlaying) {
         audioRef.current.pause();
       } else {
-        audioRef.current.play();
+        audio.current.play();
       }
     }
   };
@@ -98,21 +98,24 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
   };
 
   const imageUrl = `https://picsum.photos/seed/${song.key}/500/500`;
-
   const songTitle = song.title.replace(`${song.artist} - `, '');
+
+  // A simple check to see if the text is long. In a real app, you might measure it.
+  const isTitleLong = songTitle.length > 25;
+
 
   return (
     <Dialog>
-      <div className="fixed bottom-0 left-0 right-0 z-50 animate-fade-in-up">
+      <div className="fixed bottom-0 left-0 right-0 z-50">
         <DialogTrigger asChild>
-          <div className="h-16 cursor-pointer border-t border-border/50 bg-background/80 px-4 backdrop-blur-lg md:h-20">
+          <div className="h-16 cursor-pointer border-t border-border/50 bg-background/80 px-4 backdrop-blur-lg md:h-20 animate-fade-in-up">
             <div className="container mx-auto flex h-full items-center justify-between gap-4">
-              <div className="flex items-center gap-3 overflow-hidden">
+              <div className="flex items-center gap-3 overflow-hidden md:w-1/4">
                 <Image
                   src={imageUrl}
                   alt={song.title}
-                  width={40}
-                  height={40}
+                  width={48}
+                  height={48}
                   className="rounded-md flex-shrink-0 md:w-12 md:h-12"
                   data-ai-hint="song album cover"
                 />
@@ -124,9 +127,13 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                 </div>
               </div>
 
-              <div className="flex items-center justify-end">
+              <div className="hidden md:flex flex-1 flex-col items-center gap-2">
+                 {/* Desktop player controls can go here if needed in future */}
+              </div>
+
+              <div className="flex items-center justify-end md:w-1/4">
                 <div className="flex items-center gap-2 sm:gap-4">
-                   <button
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onPrev();
@@ -170,28 +177,32 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
             <DialogClose>
               <ChevronDown className="h-6 w-6 opacity-70" />
             </DialogClose>
-            <p className="px-4 font-semibold truncate">{songTitle}</p>
+            <div className="relative w-full max-w-xs overflow-hidden">
+              <p className={`px-4 font-semibold text-center whitespace-nowrap ${isTitleLong ? 'animate-marquee' : 'truncate'}`}>
+                {songTitle}
+              </p>
+            </div>
             <div className="w-6" /> {/* Placeholder for spacing */}
           </header>
 
-          <main className="flex flex-1 flex-col items-center justify-center gap-4 text-center sm:gap-8 px-4">
-            <Image
-              src={imageUrl}
-              alt={song.title}
-              width={500}
-              height={500}
-              className="aspect-square w-full max-w-[70vw] rounded-lg shadow-2xl sm:max-w-md mt-4 sm:mt-0"
-              data-ai-hint="song album cover"
-            />
-            <div className="w-full max-w-xs sm:max-w-md">
-              <div className="flex items-center justify-between mt-2">
-                <div className="text-left">
+          <main className="flex flex-1 flex-col items-center justify-start gap-4 text-center sm:gap-8 px-4 pt-8 sm:pt-12">
+            <div className="w-full max-w-xs sm:max-w-md animate-fade-in-up">
+              <Image
+                src={imageUrl}
+                alt={song.title}
+                width={500}
+                height={500}
+                className="aspect-square w-full max-w-[65vw] sm:max-w-md mx-auto rounded-lg shadow-2xl"
+                data-ai-hint="song album cover"
+              />
+              <div className="flex items-center justify-between mt-6 sm:mt-8">
+                <div className="text-left flex-1 overflow-hidden">
                   <h2 className="text-lg font-bold sm:text-2xl truncate">
                     {songTitle}
                   </h2>
                   <p className="text-sm text-muted-foreground truncate">{song.artist}</p>
                 </div>
-                <button onClick={() => setIsLiked(!isLiked)}>
+                <button onClick={() => setIsLiked(!isLiked)} className="ml-4 flex-shrink-0">
                   <Heart
                     className={`h-5 w-5 sm:h-6 sm:w-6 transition-all ${
                       isLiked
