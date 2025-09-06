@@ -48,6 +48,8 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const [isShuffle, setIsShuffle] = useState(false);
+  const [isRepeat, setIsRepeat] = useState(false);
 
   useEffect(() => {
     if (audioRef.current && song.url) {
@@ -58,6 +60,18 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
         .catch((e) => console.error('Audio play failed:', e));
     }
   }, [song, audioRef]);
+  
+  const handleEnded = () => {
+    if (isRepeat) {
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current.play();
+      }
+    } else {
+      onNext();
+    }
+  };
+
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -72,14 +86,16 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
     audio.addEventListener('loadedmetadata', updateDuration);
     audio.addEventListener('play', handlePlay);
     audio.addEventListener('pause', handlePause);
+    audio.addEventListener('ended', handleEnded);
 
     return () => {
       audio.removeEventListener('timeupdate', updateProgress);
       audio.removeEventListener('loadedmetadata', updateDuration);
       audio.removeEventListener('play', handlePlay);
       audio.removeEventListener('pause', handlePause);
+      audio.removeEventListener('ended', handleEnded);
     };
-  }, [audioRef]);
+  }, [audioRef, onNext, isRepeat]);
 
   const togglePlay = () => {
     if (audioRef.current) {
@@ -97,11 +113,20 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
       setProgress(value[0]);
     }
   };
+  
+  const handleShuffle = () => {
+    setIsShuffle(!isShuffle);
+    if (!isShuffle && isRepeat) setIsRepeat(false);
+  };
+  
+  const handleRepeat = () => {
+      setIsRepeat(!isRepeat);
+      if (!isRepeat && isShuffle) setIsShuffle(false);
+  };
 
   const imageUrl = `https://picsum.photos/seed/${song.key}/500/500`;
   const songTitle = song.title.replace(`${song.artist} - `, '');
 
-  // A simple check to see if the text is long. In a real app, you might measure it.
   const isTitleLong = songTitle.length > 25;
   const isMiniTitleLong = songTitle.length > 20;
 
@@ -204,8 +229,8 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
       </div>
 
       <DialogContent className="h-full max-h-full w-full max-w-full !rounded-none !border-none bg-gradient-to-b from-primary/30 to-background p-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-full data-[state=open]:slide-in-from-bottom-full">
-        <div className="flex h-full flex-col p-4 pt-8 sm:p-6 sm:pt-12">
-          <header className="flex items-center justify-between">
+        <div className="flex h-full flex-col p-4 pt-8 sm:p-6">
+          <header className="flex items-center justify-between flex-shrink-0">
             <DialogClose>
               <ChevronDown className="h-6 w-6 opacity-70" />
             </DialogClose>
@@ -214,23 +239,23 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                 {songTitle}
               </p>
             </div>
-            <div className="w-6" /> {/* Placeholder for spacing */}
+            <div className="w-6" /> 
           </header>
 
-          <main className="flex flex-1 flex-col items-center justify-start gap-4 text-center sm:gap-8 px-4 pt-8 sm:pt-12 animate-fade-in-up">
+          <main className="flex flex-1 flex-col items-center justify-center gap-4 text-center px-4 animate-fade-in-up">
             <div className="w-full max-w-xs sm:max-w-md">
               <Image
                 src={imageUrl}
                 alt={song.title}
                 width={500}
                 height={500}
-                className="aspect-square w-full max-w-[65vw] sm:max-w-md mx-auto rounded-lg shadow-2xl transition-transform duration-500 group-data-[state=open]:scale-100 animate-fade-in-up"
+                className="aspect-square w-full max-w-[70vw] sm:max-w-md mx-auto rounded-lg shadow-2xl transition-transform duration-500 group-data-[state=open]:scale-100 animate-fade-in-up"
                 data-ai-hint="song album cover"
                 style={{ animationDelay: '200ms' }}
               />
               <div className="flex items-center justify-between mt-6 sm:mt-8 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
                 <div className="text-left flex-1 overflow-hidden">
-                  <h2 className="text-lg font-bold sm:text-2xl truncate">
+                  <h2 className="text-xl font-bold sm:text-2xl truncate">
                     {songTitle}
                   </h2>
                   <p className="text-sm text-muted-foreground truncate">{song.artist}</p>
@@ -260,33 +285,39 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center justify-between animate-fade-in-up" style={{ animationDelay: '500ms' }}>
-                <button className="text-muted-foreground transition-colors hover:text-foreground">
+              <div className="mt-4 flex items-center justify-around animate-fade-in-up" style={{ animationDelay: '500ms' }}>
+                <button 
+                  onClick={handleShuffle}
+                  className={cn("text-muted-foreground transition-colors hover:text-foreground", {"text-primary": isShuffle})}
+                >
                   <Shuffle className="h-5 w-5" />
                 </button>
                 <button
                   onClick={onPrev}
                   className="text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  <SkipBack size={28} />
+                  <SkipBack size={32} />
                 </button>
                 <button
                   onClick={togglePlay}
-                  className="rounded-full bg-white p-3 text-background sm:p-4"
+                  className="rounded-full bg-white p-4 text-background"
                 >
                   {isPlaying ? (
-                    <PauseIcon className="h-6 w-6 sm:h-8 sm:w-8" />
+                    <PauseIcon className="h-8 w-8" />
                   ) : (
-                    <PlayIcon className="h-6 w-6 sm:h-8 sm:w-8" />
+                    <PlayIcon className="h-8 w-8" />
                   )}
                 </button>
                 <button
                   onClick={onNext}
                   className="text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  <SkipForward size={28} />
+                  <SkipForward size={32} />
                 </button>
-                <button className="text-muted-foreground transition-colors hover:text-foreground">
+                <button 
+                  onClick={handleRepeat}
+                  className={cn("text-muted-foreground transition-colors hover:text-foreground", {"text-primary": isRepeat})}
+                >
                   <Repeat className="h-5 w-5" />
                 </button>
               </div>
@@ -297,3 +328,5 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
     </Dialog>
   );
 }
+
+    
