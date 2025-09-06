@@ -183,7 +183,7 @@ function SongCard({ song, currentSong, onPlay }: { song: Song; currentSong: Song
                   {isPlaying ? <PauseCircle size={64} /> : <PlayCircle size={64} />}
               </button>
           </div>
-           <a href={song.url} download={song.title} className="absolute top-2 right-2 text-white/70 opacity-0 transition-opacity hover:text-white">
+           <a href={song.url} download={song.title} className="absolute top-2 right-2 text-white/70 opacity-0 transition-opacity hover:text-white group-hover:opacity-100">
                 <Download size={20} />
            </a>
         </div>
