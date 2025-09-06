@@ -124,7 +124,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                       e.stopPropagation();
                       onPrev();
                     }}
-                    className="hidden sm:block text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-muted-foreground transition-colors hover:text-foreground"
                   >
                     <SkipBack size={20}/>
                   </button>
