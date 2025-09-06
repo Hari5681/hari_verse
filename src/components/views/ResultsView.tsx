@@ -6,15 +6,16 @@ import AnimatedText from '../common/AnimatedText';
 import Lottie from 'lottie-react';
 import { useEffect, useState } from 'react';
 import { Button } from '../ui/button';
-import { Award, RotateCw } from 'lucide-react';
+import { Award, Instagram, Linkedin, Link as LinkIcon, MessageSquareHeart, RotateCw } from 'lucide-react';
 
 interface ResultsViewProps {
   score: number;
   total: number;
   onRestart: () => void;
+  onConnect: () => void;
 }
 
-const ResultsView = ({ score, total, onRestart }: ResultsViewProps) => {
+const ResultsView = ({ score, total, onRestart, onConnect }: ResultsViewProps) => {
     const [animationData, setAnimationData] = useState<any>(null);
 
     useEffect(() => {
@@ -48,7 +49,7 @@ const ResultsView = ({ score, total, onRestart }: ResultsViewProps) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.5 }}
-                className="flex flex-col items-center gap-4 p-6 rounded-lg bg-card-foreground/5"
+                className="flex flex-col items-center gap-4 p-6 rounded-lg bg-card-foreground/5 w-full"
             >
                 <p className="text-xl font-headline text-muted-foreground">You scored</p>
                 <div className="flex items-end gap-2">
@@ -59,14 +60,42 @@ const ResultsView = ({ score, total, onRestart }: ResultsViewProps) => {
                     <Award className="w-6 h-6"/> {message}
                 </p>
             </motion.div>
+            
             <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, duration: 0.5 }}
+                className="flex items-center gap-4"
             >
-                <Button onClick={onRestart} variant="ghost" size="lg">
+                <Button onClick={onConnect} size="lg" variant="default">
+                    <MessageSquareHeart className="mr-2" /> Connect with me
+                </Button>
+                <Button onClick={onRestart} size="lg" variant="outline">
                     <RotateCw className="mr-2" /> Play Again
                 </Button>
+            </motion.div>
+            
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.2, duration: 0.5 }}
+                className="flex items-center gap-2 mt-4"
+            >
+                <a href="https://www.hariportfolio.xyz" target="_blank" rel="noopener noreferrer">
+                    <Button variant="ghost" size="icon" aria-label="Portfolio">
+                        <LinkIcon className="w-5 h-5 text-muted-foreground" />
+                    </Button>
+                </a>
+                <a href="https://www.linkedin.com/in/hari5681" target="_blank" rel="noopener noreferrer">
+                     <Button variant="ghost" size="icon" aria-label="LinkedIn">
+                        <Linkedin className="w-5 h-5 text-muted-foreground" />
+                    </Button>
+                </a>
+                <a href="https://www.instagram.com/hari.krishna.00" target="_blank" rel="noopener noreferrer">
+                     <Button variant="ghost" size="icon" aria-label="Instagram">
+                        <Instagram className="w-5 h-5 text-muted-foreground" />
+                    </Button>
+                </a>
             </motion.div>
         </motion.div>
     );

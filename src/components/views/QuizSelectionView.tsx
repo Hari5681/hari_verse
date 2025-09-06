@@ -20,10 +20,7 @@ const QuizSelectionView = ({ onSelect }: QuizSelectionViewProps) => {
       transition={{ duration: 0.7, type: 'spring' }}
       className="flex flex-col items-center justify-center gap-8 text-center"
     >
-      <AnimatedText text="Welcome to HariVerse ✨" className="text-4xl sm:text-5xl font-headline text-primary-foreground" />
-       <p className="text-lg font-headline text-muted-foreground mt-2">
-          Choose your adventure!
-        </p>
+      <AnimatedText text="Choose your adventure ✨" className="text-4xl sm:text-5xl font-headline text-primary-foreground" />
       <div className="flex flex-col sm:flex-row gap-4 mt-4">
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Button onClick={() => onSelect('funny')} size="lg" className="font-headline w-full sm:w-auto">

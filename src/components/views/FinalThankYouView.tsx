@@ -6,7 +6,7 @@ import AnimatedText from '../common/AnimatedText';
 import Lottie from 'lottie-react';
 import { useEffect, useState } from 'react';
 import Confetti from '../common/Confetti';
-import { Instagram, Linkedin, Link as LinkIcon } from 'lucide-react';
+import { Instagram, Linkedin, Link as LinkIcon, RotateCw } from 'lucide-react';
 import { Button } from '../ui/button';
 
 const containerVariants = {
@@ -32,8 +32,12 @@ const itemVariants = {
   },
 };
 
+interface FinalThankYouViewProps {
+    onRestart: () => void;
+}
 
-const FinalThankYouView = () => {
+
+const FinalThankYouView = ({ onRestart }: FinalThankYouViewProps) => {
     const [animationData, setAnimationData] = useState<any>(null);
 
     useEffect(() => {
@@ -83,9 +87,19 @@ const FinalThankYouView = () => {
                     </motion.a>
                     <motion.a variants={itemVariants} href="https://www.instagram.com/hari.krishna.00" target="_blank" rel="noopener noreferrer">
                          <Button variant="ghost" size="icon" aria-label="Instagram">
-                            <Instagram className="w-5 h-5 text-muted-foreground" />
+                            <Instagram className="w-5 h:5 text-muted-foreground" />
                         </Button>
                     </motion.a>
+                </motion.div>
+                 <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 2, duration: 0.5 }}
+                    className="mt-4"
+                >
+                    <Button onClick={onRestart} variant="outline" size="lg">
+                        <RotateCw className="mr-2" /> Go Home
+                    </Button>
                 </motion.div>
             </motion.div>
         </div>

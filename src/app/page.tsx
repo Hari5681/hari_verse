@@ -24,9 +24,9 @@ import ResultsView from '@/components/views/ResultsView';
 
 
 type Step = 
-  | 'quiz-selection'
   | 'gender-prompt' 
-  | 'name-prompt' 
+  | 'name-prompt'
+  | 'quiz-selection'
   | 'intro' 
   | 'question'
   | 'reply'
@@ -152,7 +152,7 @@ const questions = {
 };
 
 export default function Home() {
-  const [step, setStep] = useState<Step>('quiz-selection');
+  const [step, setStep] = useState<Step>('gender-prompt');
   const [quizType, setQuizType] = useState<QuizType | null>(null);
   const [gender, setGender] = useState<'male' | 'female' | null>(null);
   const [userName, setUserName] = useState('');
@@ -164,20 +164,12 @@ export default function Home() {
   const [, startTransition] = useTransition();
 
   const getQuestionSet = () => {
+    if (!quizType) return [];
     if (quizType === 'survey') {
       return gender === 'female' ? questions.survey_female : questions.survey_male;
     }
-    return questions[quizType!] || [];
+    return questions[quizType] || [];
   }
-
-  const handleQuizSelect = (type: QuizType) => {
-    setQuizType(type);
-    if (type === 'survey') {
-      setStep('gender-prompt');
-    } else {
-      setStep('name-prompt');
-    }
-  };
 
   const handleGenderSelect = (selectedGender: 'male' | 'female') => {
     setGender(selectedGender);
@@ -189,13 +181,23 @@ export default function Home() {
 
   const handleNameSubmit = (name: string) => {
     setUserName(name);
-    setStep('intro');
-    const data = { name, gender, answer: 'Started Quiz' };
+    setStep('quiz-selection');
+    const data = { name, gender, answer: 'Submitted Name' };
     startTransition(() => saveResponse(data));
     sendResponseEmail(data);
   };
+  
+  const handleQuizSelect = (type: QuizType) => {
+    setQuizType(type);
+    if (type === 'survey') {
+      setStep('intro');
+    } else {
+      setPlayMusic(true);
+      setStep('question');
+    }
+  };
 
-  const handleStart = () => {
+  const handleStartSurvey = () => {
     setPlayMusic(true);
     setStep('question');
   };
@@ -223,7 +225,7 @@ export default function Home() {
       }
       if (currentQuestionIndex < questionSet.length - 1) {
         setCurrentQuestionIndex(prev => prev + 1);
-        // Stays on 'question' step, but QuestionView will get new props
+        // Stays on 'question' step for a re-render
       } else {
         setStep('results');
       }
@@ -236,15 +238,33 @@ export default function Home() {
       setCurrentQuestionIndex(prev => prev + 1);
       setStep('question');
     } else {
+      // End of survey
       setStep('comment-prompt');
     }
   }
-
+  
   const handleCommentSubmit = (comment: string) => {
     const data = { name: userName, gender, comment, answer: 'User left a comment.' };
     startTransition(() => saveResponse(data));
     sendResponseEmail(data);
-    setStep('pre-storybook');
+
+    // If coming from results, go to thank you. Otherwise, pre-storybook.
+    if(quizType !== 'survey') {
+      setStep('final-thank-you');
+    } else {
+      setStep('pre-storybook');
+    }
+  }
+
+  const handleRestart = () => {
+    // Reset to quiz selection, keeping name and gender
+    setStep('quiz-selection');
+    setQuizType(null);
+    setAnswers([]);
+    setCurrentQuestionIndex(0);
+    setScore(0);
+    setCurrentReply('');
+    setPlayMusic(false);
   }
   
   const handlePreStorybookContinue = (response: boolean) => {
@@ -259,7 +279,7 @@ export default function Home() {
         setStep('broken-story');
       }
     } else {
-        setStep('final-thank-you');
+      setStep('final-thank-you');
     }
   }
 
@@ -275,36 +295,23 @@ export default function Home() {
     setStep('final-thank-you');
   };
 
-  const handleRestart = () => {
-    setStep('quiz-selection');
-    setQuizType(null);
-    setGender(null);
-    setUserName('');
-    setAnswers([]);
-    setCurrentQuestionIndex(0);
-    setScore(0);
-    setCurrentReply('');
-    setPlayMusic(false);
-  }
-
-
   const renderStep = () => {
     const questionSet = getQuestionSet();
     const currentQuestion = questionSet ? questionSet[currentQuestionIndex] : null;
 
     switch (step) {
-      case 'quiz-selection':
-        return <QuizSelectionView onSelect={handleQuizSelect} />;
       case 'gender-prompt':
         return <GenderPromptView onSelect={handleGenderSelect} />;
       case 'name-prompt':
         return <NamePromptView onSubmit={handleNameSubmit} />;
+      case 'quiz-selection':
+        return <QuizSelectionView onSelect={handleQuizSelect} />;
       case 'intro':
-        return <IntroView onStart={handleStart} name={userName} />;
+        return <IntroView onStart={handleStartSurvey} name={userName} />;
       case 'question':
         if (!currentQuestion) return null;
         return <QuestionView 
-                  key={currentQuestionIndex} // Force re-render on new question
+                  key={`${quizType}-${currentQuestionIndex}`} // Force re-render on new question/quiz
                   question={currentQuestion.text} 
                   options={currentQuestion.options} 
                   onAnswer={handleAnswer} 
@@ -312,7 +319,12 @@ export default function Home() {
       case 'reply':
         return <ReplyView reply={currentReply} onContinue={handleReplyContinue} />
       case 'results':
-        return <ResultsView score={score} total={questionSet.length} onRestart={handleRestart} />;
+        return <ResultsView 
+                  score={score} 
+                  total={questionSet.length} 
+                  onRestart={handleRestart}
+                  onConnect={() => setStep('comment-prompt')}
+               />;
       case 'comment-prompt':
         return <CommentPromptView onSubmit={handleCommentSubmit} />;
       case 'pre-storybook':
@@ -324,9 +336,9 @@ export default function Home() {
       case 'male-ending':
         return <MaleEndingView onContinue={handleMaleEndingContinue} />;
       case 'final-thank-you':
-        return <FinalThankYouView />;
+        return <FinalThankYouView onRestart={handleRestart} />;
       default:
-        return <QuizSelectionView onSelect={handleQuizSelect} />;
+        return <GenderPromptView onSelect={handleGenderSelect} />;
     }
   };
 
@@ -344,4 +356,3 @@ export default function Home() {
     </>
   );
 }
-
