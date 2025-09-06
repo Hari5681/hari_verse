@@ -1,13 +1,14 @@
-
 import type { Metadata } from 'next';
-import { Toaster } from "@/components/ui/toaster"
+import { Inter } from 'next/font/google';
 import './globals.css';
-import AnimatedBackground from '@/components/common/AnimatedBackground';
-import Header from '@/components/common/Header';
+import { Toaster } from '@/components/ui/toaster';
+import { Header } from '@/components/common/Header';
+
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'HariVerse Proposal',
-  description: 'A space made with love and creativity.',
+  title: 'HariVerse - A Modern Multi-Feature Website',
+  description: 'Welcome to a modern, multi-feature website built with Next.js and Firebase.',
 };
 
 export default function RootLayout({
@@ -17,17 +18,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400..900;1,400..900&family=Belleza&display=swap" rel="stylesheet" />
-      </head>
-      <body className="font-body bg-background text-foreground antialiased">
-        <AnimatedBackground />
+      <body className={inter.className}>
         <Header />
-        <main className="relative flex min-h-screen w-full flex-col items-center justify-center p-4 pt-20 sm:pt-24">
-          {children}
-        </main>
+        <main>{children}</main>
         <Toaster />
       </body>
     </html>
