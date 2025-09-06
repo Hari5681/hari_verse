@@ -6,7 +6,13 @@ import Image from 'next/image';
 import { Slider } from '@/components/ui/slider';
 import PlayIcon from '@/components/icons/PlayIcon';
 import PauseIcon from '@/components/icons/PauseIcon';
-import { SkipBack, SkipForward } from 'lucide-react';
+import { SkipBack, SkipForward, Repeat, Shuffle, Heart, X } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogClose,
+} from '@/components/ui/dialog';
 
 interface Song {
   key: string;
@@ -33,13 +39,15 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
 
   useEffect(() => {
     if (audioRef.current && song.url) {
       audioRef.current.src = song.url;
-      audioRef.current.play()
+      audioRef.current
+        .play()
         .then(() => setIsPlaying(true))
-        .catch(e => console.error("Audio play failed:", e));
+        .catch((e) => console.error('Audio play failed:', e));
     }
   }, [song, audioRef]);
 
@@ -56,7 +64,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
     audio.addEventListener('loadedmetadata', updateDuration);
     audio.addEventListener('play', handlePlay);
     audio.addEventListener('pause', handlePause);
-    
+
     return () => {
       audio.removeEventListener('timeupdate', updateProgress);
       audio.removeEventListener('loadedmetadata', updateDuration);
@@ -74,52 +82,169 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
       }
     }
   };
-  
+
   const handleSeek = (value: number[]) => {
     if (audioRef.current) {
-        audioRef.current.currentTime = value[0];
-        setProgress(value[0]);
+      audioRef.current.currentTime = value[0];
+      setProgress(value[0]);
     }
   };
 
   const imageUrl = `https://picsum.photos/seed/${song.key}/500/500`;
 
+  const songTitle = song.title.replace(`${song.artist} - `, '');
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-24 bg-background/80 backdrop-blur-lg border-t border-border/50 z-50 animate-fade-in-up">
-      <div className="container mx-auto h-full flex items-center justify-between px-4">
-        <div className="flex items-center gap-4 w-1/4">
-          <Image src={imageUrl} alt={song.title} width={64} height={64} className="rounded-md" data-ai-hint="song album cover" />
-          <div>
-            <p className="font-bold truncate">{song.title.replace(`${song.artist} - `, '')}</p>
-            <p className="text-sm text-muted-foreground truncate">{song.artist}</p>
-          </div>
-        </div>
+    <Dialog>
+      <div className="fixed bottom-0 left-0 right-0 z-50 animate-fade-in-up">
+        <DialogTrigger asChild>
+          <div className="h-24 cursor-pointer border-t border-border/50 bg-background/80 px-4 backdrop-blur-lg">
+            <div className="container mx-auto flex h-full items-center justify-between">
+              <div className="flex w-1/4 items-center gap-4">
+                <Image
+                  src={imageUrl}
+                  alt={song.title}
+                  width={64}
+                  height={64}
+                  className="rounded-md"
+                  data-ai-hint="song album cover"
+                />
+                <div>
+                  <p className="truncate font-bold">{songTitle}</p>
+                  <p className="truncate text-sm text-muted-foreground">
+                    {song.artist}
+                  </p>
+                </div>
+              </div>
 
-        <div className="flex flex-col items-center gap-2 w-1/2 max-w-2xl">
-          <div className="flex items-center gap-4">
-            <button onClick={onPrev} className="text-muted-foreground hover:text-foreground transition-colors"><SkipBack /></button>
-            <button onClick={togglePlay} className="bg-primary text-primary-foreground rounded-full p-3 hover:bg-primary/90 transition-colors">
-              {isPlaying ? <PauseIcon className="w-6 h-6" /> : <PlayIcon className="w-6 h-6" />}
-            </button>
-            <button onClick={onNext} className="text-muted-foreground hover:text-foreground transition-colors"><SkipForward /></button>
-          </div>
-          <div className="w-full flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">{formatDuration(progress)}</span>
-            <Slider
-                value={[progress]}
-                max={duration || 1}
-                step={1}
-                onValueChange={handleSeek}
-                className="w-full"
-            />
-            <span className="text-xs text-muted-foreground">{formatDuration(duration)}</span>
-          </div>
-        </div>
+              <div className="flex w-1/2 max-w-2xl flex-col items-center gap-2">
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onPrev();
+                    }}
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <SkipBack />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      togglePlay();
+                    }}
+                    className="rounded-full bg-primary p-3 text-primary-foreground transition-colors hover:bg-primary/90"
+                  >
+                    {isPlaying ? (
+                      <PauseIcon className="h-6 w-6" />
+                    ) : (
+                      <PlayIcon className="h-6 w-6" />
+                    )}
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onNext();
+                    }}
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <SkipForward />
+                  </button>
+                </div>
+              </div>
 
-        <div className="w-1/4">
-          {/* Volume controls can go here */}
-        </div>
+              <div className="w-1/4">
+                {/* Volume controls can go here */}
+              </div>
+            </div>
+          </div>
+        </DialogTrigger>
       </div>
-    </div>
+
+      <DialogContent className="h-full max-h-full w-full max-w-full !rounded-none !border-none bg-gradient-to-b from-primary/30 to-background p-0">
+        <div className="flex h-full flex-col p-6 pt-12">
+          <header className="flex items-center justify-between">
+            <DialogClose>
+              <X className="h-6 w-6 opacity-70" />
+            </DialogClose>
+            <p className="font-semibold">{songTitle}</p>
+            <div className="w-6" /> {/* Placeholder for spacing */}
+          </header>
+
+          <main className="flex flex-1 flex-col items-center justify-center gap-8 text-center">
+            <Image
+              src={imageUrl}
+              alt={song.title}
+              width={500}
+              height={500}
+              className="aspect-square w-full max-w-md rounded-lg shadow-2xl"
+              data-ai-hint="song album cover"
+            />
+            <div className="w-full max-w-md">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold">{songTitle}</h2>
+                  <p className="text-muted-foreground">{song.artist}</p>
+                </div>
+                <button onClick={() => setIsLiked(!isLiked)}>
+                  <Heart
+                    className={`h-6 w-6 transition-all ${
+                      isLiked
+                        ? 'fill-green-500 text-green-500'
+                        : 'text-muted-foreground'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="mt-4">
+                <Slider
+                  value={[progress]}
+                  max={duration || 1}
+                  step={1}
+                  onValueChange={handleSeek}
+                  className="w-full"
+                />
+                <div className="mt-2 flex justify-between text-xs text-muted-foreground">
+                  <span>{formatDuration(progress)}</span>
+                  <span>{formatDuration(duration)}</span>
+                </div>
+              </div>
+
+              <div className="mt-4 flex items-center justify-between">
+                <button className="text-muted-foreground transition-colors hover:text-foreground">
+                  <Shuffle className="h-5 w-5" />
+                </button>
+                <button
+                  onClick={onPrev}
+                  className="text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <SkipBack size={32} />
+                </button>
+                <button
+                  onClick={togglePlay}
+                  className="rounded-full bg-white p-4 text-background"
+                >
+                  {isPlaying ? (
+                    <PauseIcon className="h-8 w-8" />
+                  ) : (
+                    <PlayIcon className="h-8 w-8" />
+                  )}
+                </button>
+                <button
+                  onClick={onNext}
+                  className="text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <SkipForward size={32} />
+                </button>
+                <button className="text-muted-foreground transition-colors hover:text-foreground">
+                  <Repeat className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          </main>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
