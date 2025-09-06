@@ -90,6 +90,11 @@ const config = {
         "marquee": {
           '0%': { transform: 'translateX(100%)' },
           '100%': { transform: 'translateX(-100%)' },
+        },
+        "marquee-delayed": {
+          '0%': { transform: 'translateX(0%)' },
+          '20%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-120%)' },
         }
       },
       animation: {
@@ -98,6 +103,7 @@ const config = {
         "fade-in-up": "fade-in-up 0.5s ease-out forwards",
         "fade-in-down": "fade-in-down 0.5s ease-out forwards",
         "marquee": 'marquee 10s linear infinite',
+        "marquee-delayed": 'marquee-delayed 15s linear infinite',
       },
     },
   },

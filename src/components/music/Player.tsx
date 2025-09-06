@@ -122,19 +122,49 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                   data-ai-hint="song album cover"
                 />
                 <div className="overflow-hidden whitespace-nowrap">
-                  <p className={cn("font-bold text-sm", isMiniTitleLong ? "animate-marquee" : "truncate")}>{songTitle}</p>
+                  <p className={cn("font-bold text-sm", isMiniTitleLong ? "animate-marquee-delayed" : "truncate")}>{songTitle}</p>
                   <p className="truncate text-xs text-muted-foreground">
                     {song.artist}
                   </p>
                 </div>
               </div>
 
-              <div className="hidden md:flex flex-1 flex-col items-center gap-2">
-                 {/* Desktop player controls can go here if needed in future */}
+              <div className="hidden md:flex flex-1 items-center justify-center gap-4">
+                 <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onPrev();
+                    }}
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <SkipBack size={24} />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      togglePlay();
+                    }}
+                    className="rounded-full bg-primary p-3 text-primary-foreground transition-colors hover:bg-primary/90"
+                  >
+                    {isPlaying ? (
+                      <PauseIcon className="h-6 w-6" />
+                    ) : (
+                      <PlayIcon className="h-6 w-6" />
+                    )}
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onNext();
+                    }}
+                    className="text-muted-foreground transition-colors hover:text-foreground"
+                  >
+                    <SkipForward size={24} />
+                  </button>
               </div>
 
               <div className="flex items-center justify-end md:w-1/4">
-                <div className="flex items-center gap-2 sm:gap-4">
+                <div className="flex items-center gap-2 sm:gap-4 md:hidden">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -180,7 +210,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
               <ChevronDown className="h-6 w-6 opacity-70" />
             </DialogClose>
             <div className="relative w-full max-w-xs overflow-hidden">
-              <p className={`px-4 font-semibold text-center whitespace-nowrap ${isTitleLong ? 'animate-marquee' : 'truncate'}`}>
+              <p className={`px-4 font-semibold text-center whitespace-nowrap ${isTitleLong ? 'animate-marquee-delayed' : 'truncate'}`}>
                 {songTitle}
               </p>
             </div>
@@ -194,10 +224,11 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                 alt={song.title}
                 width={500}
                 height={500}
-                className="aspect-square w-full max-w-[65vw] sm:max-w-md mx-auto rounded-lg shadow-2xl transition-transform duration-500 group-data-[state=open]:scale-100"
+                className="aspect-square w-full max-w-[65vw] sm:max-w-md mx-auto rounded-lg shadow-2xl transition-transform duration-500 group-data-[state=open]:scale-100 animate-fade-in-up"
                 data-ai-hint="song album cover"
+                style={{ animationDelay: '200ms' }}
               />
-              <div className="flex items-center justify-between mt-6 sm:mt-8">
+              <div className="flex items-center justify-between mt-6 sm:mt-8 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
                 <div className="text-left flex-1 overflow-hidden">
                   <h2 className="text-lg font-bold sm:text-2xl truncate">
                     {songTitle}
@@ -215,7 +246,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                 </button>
               </div>
 
-              <div className="mt-4">
+              <div className="mt-4 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
                 <Slider
                   value={[progress]}
                   max={duration || 1}
@@ -229,7 +260,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center justify-between">
+              <div className="mt-4 flex items-center justify-between animate-fade-in-up" style={{ animationDelay: '500ms' }}>
                 <button className="text-muted-foreground transition-colors hover:text-foreground">
                   <Shuffle className="h-5 w-5" />
                 </button>
