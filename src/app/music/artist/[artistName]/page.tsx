@@ -192,13 +192,6 @@ export default function ArtistPage() {
                     <MoreHorizontal className="h-5 w-5" />
                 </Button>
                 <div className="flex-grow md:hidden"></div>
-                <Button 
-                    size="icon" 
-                    className="ml-auto md:ml-8 rounded-full bg-green-500 hover:bg-green-600 w-16 h-16 shadow-lg"
-                    onClick={handlePlayArtistTop}
-                >
-                    <Play className="h-8 w-8 fill-current" />
-                </Button>
             </div>
         </header>
 
