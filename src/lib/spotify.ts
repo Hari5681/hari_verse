@@ -29,7 +29,7 @@ const getAccessToken = async () => {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Failed to fetch access token: ${errorText}`);
+    throw new Error(`Failed to fetch access token from Spotify: ${response.status} ${errorText}`);
   }
 
   const data = await response.json();
@@ -47,7 +47,8 @@ export const getFeaturedPlaylists = async () => {
   });
 
    if (!response.ok) {
-    throw new Error('Failed to fetch featured playlists');
+    const errorText = await response.text();
+    throw new Error(`Failed to fetch featured playlists: ${errorText}`);
   }
 
   const data = await response.json();
@@ -65,7 +66,8 @@ export const getPlaylist = async (playlistId: string) => {
     });
 
     if (!response.ok) {
-        throw new Error(`Failed to fetch playlist ${playlistId}`);
+        const errorText = await response.text();
+        throw new Error(`Failed to fetch playlist ${playlistId}: ${errorText}`);
     }
 
     return response.json();
