@@ -21,6 +21,12 @@ const getArtistFromTitle = (title: string): string => {
   return parts.length > 1 ? parts[0].trim() : 'Unknown Artist';
 };
 
+const cleanSongTitle = (title: string, artist: string): string => {
+    const titleWithoutArtist = title.replace(`${artist} - `, '');
+    // Remove common extra text like (Official Music Video)
+    return titleWithoutArtist.replace(/\s*\(.*\)/i, '').trim();
+}
+
 export default function ArtistPage() {
   const params = useParams();
   const router = useRouter();
@@ -217,7 +223,7 @@ function SongListItem({ song, index, isPlaying, onPlay }: { song: Song; index: n
             />
             <div className="ml-4 flex-grow">
                 <p className={`font-semibold truncate ${isPlaying ? 'text-green-400' : 'text-white'}`}>
-                    {song.title.replace(`${song.artist} - `, '')}
+                    {cleanSongTitle(song.title, song.artist)}
                 </p>
             </div>
             <div className="text-muted-foreground text-sm mr-4">
@@ -226,5 +232,3 @@ function SongListItem({ song, index, isPlaying, onPlay }: { song: Song; index: n
         </div>
     );
 }
-
-    
