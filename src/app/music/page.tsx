@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Music } from 'lucide-react';
 
 export default function MusicPage() {
-  const streamUrl = 'https://76c93ac1f8a63d255364ea7029e75232.r2.cloudflarestorage.com/hariverse-music';
+  const streamUrl = 'https://76c93ac1f8a63d255364ea7029e75232.r2.cloudflarestorage.com/hariverse-music/Hukum.mp3';
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4 pt-20">
@@ -15,7 +15,7 @@ export default function MusicPage() {
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground mb-6">
-            Now playing a curated stream.
+            Now playing from Cloudflare.
           </p>
           <audio controls autoPlay className="w-full" src={streamUrl}>
             Your browser does not support the audio element.
