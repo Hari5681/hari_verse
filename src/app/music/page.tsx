@@ -6,13 +6,21 @@ import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Music, PlayCircle, Download, AlertTriangle, PauseCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
+import { Separator } from '@/components/ui/separator';
 
 interface Song {
   key: string;
   title: string;
   url: string;
+  artist: string;
 }
+
+// Simple parser to extract artist from title like "Artist - Song"
+const getArtistFromTitle = (title: string): string => {
+  const parts = title.split(' - ');
+  return parts.length > 1 ? parts[0].trim() : 'Unknown Artist';
+};
+
 
 export default function MusicPage() {
   const [songs, setSongs] = useState<Song[]>([]);
@@ -37,7 +45,11 @@ export default function MusicPage() {
             setError('No songs found. Please upload .mp3 files to your R2 bucket.');
             setSongs([]);
         } else {
-            setSongs(data.songs);
+            const songsWithArtists = data.songs.map((song: Omit<Song, 'artist'>) => ({
+                ...song,
+                artist: getArtistFromTitle(song.title)
+            }));
+            setSongs(songsWithArtists);
         }
       } catch (error: any) {
         console.error("Fetch songs error:", error);
@@ -102,6 +114,9 @@ export default function MusicPage() {
     }
   }, []);
 
+  const lanaDelReySongs = songs.filter(song => song.artist === 'Lana Del Rey');
+  const otherSongs = songs.filter(song => song.artist !== 'Lana Del Rey');
+
   return (
     <div className="flex min-h-screen flex-col items-center bg-background p-4 pt-20">
       <Card className="w-full max-w-7xl bg-transparent border-none">
@@ -122,32 +137,41 @@ export default function MusicPage() {
                 </div>
             )}
             {!error && songs.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                    {songs.map((song) => (
-                        <div key={song.key} className="group relative rounded-2xl overflow-hidden shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-primary/20">
-                          <Image 
-                            src={`https://picsum.photos/seed/${song.key}/500/500`} 
-                            alt={song.title} 
-                            width={500} 
-                            height={500} 
-                            data-ai-hint="song album cover"
-                            className="w-full h-auto object-cover aspect-square"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                          <div className="absolute inset-0 flex flex-col justify-end p-4">
-                              <h3 className="font-bold text-lg text-white truncate">{song.title}</h3>
-                              <p className="text-sm text-gray-300">Hari's Mix</p>
-                          </div>
-                          <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                              <button onClick={() => handlePlayPause(song)} className="text-white transform transition-transform duration-300 group-hover:scale-110">
-                                  {isPlaying && currentSong?.key === song.key ? <PauseCircle size={64} /> : <PlayCircle size={64} />}
-                              </button>
-                          </div>
-                           <a href={song.url} download={song.title} className="absolute top-2 right-2 text-white/70 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                                <Download size={20} />
-                           </a>
-                        </div>
-                    ))}
+                <div className="space-y-12">
+                    {lanaDelReySongs.length > 0 && (
+                        <section>
+                            <h2 className="text-2xl font-bold mb-4">Artists</h2>
+                             <Card className="bg-card/50">
+                                <CardHeader>
+                                    <div className="flex items-center gap-4">
+                                        <Image src="https://picsum.photos/seed/lana-del-rey/150/150" width={100} height={100} alt="Lana Del Rey" className="rounded-full" data-ai-hint="artist portrait" />
+                                        <div>
+                                            <CardTitle className="text-2xl">Lana Del Rey</CardTitle>
+                                            <p className="text-muted-foreground">Featured Artist</p>
+                                        </div>
+                                    </div>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                                        {lanaDelReySongs.map((song) => (
+                                            <SongCard key={song.key} song={song} isPlaying={isPlaying} currentSong={currentSong} onPlayPause={handlePlayPause} />
+                                        ))}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </section>
+                    )}
+
+                    {otherSongs.length > 0 && (
+                       <section>
+                            <h2 className="text-2xl font-bold mb-4">All Songs</h2>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                                {otherSongs.map((song) => (
+                                    <SongCard key={song.key} song={song} isPlaying={isPlaying} currentSong={currentSong} onPlayPause={handlePlayPause} />
+                                ))}
+                            </div>
+                        </section>
+                    )}
                 </div>
             ) : (
              !error && <p className="text-center text-muted-foreground">Loading songs...</p>
@@ -164,4 +188,33 @@ export default function MusicPage() {
       )}
     </div>
   );
+}
+
+
+function SongCard({ song, isPlaying, currentSong, onPlayPause }: { song: Song; isPlaying: boolean; currentSong: Song | null; onPlayPause: (song: Song) => void; }) {
+    return (
+        <div key={song.key} className="group relative rounded-2xl overflow-hidden shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-primary/20">
+          <Image 
+            src={`https://picsum.photos/seed/${song.key}/500/500`} 
+            alt={song.title} 
+            width={500} 
+            height={500} 
+            data-ai-hint="song album cover"
+            className="w-full h-auto object-cover aspect-square"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+          <div className="absolute inset-0 flex flex-col justify-end p-4">
+              <h3 className="font-bold text-lg text-white truncate">{song.title.replace(`${song.artist} - `, '')}</h3>
+              <p className="text-sm text-gray-300">{song.artist}</p>
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <button onClick={() => onPlayPause(song)} className="text-white transform transition-transform duration-300 group-hover:scale-110">
+                  {isPlaying && currentSong?.key === song.key ? <PauseCircle size={64} /> : <PlayCircle size={64} />}
+              </button>
+          </div>
+           <a href={song.url} download={song.title} className="absolute top-2 right-2 text-white/70 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                <Download size={20} />
+           </a>
+        </div>
+    );
 }
