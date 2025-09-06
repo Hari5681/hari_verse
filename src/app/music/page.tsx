@@ -158,9 +158,22 @@ export default function MusicPage() {
 
                 <section>
                     <h2 className="text-2xl font-bold mb-4">Top Picks</h2>
-                    <div className="flex items-center justify-center h-40 rounded-lg bg-muted/20">
-                        <p className="text-muted-foreground">Coming Soon</p>
-                    </div>
+                    {songs.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+                            {songs.slice(0, 5).map((song, index) => (
+                                <TopPickSongCard 
+                                    key={`top-pick-${song.key}`} 
+                                    song={song} 
+                                    index={index + 1}
+                                    onPlay={() => handlePlaySong(song, songs.slice(0, 5))} 
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                         <div className="flex items-center justify-center h-40 rounded-lg bg-muted/20">
+                            <p className="text-muted-foreground">Loading your top picks...</p>
+                        </div>
+                    )}
                     <Separator className="my-12"/>
                 </section>
                 
@@ -264,6 +277,32 @@ function RecentlyPlayedSongCard({ song, onPlay }: { song: Song; onPlay: () => vo
                     className="w-full h-full object-cover"
                     data-ai-hint="song album cover"
                 />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <PlayCircle size={48} className="text-white" />
+                </div>
+            </div>
+            <p className="mt-2 text-sm font-semibold truncate text-foreground">
+                {song.title.replace(`${song.artist} - `, '')}
+            </p>
+        </div>
+    );
+}
+
+function TopPickSongCard({ song, index, onPlay }: { song: Song; index: number; onPlay: () => void; }) {
+    return (
+        <div onClick={onPlay} className="group cursor-pointer">
+            <div className="relative aspect-square w-full overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105">
+                <Image
+                    src={`https://picsum.photos/seed/${song.key}/200/200`}
+                    alt={song.title}
+                    width={200}
+                    height={200}
+                    className="w-full h-full object-cover"
+                    data-ai-hint="song album cover"
+                />
+                <div className="absolute top-2 left-2 bg-black/50 text-white text-sm font-bold w-6 h-6 flex items-center justify-center rounded-full">
+                    {index}
+                </div>
                 <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <PlayCircle size={48} className="text-white" />
                 </div>
