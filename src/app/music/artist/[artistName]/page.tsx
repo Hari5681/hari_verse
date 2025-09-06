@@ -175,7 +175,7 @@ export default function ArtistPage() {
             />
             <h1 className="text-5xl md:text-7xl font-bold mt-6">{artistName}</h1>
             <p className="text-muted-foreground mt-2">Digital Creator</p>
-            <div className="mt-6 flex items-center gap-4 w-full">
+            <div className="mt-6 flex items-center gap-4 w-full flex-wrap justify-center md:justify-start">
                 <Button 
                     variant={isFollowing ? 'secondary' : 'outline'}
                     className="rounded-full px-6"
@@ -189,6 +189,7 @@ export default function ArtistPage() {
                 <Button variant="ghost" size="icon">
                     <MoreHorizontal className="h-5 w-5" />
                 </Button>
+                <div className="flex-grow md:hidden"></div>
                 <Button 
                     size="icon" 
                     className="ml-auto md:ml-8 rounded-full bg-green-500 hover:bg-green-600 w-16 h-16 shadow-lg"
