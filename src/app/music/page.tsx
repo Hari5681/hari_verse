@@ -4,17 +4,12 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Music, PlayCircle, Download, AlertTriangle, PauseCircle } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { PlayCircle, Download, AlertTriangle, PauseCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { Player } from '@/components/music/Player';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import type { Album, Playlist, Song as JioSaavnSong } from '@/lib/jiosaavn';
-import { getModules, getAlbumDetails, getPlaylistDetails } from '@/lib/jiosaavn';
-import { SongCard as JioSaavnSongCard } from '@/components/music/SongCard';
-import { MusicPlayer as JioSaavnPlayer } from '@/components/music/MusicPlayer';
-import { SongList as JioSaavnSongList } from '@/components/music/SongList';
 
 
 interface Song {
@@ -44,13 +39,6 @@ export default function MusicPage() {
   const { toast } = useToast();
   const [recentlyPlayed, setRecentlyPlayed] = useState<Song[]>([]);
 
-  // State for JioSaavn data
-  const [trendingAlbums, setTrendingAlbums] = useState<Album[]>([]);
-  const [topPlaylists, setTopPlaylists] = useState<Playlist[]>([]);
-  const [currentJioSaavnSong, setCurrentJioSaavnSong] = useState<JioSaavnSong | null>(null);
-  const jioSaavnAudioRef = useRef<HTMLAudioElement>(null);
-  const [jioSaavnPlaylist, setJioSaavnPlaylist] = useState<JioSaavnSong[]>([]);
-
   useEffect(() => {
     try {
       const storedSongs = localStorage.getItem('recentlyPlayed');
@@ -75,7 +63,7 @@ export default function MusicPage() {
         }
 
         if (!data.songs || data.songs.length === 0) {
-            setError('No songs found in your R2 bucket. You can still browse trending music.');
+            setError('No songs found in your R2 bucket. Please upload music to your bucket.');
             setSongs([]);
         } else {
             const songsWithArtists: Song[] = data.songs.map((song: Omit<Song, 'artist'>) => ({
@@ -109,31 +97,10 @@ export default function MusicPage() {
       }
     };
 
-    const fetchJioSaavnModules = async () => {
-        try {
-            const modules = await getModules();
-            if (modules.albums) {
-                setTrendingAlbums(modules.albums);
-            }
-            if(modules.playlists) {
-                setTopPlaylists(modules.playlists);
-            }
-        } catch(e) {
-            console.error("Failed to fetch JioSaavn modules", e);
-             toast({
-                variant: "destructive",
-                title: "Could not load trending music",
-                description: "There was an issue fetching data from JioSaavn.",
-            })
-        }
-    }
-
     fetchR2Songs();
-    fetchJioSaavnModules();
   }, [toast]);
   
   const handlePlaySong = (song: Song, songList: Song[]) => {
-    setCurrentJioSaavnSong(null);
     setCurrentSong(song);
     setPlaylist(songList);
 
@@ -145,45 +112,6 @@ export default function MusicPage() {
     localStorage.setItem('recentlyPlayed', JSON.stringify(newRecentlyPlayed));
   };
 
-  const handlePlayJioSaavnItem = async (item: Album | Playlist | JioSaavnSong) => {
-    setCurrentSong(null);
-    let songsToPlay: JioSaavnSong[] = [];
-  
-    try {
-      if (item.type === 'song') {
-        songsToPlay = [item];
-      } else if (item.type === 'album') {
-        const albumDetails = await getAlbumDetails(item.id);
-        songsToPlay = albumDetails.songs || [];
-      } else if (item.type === 'playlist') {
-        const playlistDetails = await getPlaylistDetails(item.id);
-        songsToPlay = playlistDetails.songs || [];
-      }
-  
-      if (songsToPlay.length > 0) {
-        // Since we may not have direct stream URLs for all songs, find the first playable one.
-        // For a real app, you'd fetch song details with downloadUrl here.
-        // For now, we'll assume the first song is playable.
-        const playableSong = songsToPlay.find(s => s.downloadUrl.some(u => u.link));
-        if (playableSong) {
-            const songWithMediaUrl = {
-                ...playableSong,
-                media_url: playableSong.downloadUrl.find(u => u.quality === '160kbps' || u.quality === '320kbps')?.link || playableSong.downloadUrl[0].link
-            };
-            setCurrentJioSaavnSong(songWithMediaUrl);
-            setJioSaavnPlaylist(songsToPlay);
-        } else {
-             toast({ variant: 'destructive', title: 'No playable songs found.' });
-        }
-      } else {
-        toast({ variant: 'destructive', title: 'No songs found in this item.' });
-      }
-    } catch (e) {
-      console.error('Error playing JioSaavn item:', e);
-      toast({ variant: 'destructive', title: 'Error loading song', description: 'Could not load the selected music.' });
-    }
-  };
-  
   const handleNext = () => {
     if (!currentSong || playlist.length === 0) return;
     const currentIndex = playlist.findIndex(s => s.key === currentSong.key);
@@ -198,30 +126,6 @@ export default function MusicPage() {
     setCurrentSong(playlist[prevIndex]);
   };
   
-  const handleJioSaavnNext = () => {
-    if (!currentJioSaavnSong || jioSaavnPlaylist.length === 0) return;
-    const currentIndex = jioSaavnPlaylist.findIndex(s => s.id === currentJioSaavnSong.id);
-    const nextIndex = (currentIndex + 1) % jioSaavnPlaylist.length;
-    const nextSong = jioSaavnPlaylist[nextIndex];
-    const songWithMediaUrl = {
-        ...nextSong,
-        media_url: nextSong.downloadUrl.find(u => u.quality === '160kbps' || u.quality === '320kbps')?.link || nextSong.downloadUrl[0].link
-    };
-    setCurrentJioSaavnSong(songWithMediaUrl);
-  };
-  
-  const handleJioSaavnPrev = () => {
-     if (!currentJioSaavnSong || jioSaavnPlaylist.length === 0) return;
-    const currentIndex = jioSaavnPlaylist.findIndex(s => s.id === currentJioSaavnSong.id);
-    const prevIndex = (currentIndex - 1 + jioSaavnPlaylist.length) % jioSaavnPlaylist.length;
-    const prevSong = jioSaavnPlaylist[prevIndex];
-    const songWithMediaUrl = {
-        ...prevSong,
-        media_url: prevSong.downloadUrl.find(u => u.quality === '160kbps' || u.quality === '320kbps')?.link || prevSong.downloadUrl[0].link
-    };
-    setCurrentJioSaavnSong(songWithMediaUrl);
-  };
-
   const otherSongs = songs.filter(song => song.artist !== 'Lana Del Rey' || !artists.some(a => a.name === 'Lana Del Rey'));
 
   return (
@@ -244,30 +148,6 @@ export default function MusicPage() {
                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
                             {recentlyPlayed.map((song) => (
                                 <RecentlyPlayedSongCard key={`recent-${song.key}`} song={song} onPlay={() => handlePlaySong(song, recentlyPlayed)} />
-                            ))}
-                        </div>
-                        <Separator className="my-12"/>
-                    </section>
-                )}
-
-                {trendingAlbums.length > 0 && (
-                    <section>
-                        <h2 className="text-2xl font-bold mb-4">Trending Albums</h2>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                            {trendingAlbums.map((album) => (
-                                <JioSaavnSongCard key={album.id} item={album} onPlay={handlePlayJioSaavnItem} />
-                            ))}
-                        </div>
-                        <Separator className="my-12"/>
-                    </section>
-                )}
-
-                {topPlaylists.length > 0 && (
-                    <section>
-                        <h2 className="text-2xl font-bold mb-4">Top Playlists</h2>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                            {topPlaylists.map((playlist) => (
-                                <JioSaavnSongCard key={playlist.id} item={playlist} onPlay={handlePlayJioSaavnItem} />
                             ))}
                         </div>
                         <Separator className="my-12"/>
@@ -330,17 +210,8 @@ export default function MusicPage() {
           onPrev={handlePrev}
         />
       )}
-      {currentJioSaavnSong && (
-        <JioSaavnPlayer 
-            song={currentJioSaavnSong}
-            audioRef={jioSaavnAudioRef}
-            onNext={handleJioSaavnNext}
-            onPrev={handleJioSaavnPrev}
-        />
-      )}
 
       <audio ref={audioRef} onEnded={handleNext} />
-      <audio ref={jioSaavnAudioRef} onEnded={handleJioSaavnNext} />
     </div>
   );
 }
@@ -398,5 +269,3 @@ function SongCard({ song, currentSong, onPlay }: { song: Song; currentSong: Song
         </div>
     );
 }
-
-    
