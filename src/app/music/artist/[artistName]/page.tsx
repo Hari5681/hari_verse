@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Music, Play, MoreHorizontal, Share, UserPlus, AlertTriangle, ArrowLeft } from 'lucide-react';
+import { Music, Play, MoreHorizontal, Share, UserPlus, AlertTriangle, ArrowLeft, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Player } from '@/components/music/Player';
@@ -239,10 +239,17 @@ function SongListItem({ song, index, isPlaying, onPlay }: { song: Song; index: n
     return (
         <div 
             className="flex items-center p-2 rounded-md hover:bg-white/10 cursor-pointer group transition-colors"
-            onClick={onPlay}
         >
-            <div className="w-10 text-center text-muted-foreground group-hover:hidden">{index}</div>
-            <div className="w-10 text-center text-white hidden group-hover:block">
+            <div 
+                className="flex-shrink-0 flex items-center justify-center w-10 text-center text-muted-foreground group-hover:hidden"
+                onClick={onPlay}
+            >
+                {index}
+            </div>
+            <div 
+                className="flex-shrink-0 w-10 text-center text-white hidden group-hover:flex items-center justify-center"
+                onClick={onPlay}
+            >
                 <Play className="h-5 w-5 fill-current" />
             </div>
             <Image 
@@ -250,16 +257,28 @@ function SongListItem({ song, index, isPlaying, onPlay }: { song: Song; index: n
                 alt={song.title}
                 width={40}
                 height={40}
-                className="rounded-md ml-4"
+                className="rounded-md ml-4 flex-shrink-0"
                 data-ai-hint="song album cover"
+                onClick={onPlay}
             />
-            <div className="ml-4 flex-grow">
+            <div className="ml-4 flex-grow" onClick={onPlay}>
                 <p className={`font-semibold truncate ${isPlaying ? 'text-green-400' : 'text-white'}`}>
                     {cleanSongTitle(song.title, song.artist)}
                 </p>
             </div>
-            <div className="text-muted-foreground text-sm mr-4">
-                {isPlaying ? <PlayingAnimation /> : <MoreHorizontal className="h-5 w-5" />}
+            <div className="text-muted-foreground text-sm mr-4 ml-4">
+                {isPlaying ? (
+                    <PlayingAnimation />
+                ) : (
+                    <a 
+                        href={song.url} 
+                        download={song.title} 
+                        className="text-white/70 opacity-0 transition-opacity hover:text-white group-hover:opacity-100"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <Download size={20} />
+                    </a>
+                )}
             </div>
         </div>
     );
