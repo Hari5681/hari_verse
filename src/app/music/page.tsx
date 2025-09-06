@@ -37,6 +37,19 @@ export default function MusicPage() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const [recentlyPlayed, setRecentlyPlayed] = useState<Song[]>([]);
+
+  useEffect(() => {
+    try {
+      const storedSongs = localStorage.getItem('recentlyPlayed');
+      if (storedSongs) {
+        setRecentlyPlayed(JSON.parse(storedSongs));
+      }
+    } catch (e) {
+      console.error("Failed to parse recently played songs from localStorage", e);
+      localStorage.removeItem('recentlyPlayed');
+    }
+  }, []);
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -91,6 +104,14 @@ export default function MusicPage() {
   const handlePlaySong = (song: Song, songList: Song[]) => {
     setCurrentSong(song);
     setPlaylist(songList);
+
+    // Update recently played
+    const newRecentlyPlayed = [
+      song,
+      ...recentlyPlayed.filter(s => s.key !== song.key)
+    ].slice(0, 10); // Limit to 10 songs
+    setRecentlyPlayed(newRecentlyPlayed);
+    localStorage.setItem('recentlyPlayed', JSON.stringify(newRecentlyPlayed));
   };
   
   const handleNext = () => {
@@ -130,6 +151,18 @@ export default function MusicPage() {
             )}
             {!error && songs.length > 0 ? (
                 <div className="space-y-12">
+                     {recentlyPlayed.length > 0 && (
+                        <section>
+                            <h2 className="text-2xl font-bold mb-4">Recently Played</h2>
+                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                                {recentlyPlayed.map((song) => (
+                                    <RecentlyPlayedSongCard key={`recent-${song.key}`} song={song} onPlay={() => handlePlaySong(song, recentlyPlayed)} />
+                                ))}
+                            </div>
+                            <Separator className="my-12"/>
+                        </section>
+                    )}
+
                     {artists.length > 0 && (
                         <section>
                             <h2 className="text-2xl font-bold mb-4">Artists</h2>
@@ -188,6 +221,29 @@ export default function MusicPage() {
   );
 }
 
+function RecentlyPlayedSongCard({ song, onPlay }: { song: Song; onPlay: () => void; }) {
+    return (
+        <div onClick={onPlay} className="group cursor-pointer">
+            <div className="relative aspect-square w-full overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105">
+                <Image
+                    src={`https://picsum.photos/seed/${song.key}/200/200`}
+                    alt={song.title}
+                    width={200}
+                    height={200}
+                    className="w-full h-full object-cover"
+                    data-ai-hint="song album cover"
+                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <PlayCircle size={48} className="text-white" />
+                </div>
+            </div>
+            <p className="mt-2 text-sm font-semibold truncate text-foreground">
+                {song.title.replace(`${song.artist} - `, '')}
+            </p>
+        </div>
+    );
+}
+
 
 function SongCard({ song, currentSong, onPlay }: { song: Song; currentSong: Song | null; onPlay: () => void; }) {
     const isPlaying = currentSong?.key === song.key;
@@ -218,3 +274,4 @@ function SongCard({ song, currentSong, onPlay }: { song: Song; currentSong: Song
         </div>
     );
 }
+
