@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Music, PlayCircle, Download } from 'lucide-react';
+import { Music, PlayCircle, Download, AlertTriangle } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+
 
 interface Song {
   key: string;
@@ -15,42 +17,64 @@ export default function MusicPage() {
   const [currentSong, setCurrentSong] = useState<Song | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchSongs = async () => {
       try {
+        setError(null);
         const response = await fetch('/api/music');
         if (!response.ok) {
-          throw new Error('Failed to fetch songs');
+           const errorData = await response.json();
+           throw new Error(errorData.error || 'Failed to fetch songs');
         }
         const data = await response.json();
-        setSongs(data.songs);
-      } catch (error) {
+        if (!data.songs || data.songs.length === 0) {
+            setError('No songs found in the bucket. Please upload songs to your R2 bucket.');
+        } else {
+            setSongs(data.songs);
+        }
+      } catch (error: any) {
         console.error(error);
+        setError(error.message || 'An unexpected error occurred.');
+        toast({
+            variant: "destructive",
+            title: "Error fetching music",
+            description: error.message || 'Please check the console for more details.',
+        })
       }
     };
 
     fetchSongs();
-  }, []);
+  }, [toast]);
   
   const handlePlay = (song: Song) => {
     if (currentSong?.key === song.key) {
       if (isPlaying) {
         audioRef.current?.pause();
-        setIsPlaying(false);
       } else {
-        audioRef.current?.play();
-        setIsPlaying(true);
+        audio_current?.play();
       }
     } else {
       setCurrentSong(song);
-      if (audioRef.current) {
-        audioRef.current.src = song.url;
-        audioRef.current.play();
-        setIsPlaying(true);
-      }
     }
   };
+  
+  useEffect(() => {
+    if (currentSong && audioRef.current) {
+        const audio = audioRef.current;
+        audio.src = currentSong.url;
+        audio.play().catch(e => {
+            console.error("Error playing audio:", e);
+            toast({
+                variant: "destructive",
+                title: "Playback Error",
+                description: "The selected song could not be played.",
+            });
+        });
+    }
+  }, [currentSong, toast]);
   
   useEffect(() => {
     const audio = audioRef.current;
@@ -80,7 +104,15 @@ export default function MusicPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {songs.length > 0 ? (
+            {error && (
+                <div className="flex flex-col items-center justify-center rounded-lg bg-destructive/10 p-6 text-center text-destructive-foreground">
+                    <AlertTriangle className="h-10 w-10 text-destructive" />
+                    <h3 className="mt-4 text-lg font-semibold">An Error Occurred</h3>
+                    <p className="mt-1 text-sm">{error}</p>
+                    <p className="mt-2 text-xs opacity-70">Please check your .env file and Cloudflare R2 settings.</p>
+                </div>
+            )}
+            {!error && songs.length > 0 ? (
               songs.map((song) => (
                 <div key={song.key} className="flex items-center justify-between rounded-lg bg-secondary/30 p-4 transition-all hover:bg-secondary/60">
                   <p className="font-semibold">{song.title}</p>
@@ -95,7 +127,7 @@ export default function MusicPage() {
                 </div>
               ))
             ) : (
-              <p className="text-center text-muted-foreground">Loading songs or no songs found in bucket.</p>
+             !error && <p className="text-center text-muted-foreground">Loading songs...</p>
             )}
           </div>
         </CardContent>
@@ -103,7 +135,7 @@ export default function MusicPage() {
       {currentSong && (
         <footer className="fixed bottom-0 left-0 right-0 z-50 mt-8 flex w-full flex-col items-center justify-center border-t border-border bg-background/80 p-4 backdrop-blur-sm">
            <p className="text-sm text-center font-bold mb-2">{currentSong.title}</p>
-           <audio controls autoPlay ref={audioRef} src={currentSong.url} className="w-full max-w-2xl">
+           <audio controls autoPlay ref={audioRef} className="w-full max-w-2xl">
               Your browser does not support the audio element.
            </audio>
         </footer>

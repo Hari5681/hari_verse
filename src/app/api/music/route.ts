@@ -28,6 +28,7 @@ export async function GET() {
     );
 
     const songs = list.Contents?.filter(item => item.Key).map(item => {
+      // Correct URL construction: publicUrl should be the base, and item.Key is the object path.
       const url = `${publicUrl}/${item.Key!}`;
       return {
         key: item.Key,
