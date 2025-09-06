@@ -105,18 +105,18 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
     <Dialog>
       <div className="fixed bottom-0 left-0 right-0 z-50 animate-fade-in-up">
         <DialogTrigger asChild>
-          <div className="h-20 cursor-pointer border-t border-border/50 bg-background/80 px-4 backdrop-blur-lg">
+          <div className="h-16 cursor-pointer border-t border-border/50 bg-background/80 px-4 backdrop-blur-lg md:h-20">
             <div className="container mx-auto flex h-full items-center justify-between gap-4">
               <div className="flex items-center gap-3 overflow-hidden">
                 <Image
                   src={imageUrl}
                   alt={song.title}
-                  width={48}
-                  height={48}
-                  className="rounded-md flex-shrink-0"
+                  width={40}
+                  height={40}
+                  className="rounded-md flex-shrink-0 md:w-12 md:h-12"
                   data-ai-hint="song album cover"
                 />
-                <div className="overflow-hidden md:hidden lg:block">
+                <div className="overflow-hidden">
                   <p className="truncate font-bold text-sm">{songTitle}</p>
                   <p className="truncate text-xs text-muted-foreground">
                     {song.artist}
@@ -124,14 +124,14 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                 </div>
               </div>
 
-              <div className="flex flex-grow items-center justify-end md:justify-center">
+              <div className="flex items-center justify-end">
                 <div className="flex items-center gap-2 sm:gap-4">
-                  <button
+                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onPrev();
                     }}
-                    className="text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-muted-foreground transition-colors hover:text-foreground hidden sm:block"
                   >
                     <SkipBack size={20} />
                   </button>
@@ -164,8 +164,8 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
         </DialogTrigger>
       </div>
 
-      <DialogContent className="h-full max-h-full w-full max-w-full !rounded-none !border-none bg-gradient-to-b from-primary/30 to-background p-0 data-[state=open]:slide-in-from-bottom-full data-[state=closed]:slide-out-to-bottom-full">
-        <div className="flex h-full flex-col p-4 sm:p-6 sm:pt-12">
+      <DialogContent className="h-full max-h-full w-full max-w-full !rounded-none !border-none bg-gradient-to-b from-primary/30 to-background p-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-full data-[state=open]:slide-in-from-bottom-full">
+        <div className="flex h-full flex-col p-4 pt-8 sm:p-6 sm:pt-12">
           <header className="flex items-center justify-between">
             <DialogClose>
               <ChevronDown className="h-6 w-6 opacity-70" />
@@ -180,20 +180,20 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
               alt={song.title}
               width={500}
               height={500}
-              className="aspect-square w-full max-w-xs rounded-lg shadow-2xl sm:max-w-md mt-4 sm:mt-0"
+              className="aspect-square w-full max-w-[70vw] rounded-lg shadow-2xl sm:max-w-md mt-4 sm:mt-0"
               data-ai-hint="song album cover"
             />
             <div className="w-full max-w-xs sm:max-w-md">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mt-2">
                 <div className="text-left">
-                  <h2 className="text-xl font-bold sm:text-2xl truncate">
+                  <h2 className="text-lg font-bold sm:text-2xl truncate">
                     {songTitle}
                   </h2>
-                  <p className="text-muted-foreground truncate">{song.artist}</p>
+                  <p className="text-sm text-muted-foreground truncate">{song.artist}</p>
                 </div>
                 <button onClick={() => setIsLiked(!isLiked)}>
                   <Heart
-                    className={`h-6 w-6 transition-all ${
+                    className={`h-5 w-5 sm:h-6 sm:w-6 transition-all ${
                       isLiked
                         ? 'fill-green-500 text-green-500'
                         : 'text-muted-foreground'
@@ -216,7 +216,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center justify-around sm:justify-between">
+              <div className="mt-4 flex items-center justify-between">
                 <button className="text-muted-foreground transition-colors hover:text-foreground">
                   <Shuffle className="h-5 w-5" />
                 </button>
@@ -224,23 +224,23 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                   onClick={onPrev}
                   className="text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  <SkipBack size={32} />
+                  <SkipBack size={28} />
                 </button>
                 <button
                   onClick={togglePlay}
                   className="rounded-full bg-white p-3 text-background sm:p-4"
                 >
                   {isPlaying ? (
-                    <PauseIcon className="h-7 w-7 sm:h-8 sm:w-8" />
+                    <PauseIcon className="h-6 w-6 sm:h-8 sm:w-8" />
                   ) : (
-                    <PlayIcon className="h-7 w-7 sm:h-8 sm:w-8" />
+                    <PlayIcon className="h-6 w-6 sm:h-8 sm:w-8" />
                   )}
                 </button>
                 <button
                   onClick={onNext}
                   className="text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  <SkipForward size={32} />
+                  <SkipForward size={28} />
                 </button>
                 <button className="text-muted-foreground transition-colors hover:text-foreground">
                   <Repeat className="h-5 w-5" />
