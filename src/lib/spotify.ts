@@ -28,10 +28,12 @@ const getAccessToken = async () => {
   });
 
   if (!response.ok) {
-    throw new Error('Failed to fetch access token');
+    const errorText = await response.text();
+    throw new Error(`Failed to fetch access token: ${errorText}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  return data;
 };
 
 export const getFeaturedPlaylists = async () => {
