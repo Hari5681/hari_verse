@@ -98,47 +98,47 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
     <Dialog>
       <div className="fixed bottom-0 left-0 right-0 z-50 animate-fade-in-up">
         <DialogTrigger asChild>
-          <div className="h-24 cursor-pointer border-t border-border/50 bg-background/80 px-4 backdrop-blur-lg">
-            <div className="container mx-auto flex h-full items-center justify-between">
-              <div className="flex w-1/4 items-center gap-4 overflow-hidden">
+          <div className="h-20 cursor-pointer border-t border-border/50 bg-background/80 px-4 backdrop-blur-lg">
+            <div className="container mx-auto flex h-full items-center justify-between gap-4">
+              <div className="flex items-center gap-3 overflow-hidden">
                 <Image
                   src={imageUrl}
                   alt={song.title}
-                  width={64}
-                  height={64}
+                  width={48}
+                  height={48}
                   className="rounded-md flex-shrink-0"
                   data-ai-hint="song album cover"
                 />
-                <div className="overflow-hidden">
-                  <p className="truncate font-bold">{songTitle}</p>
-                  <p className="truncate text-sm text-muted-foreground">
+                <div className="overflow-hidden md:hidden lg:block">
+                  <p className="truncate font-bold text-sm">{songTitle}</p>
+                  <p className="truncate text-xs text-muted-foreground">
                     {song.artist}
                   </p>
                 </div>
               </div>
 
-              <div className="flex w-1/2 max-w-2xl flex-col items-center gap-2">
-                <div className="flex items-center gap-4">
+              <div className="flex-grow flex items-center justify-end md:justify-center">
+                 <div className="flex items-center gap-2 sm:gap-4">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       onPrev();
                     }}
-                    className="text-muted-foreground transition-colors hover:text-foreground"
+                    className="hidden sm:block text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    <SkipBack />
+                    <SkipBack size={20}/>
                   </button>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       togglePlay();
                     }}
-                    className="rounded-full bg-primary p-3 text-primary-foreground transition-colors hover:bg-primary/90"
+                    className="rounded-full bg-primary p-2 text-primary-foreground transition-colors hover:bg-primary/90"
                   >
                     {isPlaying ? (
-                      <PauseIcon className="h-6 w-6" />
+                      <PauseIcon className="h-5 w-5" />
                     ) : (
-                      <PlayIcon className="h-6 w-6" />
+                      <PlayIcon className="h-5 w-5" />
                     )}
                   </button>
                   <button
@@ -148,13 +148,9 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                     }}
                     className="text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    <SkipForward />
+                    <SkipForward size={20}/>
                   </button>
                 </div>
-              </div>
-
-              <div className="w-1/4">
-                {/* Volume controls can go here */}
               </div>
             </div>
           </div>
