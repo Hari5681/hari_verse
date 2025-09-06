@@ -159,12 +159,11 @@ export default function MusicPage() {
                 <section>
                     <h2 className="text-2xl font-bold mb-4">Top Picks</h2>
                     {songs.length > 0 ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-                            {songs.slice(0, 5).map((song, index) => (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                            {songs.slice(0, 5).map((song) => (
                                 <TopPickSongCard 
                                     key={`top-pick-${song.key}`} 
                                     song={song} 
-                                    index={index + 1}
                                     onPlay={() => handlePlaySong(song, songs.slice(0, 5))} 
                                 />
                             ))}
@@ -288,29 +287,26 @@ function RecentlyPlayedSongCard({ song, onPlay }: { song: Song; onPlay: () => vo
     );
 }
 
-function TopPickSongCard({ song, index, onPlay }: { song: Song; index: number; onPlay: () => void; }) {
+function TopPickSongCard({ song, onPlay }: { song: Song; onPlay: () => void; }) {
     return (
         <div 
             onClick={onPlay} 
-            className="group cursor-pointer flex items-center gap-4 p-2 rounded-lg transition-all duration-300 hover:bg-white/10"
+            className="group cursor-pointer"
         >
-            <div className="text-lg font-bold w-8 text-center text-muted-foreground">
-                <span className="text-primary">#</span>{index}
-            </div>
-            <div className="relative w-16 h-16 flex-shrink-0">
+            <div className="relative aspect-square w-full overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105">
                 <Image
                     src={`https://picsum.photos/seed/${song.key}/200/200`}
                     alt={song.title}
-                    width={64}
-                    height={64}
-                    className="w-full h-full object-cover rounded-md"
+                    width={200}
+                    height={200}
+                    className="w-full h-full object-cover"
                     data-ai-hint="song album cover"
                 />
                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <PlayCircle size={32} className="text-white" />
+                    <PlayCircle size={48} className="text-white" />
                 </div>
             </div>
-            <div className="overflow-hidden">
+            <div className="mt-2">
                 <p className="text-sm font-semibold truncate text-foreground">
                     {song.title.replace(`${song.artist} - `, '')}
                 </p>
