@@ -18,10 +18,13 @@ const GenderPromptView = ({ onSelect }: GenderPromptViewProps) => {
       transition={{ duration: 0.7, type: 'spring' }}
       className="flex flex-col items-center justify-center gap-8 text-center"
     >
-      <AnimatedText text="Please select your gender" className="text-3xl sm:text-4xl font-headline text-primary-foreground" />
-       <p className="text-lg font-headline text-muted-foreground -mt-4">
-          This helps tailor the story for you.
+      <AnimatedText text="Welcome to HariVerse" className="text-4xl sm:text-5xl font-headline text-primary-foreground" />
+      <div className="flex flex-col items-center gap-2 -mt-4">
+        <h2 className="text-2xl sm:text-3xl font-headline text-primary-foreground/80">Please select your gender</h2>
+        <p className="text-lg font-headline text-muted-foreground">
+            This helps tailor the story for you.
         </p>
+      </div>
       <div className="flex gap-4 mt-4">
         <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
           <Button onClick={() => onSelect('male')} size="lg" className="font-headline">
