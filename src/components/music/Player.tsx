@@ -6,7 +6,14 @@ import Image from 'next/image';
 import { Slider } from '@/components/ui/slider';
 import PlayIcon from '@/components/icons/PlayIcon';
 import PauseIcon from '@/components/icons/PauseIcon';
-import { SkipBack, SkipForward, Repeat, Shuffle, Heart, X } from 'lucide-react';
+import {
+  SkipBack,
+  SkipForward,
+  Repeat,
+  Shuffle,
+  Heart,
+  ChevronDown,
+} from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -117,8 +124,8 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                 </div>
               </div>
 
-              <div className="flex-grow flex items-center justify-end md:justify-center">
-                 <div className="flex items-center gap-2 sm:gap-4">
+              <div className="flex flex-grow items-center justify-end md:justify-center">
+                <div className="flex items-center gap-2 sm:gap-4">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -126,7 +133,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                     }}
                     className="text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    <SkipBack size={20}/>
+                    <SkipBack size={20} />
                   </button>
                   <button
                     onClick={(e) => {
@@ -148,7 +155,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                     }}
                     className="text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    <SkipForward size={20}/>
+                    <SkipForward size={20} />
                   </button>
                 </div>
               </div>
@@ -157,29 +164,31 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
         </DialogTrigger>
       </div>
 
-      <DialogContent className="h-full max-h-full w-full max-w-full !rounded-none !border-none bg-gradient-to-b from-primary/30 to-background p-0">
+      <DialogContent className="h-full max-h-full w-full max-w-full !rounded-none !border-none bg-gradient-to-b from-primary/30 to-background p-0 data-[state=open]:slide-in-from-bottom-full data-[state=closed]:slide-out-to-bottom-full">
         <div className="flex h-full flex-col p-4 sm:p-6 sm:pt-12">
           <header className="flex items-center justify-between">
             <DialogClose>
-              <X className="h-6 w-6 opacity-70" />
+              <ChevronDown className="h-6 w-6 opacity-70" />
             </DialogClose>
-            <p className="font-semibold truncate px-4">{songTitle}</p>
+            <p className="px-4 font-semibold truncate">{songTitle}</p>
             <div className="w-6" /> {/* Placeholder for spacing */}
           </header>
 
-          <main className="flex flex-1 flex-col items-center justify-center gap-4 sm:gap-8 text-center px-4">
+          <main className="flex flex-1 flex-col items-center justify-center gap-4 text-center sm:gap-8 px-4">
             <Image
               src={imageUrl}
               alt={song.title}
               width={500}
               height={500}
-              className="aspect-square w-full max-w-xs sm:max-w-md rounded-lg shadow-2xl mt-4 sm:mt-0"
+              className="aspect-square w-full max-w-xs rounded-lg shadow-2xl sm:max-w-md mt-4 sm:mt-0"
               data-ai-hint="song album cover"
             />
             <div className="w-full max-w-xs sm:max-w-md">
               <div className="flex items-center justify-between">
                 <div className="text-left">
-                  <h2 className="text-xl sm:text-2xl font-bold truncate">{songTitle}</h2>
+                  <h2 className="text-xl font-bold sm:text-2xl truncate">
+                    {songTitle}
+                  </h2>
                   <p className="text-muted-foreground truncate">{song.artist}</p>
                 </div>
                 <button onClick={() => setIsLiked(!isLiked)}>
@@ -219,7 +228,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                 </button>
                 <button
                   onClick={togglePlay}
-                  className="rounded-full bg-white p-3 sm:p-4 text-background"
+                  className="rounded-full bg-white p-3 text-background sm:p-4"
                 >
                   {isPlaying ? (
                     <PauseIcon className="h-7 w-7 sm:h-8 sm:w-8" />
