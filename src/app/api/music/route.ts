@@ -8,19 +8,19 @@ const secretAccessKey = process.env.CLOUDFLARE_SECRET_ACCESS_KEY;
 const bucketName = process.env.CLOUDFLARE_BUCKET_NAME;
 const publicUrl = process.env.CLOUDFLARE_PUBLIC_URL;
 
-const R2 = new S3Client({
-  region: 'auto',
-  endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: accessKeyId!,
-    secretAccessKey: secretAccessKey!,
-  },
-});
-
 export async function GET() {
   if (!accountId || !accessKeyId || !secretAccessKey || !bucketName || !publicUrl) {
     return NextResponse.json({ error: 'Cloudflare R2 credentials or public URL are not set in environment variables' }, { status: 500 });
   }
+
+  const R2 = new S3Client({
+    region: 'auto',
+    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId: accessKeyId!,
+      secretAccessKey: secretAccessKey!,
+    },
+  });
 
   try {
     const list = await R2.send(
