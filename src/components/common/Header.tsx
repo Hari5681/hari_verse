@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/sheet';
 
 const navLinks = [
+  { href: '/', label: 'Home' },
   { href: '/music', label: 'Music' },
   { href: '/movies', label: 'Movies' },
   { href: '/ai-tools', label: 'AI Tools' },

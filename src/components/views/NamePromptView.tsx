@@ -20,13 +20,13 @@ export function NamePromptView({ onSubmit }: NamePromptViewProps) {
   };
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-background px-4">
-      <Card className="w-full max-w-sm">
+    <div className="flex min-h-screen w-full items-center justify-center bg-transparent px-4">
+      <Card className="w-full max-w-sm bg-background/50 backdrop-blur-sm">
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle className="text-2xl">Welcome!</CardTitle>
+            <CardTitle className="text-2xl">Welcome to HariVerse!</CardTitle>
             <CardDescription>
-              Please enter your name to continue.
+              What should I call you?
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -36,6 +36,7 @@ export function NamePromptView({ onSubmit }: NamePromptViewProps) {
               onChange={(e) => setName(e.target.value)}
               required
               aria-label="Your Name"
+              className="bg-background/80"
             />
           </CardContent>
           <CardFooter>
