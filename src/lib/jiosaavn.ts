@@ -65,6 +65,7 @@ export interface Playlist {
     firstname: string;
     followerCount: number;
     lastUpdated: number;
+    songs?: Song[];
     description?: string;
 }
 
@@ -86,7 +87,7 @@ export const searchSongs = async (query: string) => {
     return json.data;
 };
 
-export const getAlbumDetails = async (albumId: string) => {
+export const getAlbumDetails = async (albumId: string): Promise<Album> => {
     const response = await fetch(`${API_BASE}/albums?id=${albumId}`, { cache: 'no-store' });
     if (!response.ok) {
         throw new Error('Failed to fetch album details');
@@ -95,7 +96,7 @@ export const getAlbumDetails = async (albumId: string) => {
     return json.data;
 };
 
-export const getPlaylistDetails = async (playlistId: string) => {
+export const getPlaylistDetails = async (playlistId: string): Promise<Playlist> => {
     const response = await fetch(`${API_BASE}/playlists?id=${playlistId}`, { cache: 'no-store' });
      if (!response.ok) {
         throw new Error('Failed to fetch playlist details');
@@ -103,3 +104,5 @@ export const getPlaylistDetails = async (playlistId: string) => {
     const json = await response.json();
     return json.data;
 }
+
+    

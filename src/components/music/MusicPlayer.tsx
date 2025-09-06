@@ -84,7 +84,7 @@ export function MusicPlayer({ song, audioRef, onNext, onPrev }: MusicPlayerProps
         <div className="flex items-center gap-4 w-1/4">
           <Image src={imageUrl} alt={song.name} width={64} height={64} className="rounded-md" />
           <div>
-            <p className="font-bold truncate">{song.name}</p>
+            <p className="font-bold truncate" dangerouslySetInnerHTML={{ __html: song.name }}></p>
             <p className="text-sm text-muted-foreground truncate" dangerouslySetInnerHTML={{ __html: song.primaryArtists }}></p>
           </div>
         </div>
@@ -117,3 +117,5 @@ export function MusicPlayer({ song, audioRef, onNext, onPrev }: MusicPlayerProps
     </div>
   );
 }
+
+    

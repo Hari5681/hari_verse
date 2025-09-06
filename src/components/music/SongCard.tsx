@@ -13,7 +13,7 @@ type SongCardProps = {
 export function SongCard({ item, onPlay, className }: SongCardProps) {
   const imageUrl = item.image.find(q => q.quality === '150x150')?.link || item.image.find(q => q.quality === '500x500')?.link || item.image[0].link;
   const title = item.name || item.title;
-  const description = item.type === 'song' ? item.primaryArtists : (item.subtitle || item.description || '');
+  const description = item.type === 'song' ? item.primaryArtists : (item.subtitle || (item as Album).description || (item as Playlist).description || '');
 
   return (
     <div 
@@ -40,3 +40,5 @@ export function SongCard({ item, onPlay, className }: SongCardProps) {
     </div>
   );
 }
+
+    
