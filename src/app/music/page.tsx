@@ -266,7 +266,10 @@ export default function MusicPage() {
 
 function RecentlyPlayedSongCard({ song, onPlay }: { song: Song; onPlay: () => void; }) {
     return (
-        <div onClick={onPlay} className="group cursor-pointer">
+        <div 
+            onClick={onPlay} 
+            className="group cursor-pointer"
+        >
             <div className="relative aspect-square w-full overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105">
                 <Image
                     src={`https://picsum.photos/seed/${song.key}/200/200`}
@@ -276,13 +279,18 @@ function RecentlyPlayedSongCard({ song, onPlay }: { song: Song; onPlay: () => vo
                     className="w-full h-full object-cover"
                     data-ai-hint="song album cover"
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                 <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <PlayCircle size={48} className="text-white" />
                 </div>
             </div>
-            <p className="mt-2 text-sm font-semibold truncate text-foreground">
-                {song.title.replace(`${song.artist} - `, '')}
-            </p>
+            <div className="mt-2">
+                <p className="text-sm font-semibold truncate text-foreground">
+                    {song.title.replace(`${song.artist} - `, '')}
+                </p>
+                <p className="text-xs truncate text-muted-foreground">
+                    {song.artist}
+                </p>
+            </div>
         </div>
     );
 }
