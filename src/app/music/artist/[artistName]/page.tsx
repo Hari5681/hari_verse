@@ -159,7 +159,7 @@ export default function ArtistPage() {
   }, [handleNext]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background p-4 pt-20 pb-32">
+    <div className="min-h-screen bg-gradient-to-b from-primary/20 to-background p-4 pt-20 pb-32">
       <div className="w-full max-w-7xl mx-auto">
         <header className="relative flex flex-col items-center md:items-start text-center md:text-left pt-8">
             <Button variant="ghost" size="icon" className="absolute top-4 left-0" onClick={() => router.push('/music')}>
