@@ -17,6 +17,7 @@ const navItems = [
     { href: '/movies', label: 'Movies' },
     { href: '/ai-tools', label: 'AI Tools' },
     { href: '/about-me', label: 'About Me' },
+    { href: '/contact', label: 'Contact' },
 ];
 
 const Header = () => {
