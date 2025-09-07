@@ -19,12 +19,11 @@ export function GlobalPlayer({ isMusicPage }: { isMusicPage: boolean }) {
         return <div className="h-16" />;
     }
 
-    const isVisible = !!currentSong || isMusicPage;
+    const isVisible = !!currentSong;
 
     return (
         <div className="h-16">
-            {isVisible && currentSong && <Player />}
-            {isVisible && !currentSong && <div className="h-full border-t border-border/50 bg-background/80 backdrop-blur-lg" />}
+            {isVisible && <Player />}
         </div>
     );
 }
