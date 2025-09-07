@@ -264,7 +264,7 @@ export default function MusicPage() {
         />
       )}
 
-      <audio ref={audioRef} onEnded={handleNext} />
+      <audio ref={audioRef} />
     </div>
   );
 }

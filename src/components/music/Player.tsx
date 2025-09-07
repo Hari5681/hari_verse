@@ -57,7 +57,15 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
       audioRef.current
         .play()
         .then(() => setIsPlaying(true))
-        .catch((e) => console.error('Audio play failed:', e));
+        .catch((e) => {
+            if (e.name === 'AbortError') {
+              // This error is expected when a user quickly navigates between songs.
+              // The previous play() request is aborted by the new one.
+              // We can safely ignore it.
+              return;
+            }
+            console.error('Audio play failed:', e)
+          });
     }
   }, [song, audioRef]);
   
@@ -188,7 +196,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                   </button>
               </div>
 
-              <div className="flex items-center justify-end">
+              <div className="flex items-center justify-end md:hidden">
                 <div className="flex items-center gap-2 sm:gap-4">
                   <button
                     onClick={(e) => {
