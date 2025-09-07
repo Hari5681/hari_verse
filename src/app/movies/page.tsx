@@ -209,7 +209,7 @@ export default function MoviesPage() {
             title="Tollywood"
             subtitle="The best of Telugu cinema."
             language="te"
-            sortBy="vote_average.desc"
+            sortBy="release_date.desc"
           />
 
           <MovieCarousel
