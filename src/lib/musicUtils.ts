@@ -22,7 +22,7 @@ const defaultTheme: ArtistTheme = {
 const artistAssets: Record<string, ArtistAssets> = {
     'lana del rey': {
         profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/LENA/profile.jpg',
-        banner: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/LENA/banner.jpg',
+        banner: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/LENA/8b0f394b-de24-4415-b66c-d036e55d174e.jpg',
         wallpaper: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lana%20del%20rey/wallpaper.jpg',
         theme: {
             color: { h: 350, s: 80, l: 60 }, // Vintage Rose
