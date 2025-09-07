@@ -53,10 +53,11 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
   }, [playlist]);
   
   useEffect(() => {
-    if (audioRef.current && currentSong?.url) {
-        if (audioRef.current.src !== currentSong.url) {
-          audioRef.current.src = currentSong.url;
-          audioRef.current.load(); // Explicitly load the new source
+    if (audioRef.current && currentSong?.key) {
+        const streamUrl = `/api/music/stream?key=${encodeURIComponent(currentSong.key)}`;
+        if (audioRef.current.src !== streamUrl) {
+          audioRef.current.src = streamUrl;
+          audioRef.current.load(); 
         }
         audioRef.current.play().then(() => {
             setIsPlaying(true);
@@ -161,7 +162,8 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
     const handleError = (e: Event) => {
-        console.error("Audio Element Error:", e);
+        const mediaError = (e.target as HTMLAudioElement).error;
+        console.error("Audio Element Error:", mediaError);
         setIsPlaying(false); 
     };
 
