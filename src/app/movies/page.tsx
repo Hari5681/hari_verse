@@ -40,6 +40,13 @@ export default function MoviesPage() {
             </div>
             <Separator className="my-12"/>
             <div className="space-y-16">
+               <MovieCarousel
+                title="🎌 Anime"
+                subtitle="Explore captivating animated stories."
+                withGenres="16"
+                withKeywords="210024"
+                sortBy="popularity.desc"
+              />
               <MovieCarousel
                 title="💥 Action Movies"
                 subtitle="Get your adrenaline pumping."
