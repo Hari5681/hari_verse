@@ -16,6 +16,7 @@
     "@genkit-ai/googleai": "^1.14.1",
     "@genkit-ai/next": "^1.14.1",
     "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-progress": "^1.0.3",
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slider": "^1.1.2",
     "@radix-ui/react-slot": "^1.0.2",
@@ -25,6 +26,7 @@
     "embla-carousel-react": "^8.0.2",
     "firebase": "^10.12.2",
     "genkit": "^1.14.1",
+    "he": "^1.2.0",
     "lucide-react": "^0.378.0",
     "next": "15.3.3",
     "react": "^18",
@@ -35,6 +37,7 @@
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.13",
+    "@types/he": "^1.2.3",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
