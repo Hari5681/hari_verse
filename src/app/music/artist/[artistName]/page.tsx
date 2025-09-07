@@ -20,14 +20,50 @@ interface Song {
 }
 
 const getArtistFromTitle = (title: string): string => {
-  const parts = title.split(' - ');
-  return parts.length > 1 ? parts[0].trim() : 'Unknown Artist';
+    // Handle titles like "Artist - Song" or "folder/Artist - Song"
+    const fileName = title.split('/').pop() || '';
+    const parts = fileName.split(' - ');
+    if (parts.length > 1) {
+        // Check if artist name is part of a folder structure e.g. "lana del rey/Summertime Sadness"
+        const folderParts = title.split('/');
+        if (folderParts.length > 1) {
+            const artistGuess = folderParts[0].trim();
+            // A simple heuristic: if the folder name is reasonably short, it's likely the artist.
+            if (artistGuess.length < 25) {
+                // Capitalize first letter of each word
+                return artistGuess.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            }
+        }
+        return parts[0].trim();
+    }
+    
+    // Fallback for titles without " - " separator, check folder structure
+    const folderParts = title.split('/');
+    if (folderParts.length > 1) {
+         const artistGuess = folderParts[0].trim();
+         if (artistGuess) {
+            return artistGuess.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+         }
+    }
+    
+    return 'Unknown Artist';
 };
 
+
 const cleanSongTitle = (title: string, artist: string): string => {
-    const titleWithoutArtist = title.replace(`${artist} - `, '');
+    const artistPrefix = `${artist} - `;
+    let cleanTitle = title;
+    
+    if (cleanTitle.includes('/')) {
+        cleanTitle = cleanTitle.split('/').pop() || '';
+    }
+
+    if (cleanTitle.startsWith(artistPrefix)) {
+        cleanTitle = cleanTitle.substring(artistPrefix.length);
+    }
+    
     // Remove common extra text like (Official Music Video)
-    return titleWithoutArtist.replace(/\s*\(.*\)/i, '').trim();
+    return cleanTitle.replace(/\s*\(.*\)/i, '').trim();
 }
 
 export default function ArtistPage() {
@@ -62,10 +98,10 @@ export default function ArtistPage() {
                     ...song,
                     artist: getArtistFromTitle(song.title)
                 }))
-                .filter((song: Song) => song.artist === artistName);
+                .filter((song: Song) => song.artist.toLowerCase() === artistName.toLowerCase());
             
             if (songsWithArtists.length === 0) {
-                setError(`No songs found for ${artistName}.`);
+                setError(`No songs found for ${artistName}. Check if the songs are in the correct folder or named correctly.`);
             }
             setSongs(songsWithArtists);
         }
@@ -159,7 +195,7 @@ export default function ArtistPage() {
     }
   }, []);
 
-  const artistImageUrl = artistName === 'Lana Del Rey' 
+  const artistImageUrl = artistName.toLowerCase() === 'lana del rey' 
     ? 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
     : `https://picsum.photos/seed/${artistName}/400/400`;
 

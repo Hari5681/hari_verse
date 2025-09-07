@@ -33,12 +33,12 @@ export async function GET() {
     }
 
     const songs = list.Contents
-      .filter(item => item.Key && item.Key.toLowerCase().endsWith('.mp3'))
+      .filter(item => item.Key && (item.Key.toLowerCase().endsWith('.mp3') || item.Key.toLowerCase().endsWith('.m4a')))
       .map(item => {
-        const url = `${publicUrl}/${item.Key}`;
+        const url = `${publicUrl}/${encodeURIComponent(item.Key!)}`;
         return {
           key: item.Key,
-          title: item.Key!.split('/').pop()?.replace(/\.mp3/i, '') || 'Unknown Title',
+          title: item.Key!.split('/').pop()?.replace(/\.(mp3|m4a)$/i, '') || 'Unknown Title',
           url: url,
         };
       });
