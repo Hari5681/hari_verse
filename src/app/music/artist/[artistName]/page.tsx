@@ -1,15 +1,16 @@
+
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Music, Play, MoreHorizontal, Share, UserPlus, AlertTriangle, ArrowLeft, Download } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import { Player } from '@/components/music/Player';
 import PlayingAnimation from '@/components/music/PlayingAnimation';
 import { getArtistFromTitle, cleanSongTitle } from '@/lib/musicUtils';
+import { useMusicPlayer } from '@/context/MusicPlayerContext';
 
 interface Song {
   key: string;
@@ -24,12 +25,11 @@ export default function ArtistPage() {
   const artistName = params.artistName ? decodeURIComponent(params.artistName as string) : 'Unknown Artist';
 
   const [songs, setSongs] = useState<Song[]>([]);
-  const [currentSong, setCurrentSong] = useState<Song | null>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   const [isFollowing, setIsFollowing] = useState(false);
+  
+  const { playSong, currentSong, isPlaying } = useMusicPlayer();
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -75,29 +75,9 @@ export default function ArtistPage() {
   }, [artistName, toast]);
 
   const handlePlaySong = (song: Song) => {
-    setCurrentSong(song);
+    playSong(song, songs);
   };
-  
-  const handlePlayArtistTop = () => {
-    if (songs.length > 0) {
-        setCurrentSong(songs[0]);
-    }
-  }
 
-  const handleNext = () => {
-    if (!currentSong || songs.length === 0) return;
-    const currentIndex = songs.findIndex(s => s.key === currentSong.key);
-    const nextIndex = (currentIndex + 1) % songs.length;
-    setCurrentSong(songs[nextIndex]);
-  };
-  
-  const handlePrev = () => {
-    if (!currentSong || songs.length === 0) return;
-    const currentIndex = songs.findIndex(s => s.key === currentSong.key);
-    const prevIndex = (currentIndex - 1 + songs.length) % songs.length;
-    setCurrentSong(songs[prevIndex]);
-  };
-  
   const handleFollow = () => {
     setIsFollowing(!isFollowing);
     toast({
@@ -129,23 +109,6 @@ export default function ArtistPage() {
         })
     }
   }
-
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    
-    const handlePlayEvent = () => setIsPlaying(true);
-    const handlePauseEvent = () => setIsPlaying(false);
-    
-    audio.addEventListener('play', handlePlayEvent);
-    audio.addEventListener('pause', handlePauseEvent);
-    
-    return () => {
-      audio.removeEventListener('play', handlePlayEvent);
-      audio.removeEventListener('pause', handlePauseEvent);
-    }
-  }, [audioRef]);
 
   const artistImageUrl = artistName.toLowerCase() === 'lana del rey' 
     ? 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
@@ -211,17 +174,6 @@ export default function ArtistPage() {
             )}
         </main>
       </div>
-        
-      {currentSong && (
-        <Player
-          audioRef={audioRef}
-          song={currentSong}
-          onNext={handleNext}
-          onPrev={handlePrev}
-        />
-      )}
-      
-      <audio ref={audioRef} onEnded={handleNext} />
     </div>
   );
 }

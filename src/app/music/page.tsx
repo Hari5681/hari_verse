@@ -1,16 +1,16 @@
 
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
-import { PlayCircle, Download, AlertTriangle, PauseCircle, Music, Play } from 'lucide-react';
+import { PlayCircle, Download, AlertTriangle, PauseCircle, Play } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
-import { Player } from '@/components/music/Player';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { getArtistFromTitle, cleanSongTitle } from '@/lib/musicUtils';
+import { useMusicPlayer } from '@/context/MusicPlayerContext';
 
 
 interface Song {
@@ -30,12 +30,11 @@ const languages = ['Telugu', 'English', 'Hindi', 'Tamil'];
 export default function MusicPage() {
   const [songs, setSongs] = useState<Song[]>([]);
   const [artists, setArtists] = useState<Artist[]>([]);
-  const [playlist, setPlaylist] = useState<Song[]>([]);
-  const [currentSong, setCurrentSong] = useState<Song | null>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   const [recentlyPlayed, setRecentlyPlayed] = useState<Song[]>([]);
+
+  const { playSong, pauseSong, currentSong } = useMusicPlayer();
 
   useEffect(() => {
     try {
@@ -100,8 +99,7 @@ export default function MusicPage() {
   }, [toast]);
   
   const handlePlaySong = (song: Song, songList: Song[]) => {
-    setCurrentSong(song);
-    setPlaylist(songList);
+    playSong(song, songList);
 
     const newRecentlyPlayed = [
       song,
@@ -112,23 +110,7 @@ export default function MusicPage() {
   };
   
   const handlePauseSong = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-    }
-  };
-
-  const handleNext = () => {
-    if (!currentSong || playlist.length === 0) return;
-    const currentIndex = playlist.findIndex(s => s.key === currentSong.key);
-    const nextIndex = (currentIndex + 1) % playlist.length;
-    setCurrentSong(playlist[nextIndex]);
-  };
-  
-  const handlePrev = () => {
-    if (!currentSong || playlist.length === 0) return;
-    const currentIndex = playlist.findIndex(s => s.key === currentSong.key);
-    const prevIndex = (currentIndex - 1 + playlist.length) % playlist.length;
-    setCurrentSong(playlist[prevIndex]);
+    pauseSong();
   };
   
   const topPicks = songs.slice(0, 10);
@@ -255,17 +237,6 @@ export default function MusicPage() {
             </div>
         </CardContent>
       </Card>
-      
-      {currentSong && (
-        <Player
-          audioRef={audioRef}
-          song={currentSong}
-          onNext={handleNext}
-          onPrev={handlePrev}
-        />
-      )}
-
-      <audio ref={audioRef} onEnded={handleNext} src={currentSong?.url}/>
     </div>
   );
 }

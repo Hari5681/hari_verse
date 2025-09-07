@@ -23,125 +23,51 @@ import {
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { cleanSongTitle } from '@/lib/musicUtils';
+import { useMusicPlayer } from '@/context/MusicPlayerContext';
 
 
-interface Song {
-  key: string;
-  title: string;
-  url: string;
-  artist: string;
-}
-
-type PlayerProps = {
-  song: Song;
-  audioRef: React.RefObject<HTMLAudioElement>;
-  onNext: () => void;
-  onPrev: () => void;
-};
-
-const formatDuration = (secs: number) => {
-  if (isNaN(secs)) return '0:00';
-  const minutes = Math.floor(secs / 60);
-  const seconds = Math.floor(secs % 60);
-  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-};
-
-export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [duration, setDuration] = useState(0);
+export function Player() {
+  const { 
+    currentSong, 
+    audioRef, 
+    playNext, 
+    playPrev, 
+    isPlaying, 
+    togglePlay, 
+    progress, 
+    duration,
+    handleSeek,
+    isShuffle,
+    toggleShuffle,
+    isRepeat,
+    toggleRepeat
+  } = useMusicPlayer();
   const [isLiked, setIsLiked] = useState(false);
-  const [isShuffle, setIsShuffle] = useState(false);
-  const [isRepeat, setIsRepeat] = useState(false);
 
-  useEffect(() => {
-    if (audioRef.current && song.url) {
-      audioRef.current.src = song.url;
-      audioRef.current
-        .play()
-        .then(() => setIsPlaying(true))
-        .catch((e) => {
-            if (e.name !== 'AbortError') {
-              console.error('Audio play failed:', e)
-            }
-          });
-    }
-    // Reset progress for new song
-    setProgress(0);
-    setDuration(0);
-  }, [song, audioRef]);
-  
-  const handleEnded = () => {
-    if (isRepeat) {
-      if (audioRef.current) {
-        audioRef.current.currentTime = 0;
-        audioRef.current.play();
-      }
-    } else {
-      onNext();
-    }
-  };
+  if (!currentSong) return null;
 
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const updateProgress = () => setProgress(audio.currentTime);
-    const updateDuration = () => setDuration(audio.duration);
-    const handlePlay = () => setIsPlaying(true);
-    const handlePause = () => setIsPlaying(false);
-
-    audio.addEventListener('timeupdate', updateProgress);
-    audio.addEventListener('loadedmetadata', updateDuration);
-    audio.addEventListener('play', handlePlay);
-    audio.addEventListener('pause', handlePause);
-    audio.addEventListener('ended', handleEnded);
-
-    return () => {
-      audio.removeEventListener('timeupdate', updateProgress);
-      audio.removeEventListener('loadedmetadata', updateDuration);
-      audio.removeEventListener('play', handlePlay);
-      audio.removeEventListener('pause', handlePause);
-      audio.removeEventListener('ended', handleEnded);
-    };
-  }, [audioRef, onNext, isRepeat]);
-
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play().catch(e => console.error("Audio play failed on toggle:", e));
-      }
-    }
-  };
-
-  const handleSeek = (value: number[]) => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = value[0];
-      setProgress(value[0]);
-    }
-  };
-  
-  const handleShuffle = (e: React.MouseEvent) => {
+  const handleShuffleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsShuffle(!isShuffle);
-    if (!isShuffle && isRepeat) setIsRepeat(false);
+    toggleShuffle();
   };
   
-  const handleRepeat = (e: React.MouseEvent) => {
+  const handleRepeatClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-      setIsRepeat(!isRepeat);
-      if (!isRepeat && isShuffle) setIsShuffle(false);
+    toggleRepeat();
   };
 
-  const imageUrl = `https://picsum.photos/seed/${song.key}/500/500`;
-  const songTitle = cleanSongTitle(song.title, song.artist);
+  const imageUrl = `https://picsum.photos/seed/${currentSong.key}/500/500`;
+  const songTitle = cleanSongTitle(currentSong.title, currentSong.artist);
 
   const isTitleLong = songTitle.length > 25;
   const isMiniTitleLong = songTitle.length > 20;
 
+  const formatDuration = (secs: number) => {
+    if (isNaN(secs)) return '0:00';
+    const minutes = Math.floor(secs / 60);
+    const seconds = Math.floor(secs % 60);
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  };
 
   return (
     <Dialog>
@@ -152,7 +78,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
               <div className="flex items-center gap-3 overflow-hidden">
                 <Image
                   src={imageUrl}
-                  alt={song.title}
+                  alt={currentSong.title}
                   width={40}
                   height={40}
                   className="rounded-md flex-shrink-0"
@@ -161,7 +87,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                 <div className="overflow-hidden whitespace-nowrap min-w-0">
                   <p className={cn("font-bold text-sm", isMiniTitleLong && "md:animate-marquee-delayed", "truncate")}>{songTitle}</p>
                   <p className="truncate text-xs text-muted-foreground">
-                    {song.artist}
+                    {currentSong.artist}
                   </p>
                 </div>
               </div>
@@ -170,7 +96,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                  <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      onPrev();
+                      playPrev();
                     }}
                     className="text-muted-foreground transition-colors hover:text-foreground"
                   >
@@ -192,7 +118,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      onNext();
+                      playNext();
                     }}
                     className="text-muted-foreground transition-colors hover:text-foreground"
                   >
@@ -218,7 +144,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      onNext();
+                      playNext();
                     }}
                     className="text-muted-foreground transition-colors hover:text-foreground"
                   >
@@ -250,7 +176,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
             <div className="w-full max-w-xs sm:max-w-md">
               <Image
                 src={imageUrl}
-                alt={song.title}
+                alt={currentSong.title}
                 width={500}
                 height={500}
                 className="aspect-square w-full max-w-[70vw] sm:max-w-md mx-auto rounded-lg shadow-2xl transition-transform duration-500 group-data-[state=open]:scale-100 animate-fade-in-up"
@@ -262,7 +188,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                   <h2 className="text-xl font-bold sm:text-2xl truncate">
                     {songTitle}
                   </h2>
-                  <p className="text-sm text-muted-foreground truncate">{song.artist}</p>
+                  <p className="text-sm text-muted-foreground truncate">{currentSong.artist}</p>
                 </div>
                 <button onClick={() => setIsLiked(!isLiked)} className="ml-4 flex-shrink-0">
                   <Heart
@@ -291,13 +217,13 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
 
               <div className="mt-4 flex items-center justify-around animate-fade-in-up" style={{ animationDelay: '500ms' }}>
                 <button 
-                  onClick={handleShuffle}
+                  onClick={handleShuffleClick}
                   className={cn("text-muted-foreground transition-colors hover:text-foreground", {"text-primary": isShuffle})}
                 >
                   <Shuffle className="h-5 w-5" />
                 </button>
                 <button
-                  onClick={onPrev}
+                  onClick={playPrev}
                   className="text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <SkipBack size={32} />
@@ -313,13 +239,13 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                   )}
                 </button>
                 <button
-                  onClick={onNext}
+                  onClick={playNext}
                   className="text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <SkipForward size={32} />
                 </button>
                 <button 
-                  onClick={handleRepeat}
+                  onClick={handleRepeatClick}
                   className={cn("text-muted-foreground transition-colors hover:text-foreground", {"text-primary": isRepeat})}
                 >
                   <Repeat className="h-5 w-5" />
