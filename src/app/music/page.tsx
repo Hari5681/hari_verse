@@ -126,7 +126,6 @@ export default function MusicPage() {
   };
   
   const lanaDelReySongs = songs.filter(song => song.artist.toLowerCase() === 'lana del rey');
-  const otherSongs = songs.filter(song => song.artist.toLowerCase() !== 'lana del rey' && song.artist !== 'Unknown Artist');
   const topPicks = songs.slice(0, 10);
 
   return (
@@ -249,18 +248,6 @@ export default function MusicPage() {
                             ))}
                         </div>
                          <Separator className="my-12"/>
-                    </section>
-                )}
-
-
-                {otherSongs.length > 0 && (
-                   <section>
-                        <h2 className="text-2xl font-bold mb-4">All Songs</h2>
-                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                            {otherSongs.map((song) => (
-                                <SongCard key={song.key} song={song} currentSong={currentSong} onPlay={() => handlePlaySong(song, otherSongs)} />
-                            ))}
-                        </div>
                     </section>
                 )}
 
