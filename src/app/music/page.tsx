@@ -33,6 +33,7 @@ export default function MusicPage() {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   const [recentlyPlayed, setRecentlyPlayed] = useState<Song[]>([]);
+  const [topPicks, setTopPicks] = useState<Song[]>([]);
 
   const { playSong, pauseSong, currentSong } = useMusicPlayer();
 
@@ -68,6 +69,27 @@ export default function MusicPage() {
                 artist: getArtistFromTitle(song.title)
             }));
             setSongs(songsWithArtists);
+
+            const picksOrder = [
+              'young and beautiful',
+              'changes',
+              'when i grow up',
+              'sweater weather',
+              'lovely',
+              'blinding lights',
+            ];
+
+            const filteredPicks = songsWithArtists.filter(song => 
+                picksOrder.some(pick => cleanSongTitle(song.title, song.artist).toLowerCase().includes(pick))
+            );
+
+            const sortedPicks = filteredPicks.sort((a, b) => {
+                const aIndex = picksOrder.findIndex(pick => cleanSongTitle(a.title, a.artist).toLowerCase().includes(pick));
+                const bIndex = picksOrder.findIndex(pick => cleanSongTitle(b.title, b.artist).toLowerCase().includes(pick));
+                return aIndex - bIndex;
+            });
+            
+            setTopPicks(sortedPicks);
             
             const uniqueArtists = songsWithArtists.reduce((acc, song) => {
                 if (!acc.find(a => a.name === song.artist) && song.artist !== 'Unknown Artist') {
@@ -111,8 +133,6 @@ export default function MusicPage() {
     pauseSong();
   };
   
-  const topPicks = songs.slice(0, 10);
-
   return (
     <div className="flex min-h-screen flex-col items-center bg-background p-4 pt-20">
       <Card className="w-full max-w-7xl border-none bg-transparent">
@@ -312,3 +332,5 @@ function SongCard({ song, currentSong, onPlay, onPause }: { song: Song; currentS
         </div>
     );
 }
+
+    
