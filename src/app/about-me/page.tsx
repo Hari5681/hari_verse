@@ -1,6 +1,8 @@
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { User } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { User, Github, Linkedin, Instagram, Mail } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export default function AboutMePage() {
   return (
@@ -26,6 +28,32 @@ export default function AboutMePage() {
             Beyond coding, I’m curious about AI tools, music apps, and 3D animation websites. My goal is to become a skilled developer and create apps that are both useful and fun for people.
           </p>
         </CardContent>
+        <CardFooter className="flex justify-center gap-4 border-t border-border/20 pt-6">
+            <Link href="https://github.com/Hari5681" target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" size="icon">
+                <Github className="h-5 w-5" />
+                <span className="sr-only">GitHub</span>
+              </Button>
+            </Link>
+            <Link href="#" target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" size="icon">
+                <Linkedin className="h-5 w-5" />
+                <span className="sr-only">LinkedIn</span>
+              </Button>
+            </Link>
+            <Link href="https://www.instagram.com/hari_5681/" target="_blank" rel="noopener noreferrer">
+               <Button variant="outline" size="icon">
+                <Instagram className="h-5 w-5" />
+                 <span className="sr-only">Instagram</span>
+              </Button>
+            </Link>
+            <Link href="mailto:harikrishna5681@gmail.com">
+               <Button variant="outline" size="icon">
+                <Mail className="h-5 w-5" />
+                <span className="sr-only">Email</span>
+              </Button>
+            </Link>
+        </CardFooter>
       </Card>
     </div>
   );
