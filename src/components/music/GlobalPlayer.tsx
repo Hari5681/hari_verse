@@ -5,7 +5,7 @@ import { useMusicPlayer } from '@/context/MusicPlayerContext';
 import { Player } from './Player';
 import { useEffect, useState } from 'react';
 
-export function GlobalPlayer({ forceShow = false }: { forceShow?: boolean }) {
+export function GlobalPlayer({ isMusicPage }: { isMusicPage: boolean }) {
     const { currentSong } = useMusicPlayer();
     const [hasMounted, setHasMounted] = useState(false);
 
@@ -19,7 +19,7 @@ export function GlobalPlayer({ forceShow = false }: { forceShow?: boolean }) {
         return <div className="fixed bottom-0 left-0 right-0 z-50 h-16" />;
     }
 
-    const isVisible = !!currentSong || forceShow;
+    const isVisible = !!currentSong || isMusicPage;
 
     return (
         <div className="fixed bottom-0 left-0 right-0 z-50 h-16">
