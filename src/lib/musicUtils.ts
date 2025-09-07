@@ -1,5 +1,6 @@
 
 
+
 const artistAssets: Record<string, { profile?: string; banners?: string[] }> = {
     'lana del rey': {
         profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
@@ -52,7 +53,9 @@ export const getArtistFromTitle = (title: string): string => {
     if (parts.length > 1 && parts[0].trim() !== '') {
         const artistCandidate = parts[0].trim();
         // Capitalize first letter of each word
-        return artistCandidate.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        const formattedArtist = artistCandidate.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        if (formattedArtist.toLowerCase() === 'xxxtentacion') return 'XXXTentacion';
+        return formattedArtist;
     }
     
     // Case 2: Artist is in the filename, e.g., "Artist - Song.mp3"
