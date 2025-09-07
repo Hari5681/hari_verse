@@ -12,6 +12,12 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import React from 'react';
+import { MovieCarousel } from '@/components/movies/MovieCarousel';
+import Link from 'next/link';
+import { genres } from '@/lib/genres';
+import { Card, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowRight } from 'lucide-react';
+
 
 interface MovieDetails {
   id: number;
@@ -57,8 +63,8 @@ const AnimatedRating = ({ rating }: { rating: number }) => {
     <div className="w-full max-w-xs">
       <div className="flex justify-between items-center mb-1">
         <div className="flex items-center gap-2">
-            <span className="text-base font-medium text-foreground">TMDb Rating</span>
             <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+            <span className="text-base font-medium text-foreground">TMDb Rating</span>
         </div>
         <span className={cn("text-sm font-medium", getRatingTextColor(rating))}>{rating.toFixed(1)}/10</span>
       </div>
@@ -307,11 +313,50 @@ export default function MovieDetailPage() {
                 </section>
             )}
 
+            <Separator />
+
+             <div className="space-y-16">
+                 <MovieCarousel
+                    title="Similar Movies"
+                    subtitle="If you liked this, you might also like..."
+                    endpoint={`/api/movies/${id}/similar`}
+                 />
+                 
+                <section className="animate-fade-in-up">
+                    <h2 className="text-2xl font-bold">Explore Other Sections</h2>
+                    <p className="text-muted-foreground mb-6">Browse movies by your favorite genre.</p>
+                    <Carousel
+                        opts={{
+                            align: 'start',
+                            loop: true,
+                        }}
+                        className="w-full"
+                    >
+                        <CarouselContent>
+                        {genres.map((genre, index) => (
+                            <CarouselItem key={genre.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
+                            <Link href={`/movies/category/${genre.name.toLowerCase()}`} passHref>
+                                <Card 
+                                className="group flex flex-col justify-between h-40 overflow-hidden rounded-lg bg-card text-card-foreground shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-primary/20 hover:border-primary/50"
+                                style={{ animationDelay: `${index * 100}ms` }}
+                                >
+                                <CardHeader>
+                                    <CardTitle className="text-xl font-bold flex items-center justify-between">
+                                    <span>{genre.name}</span>
+                                    <ArrowRight className="h-5 w-5 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
+                                    </CardTitle>
+                                </CardHeader>
+                                </Card>
+                            </Link>
+                            </CarouselItem>
+                        ))}
+                        </CarouselContent>
+                        <CarouselPrevious className="hidden md:flex" />
+                        <CarouselNext className="hidden md:flex" />
+                    </Carousel>
+                </section>
+            </div>
         </div>
       </main>
     </div>
   );
-
-    
-
-    
