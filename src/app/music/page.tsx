@@ -101,7 +101,25 @@ export default function MusicPage() {
                 return acc;
             }, [] as Artist[]);
 
-            setArtists(uniqueArtists);
+            const preferredOrder = ['Xxx Tentacion', 'Lana Del Rey'];
+            const sortedArtists = uniqueArtists.sort((a, b) => {
+                const aIndex = preferredOrder.indexOf(a.name);
+                const bIndex = preferredOrder.indexOf(b.name);
+
+                if (aIndex > -1 && bIndex > -1) {
+                    return aIndex - bIndex;
+                }
+                if (aIndex > -1) {
+                    return -1;
+                }
+                if (bIndex > -1) {
+                    return 1;
+                }
+                return a.name.localeCompare(b.name);
+            });
+
+
+            setArtists(sortedArtists);
         }
       } catch (error: any) {
         console.error("Fetch R2 songs error:", error);
@@ -332,5 +350,7 @@ function SongCard({ song, currentSong, onPlay, onPause }: { song: Song; currentS
         </div>
     );
 }
+
+    
 
     
