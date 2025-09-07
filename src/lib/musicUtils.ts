@@ -53,6 +53,8 @@ const artistAssets: Record<string, ArtistAssets> = {
         },
     },
     'billie eilish': {
+        profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/Billie%20Eilish/biile%20-%20pro.jpg',
+        banner: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/Billie%20Eilish/bille%20_%20cover%20.jpg',
         wallpaper: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/billie%20eilish/wallpaper.jpg',
         theme: {
             color: { h: 100, s: 80, l: 60 }, // Green
