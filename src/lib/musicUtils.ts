@@ -49,7 +49,7 @@ const artistAssets: Record<string, ArtistAssets> = {
     },
     'nf': {
         profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/NF/nf_profile.jpg',
-        banner: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/NF/nf.jpg',
+        banner: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/NF/4488b65b-637c-4bc5-b4aa-47c57d2a9c59.jpg',
         wallpaper: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/nf/wallpaper.jpg',
         theme: {
             color: { h: 60, s: 80, l: 60 }, // Yellow
