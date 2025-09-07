@@ -40,6 +40,24 @@ const artistAssets: Record<string, ArtistAssets> = {
             color: { h: 210, s: 50, l: 55 }, // Moody Blue
             gradient: 'linear-gradient(to bottom, hsl(210, 50%, 25%), hsl(240, 10%, 3.9%))',
         },
+    },
+    'nf': {
+        theme: {
+            color: { h: 60, s: 80, l: 60 }, // Yellow
+            gradient: 'linear-gradient(to bottom, hsl(60, 80%, 30%), hsl(240, 10%, 3.9%))',
+        },
+    },
+    'billie eilish': {
+        theme: {
+            color: { h: 100, s: 80, l: 60 }, // Green
+            gradient: 'linear-gradient(to bottom, hsl(100, 80%, 30%), hsl(240, 10%, 3.9%))',
+        },
+    },
+    'the weeknd': {
+        theme: {
+            color: { h: 270, s: 80, l: 60 }, // Violet
+            gradient: 'linear-gradient(to bottom, hsl(270, 80%, 30%), hsl(240, 10%, 3.9%))',
+        },
     }
 };
 
@@ -69,6 +87,15 @@ export const getArtistFromTitle = (title: string): string => {
     }
     if (lowerCaseTitle.includes('the neighbourhood')) {
         return 'The Neighbourhood';
+    }
+    if (lowerCaseTitle.includes('billie eilish')) {
+        return 'Billie Eilish';
+    }
+    if (lowerCaseTitle.includes('the weeknd')) {
+        return 'The Weeknd';
+    }
+    if (lowerCaseTitle.includes('nf')) {
+        return 'NF';
     }
 
     const parts = title.split('/');
