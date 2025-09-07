@@ -9,25 +9,21 @@ import PauseIcon from '@/components/icons/PauseIcon';
 import {
   SkipBack,
   SkipForward,
-  Repeat,
-  Shuffle,
   Heart,
-  ChevronDown,
-  X,
+  ArrowLeft,
   Volume2,
   MoreHorizontal,
-  ArrowLeft,
+  Shuffle,
+  Repeat,
 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
-  DialogClose,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { cleanSongTitle, getSongImageUrl } from '@/lib/musicUtils';
 import { useMusicPlayer } from '@/context/MusicPlayerContext';
-
 
 export function Player() {
   const { 
@@ -40,27 +36,34 @@ export function Player() {
     progress, 
     duration,
     handleSeek,
-    isShuffle,
-    toggleShuffle,
-    isRepeat,
-    toggleRepeat,
-    stopPlayer,
   } = useMusicPlayer();
   const [isLiked, setIsLiked] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [showVolume, setShowVolume] = useState(false);
+  const [volume, setVolumeState] = useState(1);
+  const [isShuffle, setIsShuffle] = useState(false);
+  const [isRepeat, setIsRepeat] = useState(false);
 
   if (!currentSong) {
     return null;
   }
+
+  const handleVolumeChange = (value: number[]) => {
+    const newVolume = value[0] / 100;
+    setVolumeState(newVolume);
+    if (audioRef.current) {
+        audioRef.current.volume = newVolume;
+    }
+  }
   
   const handleShuffleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    toggleShuffle();
+    setIsShuffle(!isShuffle);
   };
   
   const handleRepeatClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    toggleRepeat();
+    setIsRepeat(!isRepeat);
   };
 
   const imageUrl = getSongImageUrl(currentSong.artist, currentSong.key, 500);
@@ -119,22 +122,18 @@ export function Player() {
                   >
                     <SkipForward size={22} />
                   </button>
-                   <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        stopPlayer();
-                      }}
-                      className="text-muted-foreground transition-colors hover:text-foreground ml-2"
-                    >
-                      <X size={20} />
-                    </button>
                 </div>
             </div>
           </div>
         </DialogTrigger>
       </div>
 
-      <DialogContent className="h-[90vh] max-h-[90vh] w-[95vw] max-w-md !rounded-3xl !border-none p-0 flex flex-col bg-card shadow-2xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-full data-[state=open]:slide-in-from-bottom-full">
+      <DialogContent 
+        className="h-[90vh] max-h-[90vh] w-[95vw] max-w-md !rounded-3xl !border-none p-0 flex flex-col bg-card shadow-2xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-full data-[state=open]:slide-in-from-bottom-full"
+        style={{
+            boxShadow: `0 10px 50px -10px hsl(var(--dynamic-primary-h) var(--dynamic-primary-s) var(--dynamic-primary-l) / 0.5), 0 0 20px hsl(var(--dynamic-primary-h) var(--dynamic-primary-s) var(--dynamic-primary-l) / 0.2)`
+        }}
+      >
         
         <div className="p-6 pb-2">
             <header className="flex items-center justify-between text-foreground">
@@ -158,9 +157,25 @@ export function Player() {
                     data-ai-hint="song album cover"
                 />
                 <div className='absolute bottom-4 right-4'>
-                    <button className='w-10 h-10 bg-background/50 backdrop-blur-sm rounded-full flex items-center justify-center text-foreground'>
-                        <Volume2 size={20}/>
-                    </button>
+                    <div className="relative">
+                        <button 
+                            onClick={() => setShowVolume(!showVolume)}
+                            className='w-10 h-10 bg-background/50 backdrop-blur-sm rounded-full flex items-center justify-center text-foreground'
+                        >
+                            <Volume2 size={20}/>
+                        </button>
+                        {showVolume && (
+                           <div className="absolute bottom-12 right-0 w-28 p-2 bg-background/70 backdrop-blur-md rounded-lg">
+                             <Slider
+                                value={[volume * 100]}
+                                max={100}
+                                step={1}
+                                onValueChange={handleVolumeChange}
+                                className="w-full"
+                             />
+                           </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </main>
@@ -168,9 +183,9 @@ export function Player() {
         <footer className="px-6 pb-8 pt-4">
             <div className="text-center mb-6">
                 <h2 className="text-2xl font-bold truncate text-foreground">
-                    {currentSong.artist}
+                    {songTitle}
                 </h2>
-                <p className="text-sm text-muted-foreground uppercase tracking-widest truncate">{songTitle}</p>
+                <p className="text-sm text-muted-foreground uppercase tracking-widest truncate">{currentSong.artist}</p>
             </div>
 
             <div className="space-y-2">
@@ -188,14 +203,11 @@ export function Player() {
             </div>
 
             <div className="mt-4 flex items-center justify-around text-foreground">
-              <button onClick={() => setIsLiked(!isLiked)} className="ml-4 flex-shrink-0">
-                  <Heart
-                      className={`h-6 w-6 transition-all ${
-                      isLiked
-                          ? 'fill-primary text-primary'
-                          : 'text-muted-foreground'
-                      }`}
-                  />
+              <button 
+                onClick={handleShuffleClick}
+                className={cn("text-muted-foreground transition-colors hover:text-primary", {"text-primary": isShuffle})}
+              >
+                <Shuffle className="h-6 w-6" />
               </button>
               <button
                 onClick={playPrev}
@@ -220,11 +232,22 @@ export function Player() {
                 <SkipForward size={28} fill='currentColor' />
               </button>
               <button 
-                onClick={handleShuffleClick}
-                className={cn("text-muted-foreground transition-colors hover:text-primary", {"text-primary": isShuffle})}
+                onClick={handleRepeatClick}
+                className={cn("text-muted-foreground transition-colors hover:text-primary", {"text-primary": isRepeat})}
               >
-                <Shuffle className="h-6 w-6" />
+                <Repeat className="h-6 w-6" />
               </button>
+            </div>
+             <div className='flex justify-center mt-6'>
+                <button onClick={() => setIsLiked(!isLiked)} className="flex-shrink-0">
+                    <Heart
+                        className={`h-6 w-6 transition-all ${
+                        isLiked
+                            ? 'fill-primary text-primary'
+                            : 'text-muted-foreground'
+                        }`}
+                    />
+                </button>
             </div>
         </footer>
 
