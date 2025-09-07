@@ -13,17 +13,13 @@ export function GlobalPlayer({ isMusicPage }: { isMusicPage: boolean }) {
         setHasMounted(true);
     }, []);
 
-    if (!hasMounted) {
-        // On the server and during initial client render, render a static placeholder
-        // that takes up the same space as the player.
-        return <div className="h-16" />;
+    if (!hasMounted || !currentSong) {
+        return null;
     }
-
-    const isVisible = !!currentSong;
 
     return (
         <div className="h-16">
-            {isVisible && <Player />}
+            <Player />
         </div>
     );
 }
