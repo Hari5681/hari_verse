@@ -3,7 +3,7 @@ import { Github, Instagram, Linkedin, Mail } from 'lucide-react';
 
 export function Footer() {
   return (
-    <footer className="relative z-10 w-full border-t border-border/50 bg-background/80 py-6 backdrop-blur-sm">
+    <footer className="relative z-10 w-full bg-background/80 py-6 backdrop-blur-sm">
       <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 text-center md:flex-row md:px-6">
         <p className="text-sm text-muted-foreground">
           © 2025 HariVerse. All rights reserved.
