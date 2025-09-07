@@ -62,8 +62,8 @@ function MainContent({ children }: { children: React.ReactNode }) {
         <Header />
         <main className="relative z-10">{children}</main>
       </div>
-      <GlobalPlayer isMusicPage={isMusicPage} />
-      <Footer />
+      <GlobalPlayer />
+      {!currentSong && <Footer />}
       <Toaster />
     </div>
   );
