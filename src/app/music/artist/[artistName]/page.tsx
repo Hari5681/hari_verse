@@ -9,7 +9,7 @@ import { Music, Play, MoreHorizontal, Share, UserPlus, AlertTriangle, ArrowLeft,
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import PlayingAnimation from '@/components/music/PlayingAnimation';
-import { getArtistFromTitle, cleanSongTitle, getArtistImageUrl, getSongImageUrl, getArtistTheme } from '@/lib/musicUtils';
+import { getArtistFromTitle, cleanSongTitle, getArtistImageUrl, getSongImageUrl, getArtistTheme, getArtistWallpaperUrl } from '@/lib/musicUtils';
 import { useMusicPlayer } from '@/context/MusicPlayerContext';
 import { cn } from '@/lib/utils';
 
@@ -43,6 +43,7 @@ export default function ArtistPage() {
   
   const { playSong, currentSong, isPlaying } = useMusicPlayer();
   const artistTheme = getArtistTheme(artistName);
+  const artistWallpaperUrl = getArtistWallpaperUrl(artistName);
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -125,8 +126,15 @@ export default function ArtistPage() {
 
   const artistImageUrl = getArtistImageUrl(artistName);
 
+  const backgroundStyle = {
+    backgroundImage: `${artistTheme.gradient}, url(${artistWallpaperUrl})`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundBlendMode: 'overlay',
+  };
+
   return (
-    <div className="min-h-screen p-4 pt-20 pb-40 transition-colors duration-500" style={{ background: artistTheme.gradient }}>
+    <div className="min-h-screen p-4 pt-20 pb-40 transition-colors duration-500" style={backgroundStyle}>
       <div className="w-full max-w-7xl mx-auto">
         <header className="relative flex flex-col items-center text-center pt-8">
             <Button variant="ghost" size="icon" className="absolute top-4 left-0 md:left-4" onClick={() => router.push('/music')}>

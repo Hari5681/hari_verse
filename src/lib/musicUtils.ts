@@ -10,6 +10,7 @@ export interface ArtistTheme {
 interface ArtistAssets {
     profile?: string;
     banner?: string;
+    wallpaper?: string;
     theme: ArtistTheme;
 }
 
@@ -21,6 +22,7 @@ const defaultTheme: ArtistTheme = {
 const artistAssets: Record<string, ArtistAssets> = {
     'lana del rey': {
         profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lana%20del%20rey/lana%20del%20rey%20profile.jpg',
+        wallpaper: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lana%20del%20rey/wallpaper.jpg',
         theme: {
             color: { h: 350, s: 80, l: 60 }, // Vintage Rose
             gradient: 'linear-gradient(to bottom, hsl(350, 80%, 30%), hsl(240, 10%, 3.9%))',
@@ -28,6 +30,7 @@ const artistAssets: Record<string, ArtistAssets> = {
     },
     'the neighbourhood': {
         profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neighbourhood/the%20neighbourhood%20profile.jpeg',
+        wallpaper: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neighbourhood/wallpaper.jpg',
         theme: {
             color: { h: 0, s: 0, l: 80 }, // Grayscale
             gradient: 'linear-gradient(to bottom, hsl(0, 0%, 20%), hsl(240, 10%, 3.9%))',
@@ -36,24 +39,28 @@ const artistAssets: Record<string, ArtistAssets> = {
     'xxx tentacion': {
         profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/images.jpg',
         banner: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%203.jpg?raw=true',
+        wallpaper: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/wallpaper.jpg',
         theme: {
             color: { h: 210, s: 50, l: 55 }, // Moody Blue
             gradient: 'linear-gradient(to bottom, hsl(210, 50%, 25%), hsl(240, 10%, 3.9%))',
         },
     },
     'nf': {
+        wallpaper: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/nf/wallpaper.jpg',
         theme: {
             color: { h: 60, s: 80, l: 60 }, // Yellow
             gradient: 'linear-gradient(to bottom, hsl(60, 80%, 30%), hsl(240, 10%, 3.9%))',
         },
     },
     'billie eilish': {
+        wallpaper: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/billie%20eilish/wallpaper.jpg',
         theme: {
             color: { h: 100, s: 80, l: 60 }, // Green
             gradient: 'linear-gradient(to bottom, hsl(100, 80%, 30%), hsl(240, 10%, 3.9%))',
         },
     },
     'the weeknd': {
+        wallpaper: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20weeknd/wallpaper.jpg',
         theme: {
             color: { h: 270, s: 80, l: 60 }, // Violet
             gradient: 'linear-gradient(to bottom, hsl(270, 80%, 30%), hsl(240, 10%, 3.9%))',
@@ -159,6 +166,16 @@ export const cleanSongTitle = (title: string, artist: string): string => {
 export const getArtistImageUrl = (artistName: string): string => {
     const assets = artistAssets[artistName.toLowerCase()];
     return assets?.profile || `https://picsum.photos/seed/${encodeURIComponent(artistName)}/400/400`;
+};
+
+/**
+ * Gets the wallpaper image URL for a given artist.
+ * @param artistName The name of the artist.
+ * @returns A URL for the artist's wallpaper image, or a generic one.
+ */
+export const getArtistWallpaperUrl = (artistName: string): string => {
+    const assets = artistAssets[artistName.toLowerCase()];
+    return assets?.wallpaper || `https://picsum.photos/seed/${encodeURIComponent(artistName)}-wallpaper/1920/1080`;
 };
 
 
