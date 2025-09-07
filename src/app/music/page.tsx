@@ -254,6 +254,7 @@ export default function MusicPage() {
                 )}
             </div>
              <div className="mt-12 text-center text-muted-foreground animate-fade-in-up" style={{ animationDelay: '500ms' }}>
+                <div className="text-4xl mb-4 animate-spin [animation-duration:3s]">🎶</div>
                 <p className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
                     Music updates in progress… Please stay tuned!
                 </p>
