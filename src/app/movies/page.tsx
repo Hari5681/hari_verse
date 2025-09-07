@@ -7,6 +7,7 @@ import { genres } from '@/lib/genres';
 import Link from 'next/link';
 import { Card, CardTitle, CardHeader } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 export default function MoviesPage() {
   return (
@@ -43,20 +44,32 @@ export default function MoviesPage() {
               </p>
             </div>
             <Separator className="my-12"/>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {genres.map((genre) => (
-                <Link key={genre.id} href={`/movies/category/${genre.name.toLowerCase()}`} passHref>
-                  <Card className="group flex flex-col justify-between h-full overflow-hidden rounded-lg bg-card text-card-foreground shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-primary/20 hover:border-primary/50">
-                    <CardHeader>
-                      <CardTitle className="text-xl font-bold flex items-center justify-between">
-                        <span>{genre.name}</span>
-                        <ArrowRight className="h-5 w-5 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
-                      </CardTitle>
-                    </CardHeader>
-                  </Card>
-                </Link>
-              ))}
-            </div>
+            <Carousel
+              opts={{
+                align: 'start',
+                loop: true,
+              }}
+              className="w-full"
+            >
+              <CarouselContent>
+                {genres.map((genre) => (
+                  <CarouselItem key={genre.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
+                    <Link href={`/movies/category/${genre.name.toLowerCase()}`} passHref>
+                      <Card className="group flex flex-col justify-between h-40 overflow-hidden rounded-lg bg-card text-card-foreground shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-primary/20 hover:border-primary/50">
+                        <CardHeader>
+                          <CardTitle className="text-xl font-bold flex items-center justify-between">
+                            <span>{genre.name}</span>
+                            <ArrowRight className="h-5 w-5 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
+                          </CardTitle>
+                        </CardHeader>
+                      </Card>
+                    </Link>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="hidden md:flex" />
+              <CarouselNext className="hidden md:flex" />
+            </Carousel>
           </section>
           
           <MovieCarousel
