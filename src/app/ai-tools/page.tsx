@@ -123,7 +123,7 @@ export default function AiToolsPage() {
               >
                 <CarouselContent>
                   {category.tools.map((tool, toolIndex) => (
-                    <CarouselItem key={tool.name} className="basis-full md:basis-1/2 lg:basis-1/3">
+                    <CarouselItem key={tool.name} className="basis-1/2 md:basis-1/2 lg:basis-1/3">
                       <div 
                         className="h-full p-1"
                         style={{ animationDelay: `${toolIndex * 100}ms`, animationFillMode: 'both' }}
@@ -131,14 +131,14 @@ export default function AiToolsPage() {
                         <Card 
                           className="flex flex-col h-full bg-card/50 backdrop-blur-sm border-border/20 transition-all duration-300 hover:border-primary/50 hover:-translate-y-1"
                         >
-                          <CardHeader>
-                            <CardTitle>{tool.name}</CardTitle>
-                            <CardDescription>{tool.description}</CardDescription>
+                          <CardHeader className="p-4">
+                            <CardTitle className="text-base sm:text-lg">{tool.name}</CardTitle>
+                            <CardDescription className="text-xs sm:text-sm">{tool.description}</CardDescription>
                           </CardHeader>
-                          <CardContent className="flex-grow flex items-end mt-auto">
+                          <CardContent className="flex-grow flex items-end mt-auto p-4 pt-0">
                             <Link href={tool.link} target="_blank" rel="noopener noreferrer" className="w-full">
-                              <Button variant="outline" className="w-full">
-                                Visit <ArrowUpRight className="h-4 w-4 ml-2" />
+                              <Button variant="outline" className="w-full h-9 text-xs sm:h-10 sm:text-sm">
+                                Visit <ArrowUpRight className="h-4 w-4 ml-1 sm:ml-2" />
                               </Button>
                             </Link>
                           </CardContent>
