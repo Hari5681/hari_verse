@@ -210,6 +210,7 @@ export default function MoviesPage() {
             subtitle="The best of Telugu cinema."
             language="te"
             sortBy="release_date.desc"
+            primaryReleaseDateLte={new Date().toISOString().split('T')[0]}
           />
 
           <MovieCarousel

@@ -23,9 +23,10 @@ interface MovieCarouselProps {
     sortBy?: string;
     withKeywords?: string;
     withGenres?: string;
+    primaryReleaseDateLte?: string;
 }
 
-export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, withKeywords, withGenres }: MovieCarouselProps) {
+export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, withKeywords, withGenres, primaryReleaseDateLte }: MovieCarouselProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -43,6 +44,7 @@ export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, wit
           if (sortBy) params.append('sort_by', sortBy);
           if (withKeywords) params.append('with_keywords', withKeywords);
           if (withGenres) params.append('with_genres', withGenres);
+          if (primaryReleaseDateLte) params.append('primary_release_date.lte', primaryReleaseDateLte);
           url = `/api/movies/discover?${params.toString()}`;
         }
         
@@ -64,7 +66,7 @@ export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, wit
     };
 
     fetchMovies();
-  }, [endpoint, language, sortBy, withKeywords, withGenres]);
+  }, [endpoint, language, sortBy, withKeywords, withGenres, primaryReleaseDateLte]);
 
   return (
     <section className="animate-fade-in-up">
