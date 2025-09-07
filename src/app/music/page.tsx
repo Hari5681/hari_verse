@@ -79,17 +79,17 @@ export default function MusicPage() {
               'blinding lights',
             ];
 
-            const filteredPicks = songsWithArtists.filter(song => 
-                picksOrder.some(pick => cleanSongTitle(song.title, song.artist).toLowerCase().includes(pick))
-            );
-
-            const sortedPicks = filteredPicks.sort((a, b) => {
-                const aIndex = picksOrder.findIndex(pick => cleanSongTitle(a.title, a.artist).toLowerCase().includes(pick));
-                const bIndex = picksOrder.findIndex(pick => cleanSongTitle(b.title, b.artist).toLowerCase().includes(pick));
-                return aIndex - bIndex;
-            });
+            const uniquePicks = picksOrder.reduce((acc, pick) => {
+                const foundSong = songsWithArtists.find(song => 
+                    cleanSongTitle(song.title, song.artist).toLowerCase().includes(pick)
+                );
+                if (foundSong && !acc.find(s => s.key === foundSong.key)) {
+                    acc.push(foundSong);
+                }
+                return acc;
+            }, [] as Song[]);
             
-            setTopPicks(sortedPicks);
+            setTopPicks(uniquePicks);
             
             const uniqueArtists = songsWithArtists.reduce((acc, song) => {
                 if (!acc.find(a => a.name === song.artist) && song.artist !== 'Unknown Artist') {
