@@ -165,6 +165,16 @@ export default function MusicPage() {
             )}
             
             <div className="space-y-12">
+                <header className="text-center animate-fade-in-down">
+                    <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-primary">
+                        HariVerse Music
+                    </h1>
+                    <p className="mt-3 text-lg text-muted-foreground">
+                        Stream. Groove. Repeat.
+                    </p>
+                    <Separator className="my-12"/>
+                </header>
+
                  {recentlyPlayed.length > 0 && (
                     <section>
                         <h2 className="text-2xl font-bold mb-4">Recently Played</h2>
@@ -354,3 +364,4 @@ function SongCard({ song, currentSong, onPlay, onPause }: { song: Song; currentS
     
 
     
+
