@@ -17,8 +17,8 @@ export async function GET() {
       next: { revalidate: 3600 } // Revalidate every hour
     });
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.status_message || 'Failed to fetch from TMDB.');
+        console.error(`Failed to fetch page ${page} of top-rated movies from TMDB.`);
+        return [];
     }
     const data = await response.json();
     return data.results.map((movie: any) => ({
@@ -30,8 +30,12 @@ export async function GET() {
   };
 
   try {
-    const [page1, page2] = await Promise.all([fetchPage(1), fetchPage(2)]);
-    const movies = [...page1, ...page2];
+    const pagePromises = [];
+    for (let i = 1; i <= 50; i++) {
+        pagePromises.push(fetchPage(i));
+    }
+    const pages = await Promise.all(pagePromises);
+    const movies = pages.flat();
 
     return NextResponse.json({ movies });
   } catch (error: any) {
