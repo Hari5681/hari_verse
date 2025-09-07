@@ -37,37 +37,39 @@ export default function AboutMePage() {
             My goal is to keep learning, experimenting, and developing apps & websites that are not just functional but also fun to use.
           </p>
         </CardContent>
-        <CardFooter className="flex justify-center gap-4 border-t border-border/20 pt-6">
-            <Link href="https://www.hariportfolio.xyz" target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="icon">
-                <Globe className="h-5 w-5" />
-                <span className="sr-only">Portfolio</span>
+        <CardFooter className="flex flex-col items-center gap-6 border-t border-border/20 pt-6">
+            <Link href={`/redirect?url=${encodeURIComponent("https://www.hariportfolio.xyz")}`} target="_blank" rel="noopener noreferrer">
+              <Button>
+                <Globe className="h-5 w-5 mr-2" />
+                View My Portfolio
               </Button>
             </Link>
-            <Link href="https://github.com/Hari5681" target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="icon">
-                <Github className="h-5 w-5" />
-                <span className="sr-only">GitHub</span>
-              </Button>
-            </Link>
-            <Link href="#" target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="icon">
-                <Linkedin className="h-5 w-5" />
-                <span className="sr-only">LinkedIn</span>
-              </Button>
-            </Link>
-            <Link href="https://www.instagram.com/hari_5681/" target="_blank" rel="noopener noreferrer">
-               <Button variant="outline" size="icon">
-                <Instagram className="h-5 w-5" />
-                 <span className="sr-only">Instagram</span>
-              </Button>
-            </Link>
-            <Link href="mailto:harikrishna5681@gmail.com">
-               <Button variant="outline" size="icon">
-                <Mail className="h-5 w-5" />
-                <span className="sr-only">Email</span>
-              </Button>
-            </Link>
+            <div className="flex justify-center gap-4">
+                <Link href={`/redirect?url=${encodeURIComponent("https://github.com/Hari5681")}`} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="icon">
+                    <Github className="h-5 w-5" />
+                    <span className="sr-only">GitHub</span>
+                  </Button>
+                </Link>
+                <Link href={`/redirect?url=${encodeURIComponent("#")}`} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="icon">
+                    <Linkedin className="h-5 w-5" />
+                    <span className="sr-only">LinkedIn</span>
+                  </Button>
+                </Link>
+                <Link href={`/redirect?url=${encodeURIComponent("https://www.instagram.com/hari_5681/")}`} target="_blank" rel="noopener noreferrer">
+                   <Button variant="outline" size="icon">
+                    <Instagram className="h-5 w-5" />
+                     <span className="sr-only">Instagram</span>
+                  </Button>
+                </Link>
+                <Link href="mailto:harikrishna5681@gmail.com">
+                   <Button variant="outline" size="icon">
+                    <Mail className="h-5 w-5" />
+                    <span className="sr-only">Email</span>
+                  </Button>
+                </Link>
+            </div>
         </CardFooter>
       </Card>
     </div>
