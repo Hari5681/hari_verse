@@ -2,6 +2,7 @@
 
 
 
+
 const artistAssets: Record<string, { profile?: string; banners?: string[] }> = {
     'lana del rey': {
         profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
