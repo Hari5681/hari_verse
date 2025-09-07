@@ -152,7 +152,7 @@ export default function MusicPage() {
   return (
     <div className="flex min-h-screen flex-col items-center bg-background p-4 pt-20">
       <Card className="w-full max-w-7xl border-none bg-transparent">
-        <CardContent className="pb-40">
+        <CardContent>
             {error && (
                 <div className="mb-8 flex flex-col items-center justify-center rounded-lg bg-destructive/10 p-6 text-center text-destructive-foreground">
                     <AlertTriangle className="h-10 w-10 text-destructive" />
@@ -338,3 +338,5 @@ function SongCard({ song, currentSong, onPlay, onPause }: { song: Song; currentS
         </div>
     );
 }
+
+    
