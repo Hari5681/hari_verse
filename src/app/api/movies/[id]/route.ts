@@ -16,46 +16,32 @@ export async function GET(
   }
 
   const baseUrl = 'https://api.themoviedb.org/3';
-  const commonParams = `api_key=${apiKey}&language=en-US`;
+  // Appending credits, videos, and images to the main movie details request
+  const commonParams = `api_key=${apiKey}&language=en-US&append_to_response=credits,videos,images`;
 
   const detailsUrl = `${baseUrl}/movie/${id}?${commonParams}`;
-  const creditsUrl = `${baseUrl}/movie/${id}/credits?${commonParams}`;
-  const videosUrl = `${baseUrl}/movie/${id}/videos?${commonParams}`;
 
   try {
-    const [detailsRes, creditsRes, videosRes] = await Promise.all([
-      fetch(detailsUrl, { next: { revalidate: 3600 } }), // Revalidate every hour
-      fetch(creditsUrl, { next: { revalidate: 3600 } }),
-      fetch(videosUrl, { next: { revalidate: 3600 } }),
-    ]);
+    const detailsRes = await fetch(detailsUrl, { next: { revalidate: 3600 } }); // Revalidate every hour
 
     if (!detailsRes.ok) {
       const errorData = await detailsRes.json();
       throw new Error(errorData.status_message || 'Failed to fetch movie details from TMDB.');
     }
-     if (!creditsRes.ok) {
-      const errorData = await creditsRes.json();
-      throw new Error(errorData.status_message || 'Failed to fetch movie credits from TMDB.');
-    }
-     if (!videosRes.ok) {
-      const errorData = await videosRes.json();
-      throw new Error(errorData.status_message || 'Failed to fetch movie videos from TMDB.');
-    }
-
+    
     const details = await detailsRes.json();
-    const credits = await creditsRes.json();
-    const videos = await videosRes.json();
 
     // Find the official trailer
-    const trailer = videos.results.find(
+    const trailer = details.videos?.results.find(
       (video: any) => video.site === 'YouTube' && video.type === 'Trailer' && video.official
-    ) || videos.results.find( // Fallback to any trailer
+    ) || details.videos?.results.find( // Fallback to any trailer
       (video: any) => video.site === 'YouTube' && video.type === 'Trailer'
     ) || null;
     
     const movieData = {
       ...details,
-      cast: credits.cast || [],
+      cast: details.credits?.cast || [],
+      crew: details.credits?.crew || [],
       trailer: trailer ? { key: trailer.key } : null,
     };
 

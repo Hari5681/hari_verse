@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss"
 
 const config = {
@@ -87,6 +88,16 @@ const config = {
             transform: "translateY(0)"
           }
         },
+        "fade-in-left": {
+          "0%": {
+            opacity: "0",
+            transform: "translateX(20px)"
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateX(0)"
+          }
+        },
         "marquee": {
           '0%': { transform: 'translateX(100%)' },
           '100%': { transform: 'translateX(-100%)' },
@@ -114,6 +125,7 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in-up": "fade-in-up 0.5s ease-out forwards",
         "fade-in-down": "fade-in-down 0.5s ease-out forwards",
+        "fade-in-left": "fade-in-left 0.5s ease-out forwards",
         "marquee": 'marquee 10s linear infinite',
         "marquee-delayed": 'marquee-delayed 15s linear infinite',
         bar1: 'bar1 1.2s infinite ease-in-out',
