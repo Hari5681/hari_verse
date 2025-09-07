@@ -4,10 +4,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Star, Clock, Calendar, AlertTriangle, ArrowLeft, Plus, Film, Users, Video } from 'lucide-react';
+import { Star, AlertTriangle, ArrowLeft, Plus, Users, Video } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 interface MovieDetails {
   id: number;
@@ -173,23 +174,35 @@ export default function MovieDetailPage() {
                 {movie.cast && movie.cast.length > 0 && (
                      <section className="animate-fade-in-up" style={{animationDelay: '400ms'}}>
                         <h2 className="text-2xl font-bold mb-4 flex items-center gap-2"><Users className="w-6 h-6"/> Top Billed Cast</h2>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-                            {movie.cast.slice(0, 10).map(actor => (
-                                <div key={actor.id} className="text-center group">
-                                    <div className="overflow-hidden rounded-lg transform transition-transform duration-300 group-hover:scale-105">
+                        <Carousel
+                            opts={{
+                                align: 'start',
+                                slidesToScroll: 3,
+                            }}
+                            className="w-full"
+                            >
+                            <CarouselContent>
+                                {movie.cast.slice(0, 15).map(actor => (
+                                <CarouselItem key={actor.id} className="basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6">
+                                    <div className="text-center group">
+                                    <div className="overflow-hidden rounded-full w-24 h-24 mx-auto transform transition-transform duration-300 group-hover:scale-105">
                                         <Image 
-                                            src={actor.profile_path ? `https://image.tmdb.org/t/p/w185${actor.profile_path}` : 'https://picsum.photos/185/278'}
+                                            src={actor.profile_path ? `https://image.tmdb.org/t/p/w185${actor.profile_path}` : 'https://picsum.photos/185/185'}
                                             alt={actor.name}
                                             width={185}
-                                            height={278}
-                                            className="rounded-lg object-cover w-full h-auto aspect-[2/3] shadow-md"
+                                            height={185}
+                                            className="rounded-full object-cover w-full h-full aspect-square shadow-md"
                                         />
                                     </div>
                                     <p className="font-bold mt-2 text-sm">{actor.name}</p>
                                     <p className="text-xs text-muted-foreground">{actor.character}</p>
-                                </div>
-                            ))}
-                        </div>
+                                    </div>
+                                </CarouselItem>
+                                ))}
+                            </CarouselContent>
+                            <CarouselPrevious className="hidden md:flex" />
+                            <CarouselNext className="hidden md:flex" />
+                        </Carousel>
                     </section>
                 )}
 
@@ -228,3 +241,5 @@ export default function MovieDetailPage() {
     </div>
   );
 }
+
+    
