@@ -94,7 +94,7 @@ export default function MoviesPage() {
           <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto">
             Explore popular, top-rated, and upcoming movies, or search for something specific.
           </p>
-          <form onSubmit={handleSearchSubmit} className="mt-6 max-w-xl mx-auto relative" ref={searchContainerRef}>
+          <form onSubmit={handleSearchSubmit} className="mt-6 max-w-xl mx-auto relative z-50" ref={searchContainerRef}>
             <div className="flex items-center gap-2">
                 <Input 
                 type="text"
@@ -118,7 +118,7 @@ export default function MoviesPage() {
                   suggestions.map(movie => (
                     <Link key={movie.id} href={`/movies/${movie.id}`} passHref>
                         <div 
-                            className="flex items-center p-3 cursor-pointer transition-colors"
+                            className="flex items-center p-3 cursor-pointer transition-colors border-b border-white/10"
                             onClick={() => setShowSuggestions(false)}
                         >
                             <Image
@@ -130,13 +130,13 @@ export default function MoviesPage() {
                             />
                             <div className="ml-4">
                                 <p className="font-semibold">{movie.title}</p>
-                                <p className="text-sm text-muted-foreground">{movie.release_date?.split('-')[0] || 'N/A'}</p>
+                                <p className="text-sm text-gray-300">{movie.release_date?.split('-')[0] || 'N/A'}</p>
                             </div>
                         </div>
                     </Link>
                   ))
                 ) : (
-                  <div className="p-4 text-center text-muted-foreground">
+                  <div className="p-4 text-center text-gray-400">
                     <p>No movies found for "{searchQuery}"</p>
                   </div>
                 )}
