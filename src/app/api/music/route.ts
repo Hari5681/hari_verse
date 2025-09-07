@@ -35,8 +35,9 @@ export async function GET() {
     const songs = list.Contents
       .filter(item => item.Key && (item.Key.toLowerCase().endsWith('.mp3') || item.Key.toLowerCase().endsWith('.m4a')))
       .map(item => {
-        // Correctly encode each part of the path
-        const url = `${publicUrl}/${item.Key!.split('/').map(part => encodeURIComponent(part)).join('/')}`;
+        // Construct the URL by appending the raw key. R2 can handle paths with spaces if accessed directly.
+        // The key itself should not be fully encoded, as that would encode the slashes.
+        const url = `${publicUrl}/${item.Key!}`;
         return {
           key: item.Key,
           title: item.Key!,

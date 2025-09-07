@@ -56,6 +56,7 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
     if (audioRef.current && currentSong?.url) {
         if (audioRef.current.src !== currentSong.url) {
           audioRef.current.src = currentSong.url;
+          audioRef.current.load(); // Explicitly load the new source
         }
         audioRef.current.play().then(() => {
             setIsPlaying(true);
@@ -159,12 +160,17 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
     const updateDuration = () => setDuration(audio.duration);
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
+    const handleError = (e: Event) => {
+        console.error("Audio Element Error:", e);
+        setIsPlaying(false); 
+    };
 
     audio.addEventListener('timeupdate', updateProgress);
     audio.addEventListener('loadedmetadata', updateDuration);
     audio.addEventListener('play', handlePlay);
     audio.addEventListener('pause', handlePause);
     audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('error', handleError);
 
     return () => {
       audio.removeEventListener('timeupdate', updateProgress);
@@ -172,6 +178,7 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
       audio.removeEventListener('play', handlePlay);
       audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('error', handleError);
     };
   }, [handleEnded]);
 
