@@ -44,7 +44,12 @@ export function Player() {
   } = useMusicPlayer();
   const [isLiked, setIsLiked] = useState(false);
 
-  if (!currentSong) return null;
+  // If there's no song, render a placeholder bar on music pages
+  if (!currentSong) {
+    return (
+      <div className="fixed bottom-0 left-0 right-0 z-50 h-16 border-t border-border/50 bg-background/80 backdrop-blur-lg" />
+    );
+  }
 
   const handleShuffleClick = (e: React.MouseEvent) => {
     e.stopPropagation();

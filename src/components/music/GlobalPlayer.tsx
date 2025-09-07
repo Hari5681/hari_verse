@@ -4,10 +4,10 @@
 import { useMusicPlayer } from '@/context/MusicPlayerContext';
 import { Player } from './Player';
 
-export function GlobalPlayer() {
+export function GlobalPlayer({ forceShow = false }: { forceShow?: boolean }) {
     const { currentSong } = useMusicPlayer();
 
-    if (!currentSong) {
+    if (!currentSong && !forceShow) {
         return null;
     }
     

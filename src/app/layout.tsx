@@ -42,7 +42,7 @@ function MainContent({ children }: { children: React.ReactNode }) {
       />
       <Header />
       <main className="relative z-10">{children}</main>
-      <GlobalPlayer />
+      <GlobalPlayer forceShow={isMusicPage} />
       <Toaster />
     </div>
   );
