@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Star, AlertTriangle, ArrowLeft, Users, Video, Share2, PlayCircle, Heart, ThumbsUp, MoreVertical } from 'lucide-react';
@@ -10,8 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { useToast } from '@/hooks/use-toast';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import React from 'react';
 
 interface MovieDetails {
   id: number;
@@ -56,7 +56,10 @@ const AnimatedRating = ({ rating }: { rating: number }) => {
   return (
     <div className="w-full max-w-xs">
       <div className="flex justify-between items-center mb-1">
-        <span className="text-base font-medium text-foreground">TMDb Rating</span>
+        <div className="flex items-center gap-2">
+            <span className="text-base font-medium text-foreground">TMDb Rating</span>
+            <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+        </div>
         <span className={cn("text-sm font-medium", getRatingTextColor(rating))}>{rating.toFixed(1)}/10</span>
       </div>
       <div className="w-full bg-secondary rounded-full h-2.5">
@@ -308,5 +311,7 @@ export default function MovieDetailPage() {
       </main>
     </div>
   );
+
+    
 
     
