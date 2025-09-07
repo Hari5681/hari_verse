@@ -22,7 +22,10 @@ interface Song {
 export default function ArtistPage() {
   const params = useParams();
   const router = useRouter();
-  const artistName = params.artistName ? decodeURIComponent(params.artistName as string) : 'Unknown Artist';
+  const decodedArtistName = params.artistName ? decodeURIComponent(params.artistName as string) : 'Unknown Artist';
+  
+  // Standardize to "Lana Del Rey"
+  const artistName = decodedArtistName.toLowerCase() === 'lena del rey' ? 'Lana Del Rey' : decodedArtistName;
 
   const [songs, setSongs] = useState<Song[]>([]);
   const [error, setError] = useState<string | null>(null);
