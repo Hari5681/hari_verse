@@ -206,6 +206,20 @@ export default function MoviesPage() {
           />
           
           <MovieCarousel
+            title="Tollywood"
+            subtitle="The best of Telugu cinema."
+            language="te"
+            sortBy="vote_average.desc"
+          />
+
+          <MovieCarousel
+            title="Kollywood"
+            subtitle="The finest from Tamil cinema."
+            language="ta"
+            sortBy="vote_average.desc"
+          />
+
+          <MovieCarousel
             title="🎬 Upcoming Movies"
             subtitle="Get a glimpse of future blockbusters."
             endpoint="/api/movies/upcoming"
