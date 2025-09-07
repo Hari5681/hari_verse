@@ -133,7 +133,7 @@ export function Player() {
                   </button>
               </div>
 
-              <div className="flex items-center justify-end md:hidden">
+              <div className="flex items-center justify-end md:hidden w-auto">
                 <div className="flex items-center gap-2 sm:gap-4">
                   <button
                       onClick={(e) => {
@@ -186,7 +186,7 @@ export function Player() {
 
       <DialogContent className="h-full max-h-full w-full max-w-full !rounded-none !border-none bg-gradient-to-b from-primary/30 to-background p-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-full data-[state=open]:slide-in-from-bottom-full">
         <DialogTitle className="sr-only">Now Playing: {songTitle}</DialogTitle>
-        <div className="flex h-full flex-col p-4 pt-8 sm:p-6">
+        <div className="flex h-full flex-col p-4 pt-8 sm:p-6 overflow-x-hidden">
           <header className="flex items-center justify-between flex-shrink-0">
             <DialogClose>
               <ChevronDown className="h-6 w-6 opacity-70" />
