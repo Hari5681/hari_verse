@@ -39,10 +39,13 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: 'Song not found' }, { status: 404 });
     }
 
-    // Here, Body is a ReadableStream. We can pipe it directly to the response.
     const headers = new Headers();
-    if (ContentType) headers.set('Content-Type', ContentType);
-    if (ContentLength) headers.set('Content-Length', String(ContentLength));
+    if (ContentType) {
+      headers.set('Content-Type', ContentType);
+    }
+    if (ContentLength) {
+      headers.set('Content-Length', String(ContentLength));
+    }
     headers.set('Accept-Ranges', 'bytes');
 
     return new Response(Body as any, {
