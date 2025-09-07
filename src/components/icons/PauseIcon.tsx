@@ -15,8 +15,8 @@ export default function PauseIcon(props: SVGProps<SVGSVGElement>) {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <rect x="6" y="4" width="4" height="16" fill="currentColor" />
-      <rect x="14" y="4" width="4" height="16" fill="currentColor" />
+      <path d="M6 4h4v16H6z" fill="currentColor" />
+      <path d="M14 4h4v16h-4z" fill="currentColor" />
     </svg>
   );
 }

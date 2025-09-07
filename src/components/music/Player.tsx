@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { Slider } from '@/components/ui/slider';
 import PlayIcon from '@/components/icons/PlayIcon';
@@ -13,14 +13,16 @@ import {
   Shuffle,
   Heart,
   ChevronDown,
-  X
+  X,
+  Volume2,
+  MoreHorizontal,
+  ArrowLeft,
 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
   DialogTrigger,
   DialogClose,
-  DialogTitle,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { cleanSongTitle, getSongImageUrl } from '@/lib/musicUtils';
@@ -43,17 +45,14 @@ export function Player() {
     isRepeat,
     toggleRepeat,
     stopPlayer,
-    theme
   } = useMusicPlayer();
   const [isLiked, setIsLiked] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // If there's no song, render a placeholder bar on music pages
   if (!currentSong) {
-    return (
-      <div className="fixed bottom-0 left-0 right-0 z-50 h-16 border-t border-border/50 bg-background/80 backdrop-blur-lg" />
-    );
+    return null;
   }
-
+  
   const handleShuffleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     toggleShuffle();
@@ -67,9 +66,6 @@ export function Player() {
   const imageUrl = getSongImageUrl(currentSong.artist, currentSong.key, 500);
   const songTitle = cleanSongTitle(currentSong.title, currentSong.artist);
 
-  const isTitleLong = songTitle.length > 25;
-  const isMiniTitleLong = songTitle.length > 20;
-
   const formatDuration = (secs: number) => {
     if (isNaN(secs) || secs < 0) return '0:00';
     const minutes = Math.floor(secs / 60);
@@ -78,7 +74,7 @@ export function Player() {
   };
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <div className="fixed bottom-0 left-0 right-0 z-50">
         <DialogTrigger asChild>
           <div className="h-16 cursor-pointer border-t border-border/50 bg-background/80 px-2 sm:px-4 backdrop-blur-lg">
@@ -93,29 +89,20 @@ export function Player() {
                   data-ai-hint="song album cover"
                 />
                 <div className="overflow-hidden whitespace-nowrap min-w-0">
-                  <p className={cn("font-bold text-sm", isMiniTitleLong && "animate-marquee")}>{songTitle}</p>
+                  <p className="font-bold text-sm truncate">{songTitle}</p>
                   <p className="truncate text-xs text-muted-foreground">
                     {currentSong.artist}
                   </p>
                 </div>
               </div>
 
-              <div className="hidden md:flex flex-1 items-center justify-center gap-4">
-                 <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      playPrev();
-                    }}
-                    className="text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    <SkipBack size={24} />
-                  </button>
+              <div className="flex items-center gap-4">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       togglePlay();
                     }}
-                    className="rounded-full bg-primary p-3 text-primary-foreground transition-colors hover:bg-primary/90"
+                    className="text-foreground"
                   >
                     {isPlaying ? (
                       <PauseIcon className="h-6 w-6" />
@@ -128,114 +115,62 @@ export function Player() {
                       e.stopPropagation();
                       playNext();
                     }}
-                    className="text-muted-foreground transition-colors hover:text-foreground"
+                    className="text-muted-foreground transition-colors hover:text-foreground hidden sm:block"
                   >
-                    <SkipForward size={24} />
+                    <SkipForward size={22} />
                   </button>
-              </div>
-
-              <div className="flex items-center justify-end md:hidden w-auto">
-                <div className="flex items-center gap-2 sm:gap-4">
-                  <button
+                   <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        playPrev();
+                        stopPlayer();
                       }}
-                      className="text-muted-foreground transition-colors hover:text-foreground"
+                      className="text-muted-foreground transition-colors hover:text-foreground ml-2"
                     >
-                      <SkipBack size={20} />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      togglePlay();
-                    }}
-                    className="rounded-full bg-primary p-2 text-primary-foreground transition-colors hover:bg-primary/90"
-                  >
-                    {isPlaying ? (
-                      <PauseIcon className="h-5 w-5" />
-                    ) : (
-                      <PlayIcon className="h-5 w-5" />
-                    )}
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      playNext();
-                    }}
-                    className="text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    <SkipForward size={20} />
-                  </button>
-                  {!isPlaying && (
-                    <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          stopPlayer();
-                        }}
-                        className="text-muted-foreground transition-colors hover:text-foreground ml-2"
-                      >
-                        <X size={20} />
-                      </button>
-                  )}
+                      <X size={20} />
+                    </button>
                 </div>
-              </div>
             </div>
           </div>
         </DialogTrigger>
       </div>
 
-      <DialogContent className="h-full max-h-full w-full max-w-full !rounded-none !border-none p-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-full data-[state=open]:slide-in-from-bottom-full transition-colors duration-500" style={{ background: theme.gradient }}>
-        <DialogTitle className="sr-only">Now Playing: {songTitle}</DialogTitle>
+      <DialogContent className="h-[90vh] max-h-[90vh] w-[95vw] max-w-md !rounded-3xl !border-none p-0 flex flex-col bg-card shadow-2xl data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-full data-[state=open]:slide-in-from-bottom-full">
         
-        <Image
-          src={imageUrl}
-          alt={`Background for ${songTitle}`}
-          fill
-          className="object-cover object-center opacity-20 blur-2xl"
-        />
-
-        <div className="relative flex h-full flex-col justify-between p-6 pt-8 sm:p-8">
-          <header className="flex items-center justify-between">
-            <DialogClose>
-              <ChevronDown className="h-6 w-6 opacity-70" />
-            </DialogClose>
-            <div className="relative w-full max-w-xs overflow-hidden">
-              <p className={`px-4 font-semibold text-center whitespace-nowrap ${isTitleLong ? 'animate-marquee' : 'truncate'}`}>
-                {songTitle}
-              </p>
-            </div>
-             <button onClick={() => setIsLiked(!isLiked)} className="ml-4 flex-shrink-0">
-                <Heart
-                    className={`h-5 w-5 sm:h-6 sm:w-6 transition-all ${
-                    isLiked
-                        ? 'fill-green-500 text-green-500'
-                        : 'text-muted-foreground'
-                    }`}
+        <div className="p-6 pb-2">
+            <header className="flex items-center justify-between text-foreground">
+                <button onClick={() => setIsDialogOpen(false)} className='flex items-center gap-2'>
+                    <ArrowLeft className="h-5 w-5" />
+                    <span className="font-semibold text-sm">Library</span>
+                </button>
+                <button>
+                    <MoreHorizontal className="h-5 w-5" />
+                </button>
+            </header>
+        </div>
+        
+        <main className="flex-1 flex flex-col items-center justify-start py-4 px-6 overflow-hidden">
+            <div className="w-full aspect-square relative">
+                <Image
+                    src={imageUrl}
+                    alt={currentSong.title}
+                    fill
+                    className="rounded-2xl shadow-lg object-cover"
+                    data-ai-hint="song album cover"
                 />
-            </button>
-          </header>
-
-          <main className="flex-1 flex flex-col items-center justify-center py-6 animate-fade-in-up">
-            <div className="w-full max-w-[70vw] sm:max-w-xs">
-              <Image
-                src={imageUrl}
-                alt={currentSong.title}
-                width={500}
-                height={500}
-                className="aspect-square w-full rounded-lg shadow-2xl animate-fade-in-up object-cover"
-                data-ai-hint="song album cover"
-                style={{ animationDelay: '200ms' }}
-              />
+                <div className='absolute bottom-4 right-4'>
+                    <button className='w-10 h-10 bg-background/50 backdrop-blur-sm rounded-full flex items-center justify-center text-foreground'>
+                        <Volume2 size={20}/>
+                    </button>
+                </div>
             </div>
-          </main>
-
-          <footer className="animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+        </main>
+        
+        <footer className="px-6 pb-8 pt-4">
             <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold sm:text-3xl truncate">
-                    {songTitle}
+                <h2 className="text-2xl font-bold truncate text-foreground">
+                    {currentSong.artist}
                 </h2>
-                <p className="text-sm text-muted-foreground truncate">{currentSong.artist}</p>
+                <p className="text-sm text-muted-foreground uppercase tracking-widest truncate">{songTitle}</p>
             </div>
 
             <div className="space-y-2">
@@ -252,22 +187,25 @@ export function Player() {
               </div>
             </div>
 
-            <div className="mt-4 flex items-center justify-around">
-              <button 
-                onClick={handleShuffleClick}
-                className={cn("text-muted-foreground transition-colors hover:text-foreground", {"text-primary": isShuffle})}
-              >
-                <Shuffle className="h-5 w-5" />
+            <div className="mt-4 flex items-center justify-around text-foreground">
+              <button onClick={() => setIsLiked(!isLiked)} className="ml-4 flex-shrink-0">
+                  <Heart
+                      className={`h-6 w-6 transition-all ${
+                      isLiked
+                          ? 'fill-primary text-primary'
+                          : 'text-muted-foreground'
+                      }`}
+                  />
               </button>
               <button
                 onClick={playPrev}
-                className="text-muted-foreground transition-colors hover:text-foreground"
+                className="text-foreground transition-colors hover:text-primary"
               >
-                <SkipBack size={32} />
+                <SkipBack size={28} fill='currentColor' />
               </button>
               <button
                 onClick={togglePlay}
-                className="rounded-full bg-white p-4 text-background"
+                className="rounded-full bg-foreground h-16 w-16 flex items-center justify-center text-background"
               >
                 {isPlaying ? (
                   <PauseIcon className="h-8 w-8" />
@@ -277,19 +215,19 @@ export function Player() {
               </button>
               <button
                 onClick={playNext}
-                className="text-muted-foreground transition-colors hover:text-foreground"
+                className="text-foreground transition-colors hover:text-primary"
               >
-                <SkipForward size={32} />
+                <SkipForward size={28} fill='currentColor' />
               </button>
               <button 
-                onClick={handleRepeatClick}
-                className={cn("text-muted-foreground transition-colors hover:text-foreground", {"text-primary": isRepeat})}
+                onClick={handleShuffleClick}
+                className={cn("text-muted-foreground transition-colors hover:text-primary", {"text-primary": isShuffle})}
               >
-                <Repeat className="h-5 w-5" />
+                <Shuffle className="h-6 w-6" />
               </button>
             </div>
-          </footer>
-        </div>
+        </footer>
+
       </DialogContent>
     </Dialog>
   );
