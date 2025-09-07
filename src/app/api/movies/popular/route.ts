@@ -37,9 +37,12 @@ export async function GET() {
         pagePromises.push(fetchPage(i));
     }
     const pages = await Promise.all(pagePromises);
-    const movies = pages.flat();
+    const allMovies = pages.flat();
 
-    return NextResponse.json({ movies });
+    // De-duplicate movies
+    const uniqueMovies = Array.from(new Map(allMovies.map(movie => [movie.id, movie])).values());
+
+    return NextResponse.json({ movies: uniqueMovies });
   } catch (error: any) {
     console.error('TMDB API Error:', error);
     return NextResponse.json(
