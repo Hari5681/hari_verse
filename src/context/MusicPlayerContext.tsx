@@ -164,6 +164,11 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
     const handleError = (e: Event) => {
         const mediaError = (e.target as HTMLAudioElement).error;
         if (mediaError) {
+          // Ignore error code 4 (MEDIA_ERR_SRC_NOT_SUPPORTED) when src is empty,
+          // which can happen when the player is stopped or between tracks.
+          if (mediaError.code === 4 && audioRef.current?.src === '') {
+            return;
+          }
           console.error(`Audio Element Error: code ${mediaError.code}, message: ${mediaError.message}`);
         } else {
           console.error("An unknown audio error occurred.");
