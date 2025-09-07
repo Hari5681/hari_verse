@@ -184,11 +184,20 @@ export default function MusicPage() {
                 <section>
                     <h2 className="text-2xl font-bold mb-4">Top Picks</h2>
                      {songs.length > 0 ? (
-                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                            {songs.slice(0, 5).map((song) => (
-                                <SongCard key={song.key} song={song} currentSong={currentSong} onPlay={() => handlePlaySong(song, songs)} />
-                            ))}
-                        </div>
+                        <Carousel
+                            opts={{ align: "start", loop: songs.slice(0, 10).length > 5 }}
+                            className="w-full"
+                        >
+                            <CarouselContent className="-ml-4">
+                                {songs.slice(0, 10).map((song) => (
+                                    <CarouselItem key={song.key} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-4">
+                                        <SongCard song={song} currentSong={currentSong} onPlay={() => handlePlaySong(song, songs)} />
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
+                            <CarouselPrevious className="hidden md:flex"/>
+                            <CarouselNext className="hidden md:flex"/>
+                        </Carousel>
                     ) : (
                          <div className="flex items-center justify-center h-40 rounded-lg bg-muted/20">
                             <p className="text-muted-foreground">Loading your top picks...</p>
