@@ -94,6 +94,9 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
     audio.addEventListener('loadedmetadata', updateDuration);
     audio.addEventListener('play', handlePlay);
     audio.addEventListener('pause', handlePause);
+    
+    // We remove the passed onEnded from the main audio tag and use the one in the player
+    // to have control over the repeat functionality
     audio.addEventListener('ended', handleEnded);
 
     return () => {
@@ -103,7 +106,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
       audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, [audioRef, onNext, isRepeat]);
+  }, [audioRef, onNext, isRepeat]); // isRepeat is needed to re-evaluate the ended listener
 
   const togglePlay = () => {
     if (audioRef.current) {
@@ -133,7 +136,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
   };
 
   const imageUrl = `https://picsum.photos/seed/${song.key}/500/500`;
-  const songTitle = song.title.replace(`${song.artist} - `, '');
+  const songTitle = song.title.replace(`${song.artist} - `, '').replace(/\.(mp3|m4a)$/i, '');
 
   const isTitleLong = songTitle.length > 25;
   const isMiniTitleLong = songTitle.length > 20;

@@ -25,8 +25,19 @@ interface Artist {
 }
 
 const getArtistFromTitle = (title: string): string => {
-  const parts = title.split(' - ');
-  return parts.length > 1 ? parts[0].trim() : 'Unknown Artist';
+  const parts = title.split('/');
+  if (parts.length > 1) {
+      const artistCandidate = parts[0].trim();
+      // Capitalize first letter of each word
+      return artistCandidate.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  }
+  
+  const fileNameParts = (parts[0] || '').split(' - ');
+  if (fileNameParts.length > 1) {
+      return fileNameParts[0].trim();
+  }
+
+  return 'Unknown Artist';
 };
 
 const languages = ['Telugu', 'English', 'Hindi', 'Tamil'];
@@ -78,9 +89,9 @@ export default function MusicPage() {
                 if (!acc.find(a => a.name === song.artist)) {
                     acc.push({
                          name: song.artist,
-                         imageUrl: song.artist === 'Lana Del Rey' 
+                         imageUrl: song.artist.toLowerCase() === 'lana del rey' 
                             ? 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
-                            : `https://picsum.photos/seed/${song.artist}/500/500`
+                            : `https://picsum.photos/seed/${encodeURIComponent(song.artist)}/500/500`
                     });
                 }
                 return acc;
@@ -128,8 +139,8 @@ export default function MusicPage() {
     setCurrentSong(playlist[prevIndex]);
   };
   
-  const lanaDelReySongs = songs.filter(song => song.artist === 'Lana Del Rey');
-  const otherSongs = songs.filter(song => song.artist !== 'Lana Del Rey');
+  const lanaDelReySongs = songs.filter(song => song.artist.toLowerCase() === 'lana del rey');
+  const otherSongs = songs.filter(song => song.artist.toLowerCase() !== 'lana del rey');
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-background p-4 pt-20">
@@ -192,7 +203,7 @@ export default function MusicPage() {
                          >
                             <CarouselContent className="-ml-4">
                                 {artists.map((artist) => (
-                                    <CarouselItem key={artist.name} className="basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6 pl-4">
+                                    <CarouselItem key={artist.name} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-4">
                                         <Link href={`/music/artist/${encodeURIComponent(artist.name)}`} passHref>
                                             <div className="group flex flex-col items-center text-center gap-2 cursor-pointer">
                                                 <div className="relative w-24 h-24 md:w-32 md:h-32">
@@ -231,7 +242,7 @@ export default function MusicPage() {
                      >
                         <CarouselContent className="-ml-4">
                             {languages.map(lang => (
-                                <CarouselItem key={lang} className="basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6 pl-4">
+                                <CarouselItem key={lang} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-4">
                                     <div className="group flex flex-col items-center text-center gap-2 cursor-pointer">
                                         <div className="relative w-24 h-24 md:w-32 md:h-32">
                                             <div className="w-full h-full rounded-full bg-primary/10 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
@@ -277,7 +288,7 @@ export default function MusicPage() {
         />
       )}
 
-      <audio ref={audioRef} />
+      <audio ref={audioRef} onEnded={handleNext}/>
     </div>
   );
 }
@@ -304,7 +315,7 @@ function RecentlyPlayedSongItem({ song, index, onPlay }: { song: Song; index: nu
             />
             <div className="ml-4 flex-grow overflow-hidden">
                 <p className="font-semibold truncate text-foreground">
-                    {song.title.replace(`${song.artist} - `, '')}
+                    {song.title.replace(`${song.artist} - `, '').replace(/\.(mp3|m4a)$/i, '')}
                 </p>
                 <p className="text-xs truncate text-muted-foreground">
                     {song.artist}
@@ -335,7 +346,7 @@ function TopPickSongCard({ song, onPlay }: { song: Song; onPlay: () => void; }) 
             </div>
             <div className="mt-2">
                 <p className="text-sm font-semibold truncate text-foreground">
-                    {song.title.replace(`${song.artist} - `, '')}
+                    {song.title.replace(`${song.artist} - `, '').replace(/\.(mp3|m4a)$/i, '')}
                 </p>
                 <p className="text-xs truncate text-muted-foreground">
                     {song.artist}
@@ -361,7 +372,7 @@ function SongCard({ song, currentSong, onPlay }: { song: Song; currentSong: Song
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 flex flex-col p-4">
-              <h3 className="truncate text-base md:text-lg font-bold text-white">{song.title.replace(`${song.artist} - `, '')}</h3>
+              <h3 className="truncate text-base md:text-lg font-bold text-white">{song.title.replace(`${song.artist} - `, '').replace(/\.(mp3|m4a)$/i, '')}</h3>
               <p className="text-xs md:text-sm text-gray-300">{song.artist}</p>
           </div>
           <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">

@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -20,50 +18,37 @@ interface Song {
 }
 
 const getArtistFromTitle = (title: string): string => {
-    // Handle titles like "Artist - Song" or "folder/Artist - Song"
-    const fileName = title.split('/').pop() || '';
-    const parts = fileName.split(' - ');
+    const parts = title.split('/');
     if (parts.length > 1) {
-        // Check if artist name is part of a folder structure e.g. "lana del rey/Summertime Sadness"
-        const folderParts = title.split('/');
-        if (folderParts.length > 1) {
-            const artistGuess = folderParts[0].trim();
-            // A simple heuristic: if the folder name is reasonably short, it's likely the artist.
-            if (artistGuess.length < 25) {
-                // Capitalize first letter of each word
-                return artistGuess.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-            }
-        }
-        return parts[0].trim();
+        const artistCandidate = parts[0].trim();
+        // Capitalize first letter of each word
+        return artistCandidate.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     }
     
-    // Fallback for titles without " - " separator, check folder structure
-    const folderParts = title.split('/');
-    if (folderParts.length > 1) {
-         const artistGuess = folderParts[0].trim();
-         if (artistGuess) {
-            return artistGuess.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-         }
+    const fileNameParts = (parts[0] || '').split(' - ');
+    if (fileNameParts.length > 1) {
+        return fileNameParts[0].trim();
     }
-    
+
     return 'Unknown Artist';
 };
 
 
 const cleanSongTitle = (title: string, artist: string): string => {
-    const artistPrefix = `${artist} - `;
     let cleanTitle = title;
     
+    // Get just the filename
     if (cleanTitle.includes('/')) {
         cleanTitle = cleanTitle.split('/').pop() || '';
     }
 
-    if (cleanTitle.startsWith(artistPrefix)) {
+    const artistPrefix = `${artist} - `;
+    if (cleanTitle.toLowerCase().startsWith(artistPrefix.toLowerCase())) {
         cleanTitle = cleanTitle.substring(artistPrefix.length);
     }
     
-    // Remove common extra text like (Official Music Video)
-    return cleanTitle.replace(/\s*\(.*\)/i, '').trim();
+    // Remove common extra text like (Official Music Video) and file extension
+    return cleanTitle.replace(/\s*\(.*\)/i, '').replace(/\.(mp3|m4a)$/i, '').trim();
 }
 
 export default function ArtistPage() {
@@ -193,7 +178,7 @@ export default function ArtistPage() {
       audio.removeEventListener('play', handlePlayEvent);
       audio.removeEventListener('pause', handlePauseEvent);
     }
-  }, []);
+  }, [audioRef]);
 
   const artistImageUrl = artistName.toLowerCase() === 'lana del rey' 
     ? 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
@@ -269,7 +254,7 @@ export default function ArtistPage() {
         />
       )}
       
-      <audio ref={audioRef} />
+      <audio ref={audioRef} onEnded={handleNext} />
     </div>
   );
 }
