@@ -11,26 +11,27 @@ export async function GET() {
     );
   }
 
-  const url = `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=1`;
-
-  try {
+  const fetchPage = async (page: number) => {
+    const url = `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US&page=${page}`;
     const response = await fetch(url, {
       next: { revalidate: 3600 } // Revalidate every hour
     });
-    
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.status_message || 'Failed to fetch from TMDB.');
     }
-
     const data = await response.json();
-
-    const movies = data.results.map((movie: any) => ({
+    return data.results.map((movie: any) => ({
       id: movie.id,
       title: movie.title,
       poster_path: movie.poster_path,
       vote_average: movie.vote_average,
     }));
+  };
+
+  try {
+    const [page1, page2] = await Promise.all([fetchPage(1), fetchPage(2)]);
+    const movies = [...page1, ...page2];
 
     return NextResponse.json({ movies });
   } catch (error: any) {
