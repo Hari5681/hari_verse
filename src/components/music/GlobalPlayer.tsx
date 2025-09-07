@@ -18,8 +18,6 @@ export function GlobalPlayer({ isMusicPage }: { isMusicPage: boolean }) {
     }
 
     return (
-        <div className="h-16">
-            <Player />
-        </div>
+        <Player />
     );
 }

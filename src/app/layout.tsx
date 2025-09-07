@@ -32,7 +32,7 @@ export default function RootLayout({
 function MainContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isMusicPage = pathname.startsWith('/music');
-  const { theme } = useMusicPlayer();
+  const { theme, currentSong } = useMusicPlayer();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -58,8 +58,9 @@ function MainContent({ children }: { children: React.ReactNode }) {
         refresh
       />
       <Header />
-      <main className="relative z-10 flex-grow pb-32">{children}</main>
+      <main className="relative z-10 flex-grow">{children}</main>
       <GlobalPlayer isMusicPage={isMusicPage} />
+      {currentSong && <div className="h-16" />}
       <Footer />
       <Toaster />
     </div>
