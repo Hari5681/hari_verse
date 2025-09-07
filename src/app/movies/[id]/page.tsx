@@ -157,12 +157,6 @@ export default function MovieDetailPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pt-16">
-      {!showTrailer && (
-        <Button variant="ghost" className="absolute top-20 left-4 z-20 flex items-center gap-2" onClick={() => router.back()}>
-            <ArrowLeft className="h-4 w-4" />
-            Back
-        </Button>
-      )}
       <main className="pb-12">
         {/* Header section with backdrop */}
         <header className="relative w-full h-[40vh] md:h-[50vh] bg-black">
@@ -200,17 +194,6 @@ export default function MovieDetailPage() {
 
            {!showTrailer && (
             <>
-                <div className="absolute top-4 right-4 z-20 flex gap-2">
-                    <Button size="icon" variant="outline" className="bg-background/30 border-none">
-                        <ThumbsUp size={20} />
-                    </Button>
-                    <Button size="icon" variant="outline" className="bg-background/30 border-none">
-                        <Heart size={20} />
-                    </Button>
-                    <Button size="icon" variant="outline" className="bg-background/30 border-none">
-                        <MoreVertical size={20} />
-                    </Button>
-                </div>
                 <div className="absolute bottom-4 left-4 md:left-8 text-white">
                     <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-shadow-lg">{movie.title}</h1>
                     <div className="flex items-center flex-wrap gap-x-4 gap-y-1 mt-2 text-sm md:text-base text-shadow">
