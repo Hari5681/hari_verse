@@ -148,9 +148,25 @@ export default function MusicPage() {
   const handlePauseSong = () => {
     pauseSong();
   };
+
+  const backgroundStyle = {
+    backgroundImage: `url(https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/music-wallpaper.jpg)`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundAttachment: 'fixed'
+  };
   
   return (
-    <div className="flex min-h-screen flex-col items-center bg-background p-4 pt-20">
+    <div className="relative min-h-screen w-full">
+      <div 
+        className="absolute inset-0"
+        style={backgroundStyle}
+      ></div>
+      <div 
+        className="absolute inset-0 bg-black/60"
+      ></div>
+    <div className="relative flex min-h-screen flex-col items-center p-4 pt-20">
       <Card className="w-full max-w-7xl border-none bg-transparent">
         <CardContent>
             {error && (
@@ -245,7 +261,6 @@ export default function MusicPage() {
                             <CarouselPrevious className="hidden md:flex"/>
                             <CarouselNext className="hidden md:flex"/>
                         </Carousel>
-                         <Separator className="my-12"/>
                     </section>
                 )}
 
@@ -261,6 +276,7 @@ export default function MusicPage() {
             </div>
         </CardContent>
       </Card>
+    </div>
     </div>
   );
 }
@@ -338,5 +354,7 @@ function SongCard({ song, currentSong, onPlay, onPause }: { song: Song; currentS
         </div>
     );
 }
+
+    
 
     

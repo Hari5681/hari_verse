@@ -131,6 +131,7 @@ export default function ArtistPage() {
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
+    backgroundAttachment: 'fixed'
   };
 
   return (
@@ -256,3 +257,5 @@ function SongListItem({ song, index, isPlaying, onPlay }: { song: Song; index: n
         </div>
     );
 }
+
+    
