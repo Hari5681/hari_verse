@@ -3,6 +3,10 @@
 
 import { MovieCarousel } from '@/components/movies/MovieCarousel';
 import { Separator } from '@/components/ui/separator';
+import { genres } from '@/lib/genres';
+import Link from 'next/link';
+import { Card, CardTitle, CardHeader } from '@/components/ui/card';
+import { ArrowRight } from 'lucide-react';
 
 export default function MoviesPage() {
   return (
@@ -39,38 +43,19 @@ export default function MoviesPage() {
               </p>
             </div>
             <Separator className="my-12"/>
-            <div className="space-y-16">
-               <MovieCarousel
-                title="🎌 Anime"
-                subtitle="Explore captivating animated stories."
-                withGenres="16"
-                withKeywords="210024"
-                sortBy="popularity.desc"
-              />
-              <MovieCarousel
-                title="💥 Action Movies"
-                subtitle="Get your adrenaline pumping."
-                withGenres="28"
-                sortBy="popularity.desc"
-              />
-              <MovieCarousel
-                title="💖 Romance Movies"
-                subtitle="Fall in love with these stories."
-                withGenres="10749"
-                sortBy="popularity.desc"
-              />
-              <MovieCarousel
-                title="😂 Comedy Movies"
-                subtitle="Have a laugh with these picks."
-                withGenres="35"
-                sortBy="popularity.desc"
-              />
-              <MovieCarousel
-                title="😱 Horror Movies"
-                subtitle="Dare to watch these scary films."
-                withGenres="27"
-                sortBy="popularity.desc"
-              />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {genres.map((genre) => (
+                <Link key={genre.id} href={`/movies/category/${genre.name.toLowerCase()}`} passHref>
+                  <Card className="group flex flex-col justify-between h-full overflow-hidden rounded-lg bg-card text-card-foreground shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-primary/20 hover:border-primary/50">
+                    <CardHeader>
+                      <CardTitle className="text-xl font-bold flex items-center justify-between">
+                        <span>{genre.name}</span>
+                        <ArrowRight className="h-5 w-5 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
+                      </CardTitle>
+                    </CardHeader>
+                  </Card>
+                </Link>
+              ))}
             </div>
           </section>
           
