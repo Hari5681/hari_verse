@@ -86,7 +86,7 @@ export default function MusicPage() {
             setSongs(songsWithArtists);
             
             const uniqueArtists = songsWithArtists.reduce((acc, song) => {
-                if (!acc.find(a => a.name === song.artist)) {
+                if (!acc.find(a => a.name === song.artist) && song.artist !== 'Unknown Artist') {
                     acc.push({
                          name: song.artist,
                          imageUrl: song.artist.toLowerCase() === 'lana del rey' 
@@ -140,7 +140,7 @@ export default function MusicPage() {
   };
   
   const lanaDelReySongs = songs.filter(song => song.artist.toLowerCase() === 'lana del rey');
-  const otherSongs = songs.filter(song => song.artist.toLowerCase() !== 'lana del rey');
+  const otherSongs = songs.filter(song => song.artist.toLowerCase() !== 'lana del rey' && song.artist !== 'Unknown Artist');
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-background p-4 pt-20">

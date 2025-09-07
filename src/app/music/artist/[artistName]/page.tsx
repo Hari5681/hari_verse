@@ -102,7 +102,7 @@ export default function ArtistPage() {
       }
     };
 
-    if (artistName) {
+    if (artistName && artistName !== 'Unknown Artist') {
       fetchSongs();
     }
   }, [artistName, toast]);
