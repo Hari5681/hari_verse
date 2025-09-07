@@ -7,13 +7,15 @@ import { Player } from './Player';
 export function GlobalPlayer({ forceShow = false }: { forceShow?: boolean }) {
     const { currentSong } = useMusicPlayer();
 
-    // The player should only be visible if there's a song loaded,
-    // or if we are forcing it to show (on music pages).
-    if (!currentSong && !forceShow) {
-        return null;
-    }
-    
-    // If we forceShow but have no song, the Player component will render a placeholder.
-    // Otherwise, it will render the full or mini player.
-    return <Player />;
+    const isVisible = !!currentSong || forceShow;
+
+    return (
+        <div className="h-16">
+            {isVisible && (
+                <div className="fixed bottom-0 left-0 right-0 z-50">
+                    <Player />
+                </div>
+            )}
+        </div>
+    );
 }
