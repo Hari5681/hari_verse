@@ -14,6 +14,15 @@ import { cn } from '@/lib/utils';
 
 const inter = Inter({ subsets: ['latin'] });
 
+// Conditionally import redirect.css
+if (typeof window !== 'undefined') {
+    const currentPath = window.location.pathname;
+    if (currentPath.startsWith('/redirect')) {
+        import('./redirect/redirect.css');
+    }
+}
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -33,6 +42,8 @@ export default function RootLayout({
 function MainContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { theme, currentSong } = useMusicPlayer();
+  const isRedirectPage = pathname.startsWith('/redirect');
+
 
   useEffect(() => {
     const root = document.documentElement;
@@ -50,23 +61,27 @@ function MainContent({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="relative flex min-h-screen flex-col">
-      <Particles
-        className="absolute inset-0 -z-10"
-        quantity={100}
-        ease={80}
-        color="hsl(var(--dynamic-primary-h) var(--dynamic-primary-s) var(--dynamic-primary-l))"
-        refresh
-      />
+      {!isRedirectPage && (
+        <Particles
+            className="absolute inset-0 -z-10"
+            quantity={100}
+            ease={80}
+            color="hsl(var(--dynamic-primary-h) var(--dynamic-primary-s) var(--dynamic-primary-l))"
+            refresh
+        />
+      )}
       
-      <Header />
+      {!isRedirectPage && <Header />}
       
-      <main className={cn("relative z-10 flex-grow", { 'pb-16': currentSong })}>
+      <main className={cn("relative z-10 flex-grow", { 'pb-16': currentSong && !isRedirectPage })}>
         {children}
       </main>
 
-      {!currentSong && <Footer />}
-      <GlobalPlayer />
+      {!isRedirectPage && !currentSong && <Footer />}
+      {!isRedirectPage && <GlobalPlayer />}
       <Toaster />
     </div>
   );
 }
+
+    

@@ -180,7 +180,7 @@ export default function AiToolsPage() {
                             <CardDescription className="text-xs sm:text-sm">{tool.description}</CardDescription>
                           </CardHeader>
                           <CardContent className="flex-grow flex items-end mt-auto p-4 pt-0">
-                            <Link href={tool.link} target="_blank" rel="noopener noreferrer" className="w-full">
+                            <Link href={`/redirect?url=${encodeURIComponent(tool.link)}`} target="_blank" rel="noopener noreferrer" className="w-full">
                               <Button variant="outline" className="w-full h-9 text-xs sm:h-10 sm:text-sm">
                                 Visit <ArrowUpRight className="h-4 w-4 ml-1 sm:ml-2" />
                               </Button>
@@ -201,3 +201,5 @@ export default function AiToolsPage() {
     </div>
   );
 }
+
+    
