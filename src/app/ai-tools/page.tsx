@@ -106,7 +106,7 @@ export default function AiToolsPage() {
 
         <div className="space-y-16">
           {toolCategories.map((category, catIndex) => (
-            <section key={category.category} className="animate-fade-in-up" style={{ animationDelay: `${catIndex * 150}ms` }}>
+            <section key={category.category} className="animate-fade-in-up" style={{ animationDelay: `${catIndex * 150}ms`, animationFillMode: 'both' }}>
               <div className="flex items-center gap-4 mb-6">
                 <div className="bg-primary/10 p-3 rounded-lg">
                   {category.icon}
@@ -115,7 +115,11 @@ export default function AiToolsPage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {category.tools.map((tool, toolIndex) => (
-                  <Card key={tool.name} className="flex flex-col bg-card/50 backdrop-blur-sm border-border/20 transition-all duration-300 hover:border-primary/50 hover:-translate-y-1">
+                  <Card 
+                    key={tool.name} 
+                    className="flex flex-col bg-card/50 backdrop-blur-sm border-border/20 transition-all duration-300 hover:border-primary/50 hover:-translate-y-1 animate-fade-in-up"
+                    style={{ animationDelay: `${toolIndex * 100}ms`, animationFillMode: 'both' }}
+                  >
                     <CardHeader>
                       <CardTitle>{tool.name}</CardTitle>
                       <CardDescription>{tool.description}</CardDescription>
