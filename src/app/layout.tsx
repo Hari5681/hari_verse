@@ -58,7 +58,7 @@ function MainContent({ children }: { children: React.ReactNode }) {
         refresh
       />
       <Header />
-      <main className="relative z-10 flex-grow pb-16">{children}</main>
+      <main className="relative z-10 flex-grow pb-32">{children}</main>
       <GlobalPlayer isMusicPage={isMusicPage} />
       <Footer />
       <Toaster />
