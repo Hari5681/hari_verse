@@ -40,6 +40,7 @@ export default function MovieDetailPage() {
   const [movie, setMovie] = useState<MovieDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showTrailer, setShowTrailer] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -114,38 +115,39 @@ export default function MovieDetailPage() {
         </Button>
       <main className="pb-12">
         {/* Header section with backdrop */}
-        <header className="relative w-full h-[40vh] md:h-[50vh]">
-          <Image
-            src={backdropUrl}
-            alt={`Backdrop for ${movie.title}`}
-            fill
-            className="object-cover object-top"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
-          <div className="absolute inset-0 flex items-center justify-center">
-             <Dialog>
-                <DialogTrigger asChild>
-                    <button className="text-white bg-black/30 backdrop-blur-sm p-4 rounded-full transition-transform hover:scale-105">
-                        <PlayCircle size={64} />
-                    </button>
-                </DialogTrigger>
+        <header className="relative w-full h-[40vh] md:h-[50vh] bg-black">
+          {showTrailer && movie.trailer ? (
+            <iframe
+              className="w-full h-full"
+              src={`https://www.youtube.com/embed/${movie.trailer.key}?autoplay=1`}
+              title="YouTube video player"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          ) : (
+            <>
+              <Image
+                src={backdropUrl}
+                alt={`Backdrop for ${movie.title}`}
+                fill
+                className="object-cover object-top"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+              <div className="absolute inset-0 flex items-center justify-center">
                 {movie.trailer && (
-                    <DialogContent className="bg-black border-none p-0 max-w-4xl w-full">
-                         <div className="aspect-video">
-                            <iframe
-                                className="w-full h-full"
-                                src={`https://www.youtube.com/embed/${movie.trailer.key}?autoplay=1`}
-                                title="YouTube video player"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            ></iframe>
-                        </div>
-                    </DialogContent>
+                  <button
+                    onClick={() => setShowTrailer(true)}
+                    className="text-white bg-black/30 backdrop-blur-sm p-4 rounded-full transition-transform hover:scale-105"
+                  >
+                    <PlayCircle size={64} />
+                  </button>
                 )}
-             </Dialog>
-          </div>
+              </div>
+            </>
+          )}
+
            <div className="absolute top-4 right-4 z-20 flex gap-2">
                 <Button size="icon" variant="outline" className="bg-background/30 border-none">
                     <ThumbsUp size={20} />
@@ -261,4 +263,3 @@ export default function MovieDetailPage() {
       </main>
     </div>
   );
-}
