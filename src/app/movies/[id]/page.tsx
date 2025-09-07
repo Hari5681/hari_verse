@@ -175,6 +175,17 @@ export default function MovieDetailPage() {
            )}
         </header>
 
+        {showTrailer && (
+             <div className="container mx-auto max-w-5xl px-4 mt-4 relative z-10">
+                <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">{movie.title}</h1>
+                <div className="flex items-center flex-wrap gap-x-4 gap-y-1 mt-2 text-sm md:text-base text-muted-foreground">
+                    <span>{new Date(movie.release_date).getFullYear()}</span>
+                    <span className="w-1 h-1 bg-border rounded-full" />
+                    <span>{formatRuntime(movie.runtime)}</span>
+                </div>
+            </div>
+        )}
+
         <div className="container mx-auto max-w-5xl px-4 mt-8 relative z-10 space-y-8">
             <h1 className="text-4xl font-bold tracking-tight">{movie.title}</h1>
             <section className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
@@ -269,5 +280,4 @@ export default function MovieDetailPage() {
       </main>
     </div>
   );
-
-    
+}
