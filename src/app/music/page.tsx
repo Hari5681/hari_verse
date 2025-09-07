@@ -236,9 +236,16 @@ export default function MusicPage() {
                     <Separator className="my-12"/>
                 </section>
                 
-
+                <div className="mt-12 text-center text-muted-foreground animate-fade-in-up" style={{ animationDelay: '500ms' }}>
+                    <div className="text-4xl mb-4 animate-spin [animation-duration:3s]">🎶</div>
+                    <p className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
+                        Music updates in progress… Please stay tuned!
+                    </p>
+                </div>
+                
                 {artists.length > 0 && (
                     <section>
+                        <Separator className="my-12"/>
                         <h2 className="text-2xl font-bold mb-4">Artists</h2>
                          <Carousel 
                             opts={{ align: "start", loop: false }} 
@@ -267,12 +274,6 @@ export default function MusicPage() {
                 {!error && songs.length === 0 && (
                   <p className="text-center text-muted-foreground pt-8">Loading your music library...</p>
                 )}
-            </div>
-             <div className="mt-12 text-center text-muted-foreground animate-fade-in-up" style={{ animationDelay: '500ms' }}>
-                <div className="text-4xl mb-4 animate-spin [animation-duration:3s]">🎶</div>
-                <p className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
-                    Music updates in progress… Please stay tuned!
-                </p>
             </div>
         </CardContent>
       </Card>
