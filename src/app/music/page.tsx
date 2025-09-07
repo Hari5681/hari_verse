@@ -222,18 +222,6 @@ export default function MusicPage() {
                     </section>
                 )}
 
-                 {lanaDelReySongs.length > 0 && (
-                   <section>
-                        <h2 className="text-2xl font-bold mb-4">Lana Del Rey</h2>
-                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                            {lanaDelReySongs.map((song) => (
-                                <SongCard key={song.key} song={song} currentSong={currentSong} onPlay={() => handlePlaySong(song, lanaDelReySongs)} />
-                            ))}
-                        </div>
-                         <Separator className="my-12"/>
-                    </section>
-                )}
-
                 <section>
                     <h2 className="text-2xl font-bold mb-4">Languages</h2>
                      <Carousel 
@@ -259,6 +247,18 @@ export default function MusicPage() {
                     </Carousel>
                     <Separator className="my-12"/>
                 </section>
+
+                 {lanaDelReySongs.length > 0 && (
+                   <section>
+                        <h2 className="text-2xl font-bold mb-4">Lana Del Rey</h2>
+                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                            {lanaDelReySongs.map((song) => (
+                                <SongCard key={song.key} song={song} currentSong={currentSong} onPlay={() => handlePlaySong(song, lanaDelReySongs)} />
+                            ))}
+                        </div>
+                         <Separator className="my-12"/>
+                    </section>
+                )}
 
 
                 {otherSongs.length > 0 && (
