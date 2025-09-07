@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
   url.searchParams.append('sort_by', sortBy);
   url.searchParams.append('include_adult', 'false');
   url.searchParams.append('include_video', 'false');
-  url.search_params.append('page', '1');
+  url.searchParams.append('page', '1');
   
   if (sortBy.includes('vote_average')) {
     url.searchParams.append('vote_count.gte', '1000'); // Ensure movies have a decent number of votes
