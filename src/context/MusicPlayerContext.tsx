@@ -20,6 +20,7 @@ interface MusicPlayerContextType {
   playNext: () => void;
   playPrev: () => void;
   togglePlay: () => void;
+  stopPlayer: () => void;
   progress: number;
   duration: number;
   handleSeek: (value: number[]) => void;
@@ -60,6 +61,9 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
             console.error("Audio play failed on song change", e);
             setIsPlaying(false);
         });
+    } else if (audioRef.current && !currentSong) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
     }
   }, [currentSong]);
 
@@ -79,6 +83,11 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
       }
     }
   };
+
+  const stopPlayer = () => {
+    pauseSong();
+    setCurrentSong(null);
+  }
 
   const playNext = useCallback(() => {
     if (playlist.length === 0) return;
@@ -171,6 +180,7 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
         playNext,
         playPrev,
         togglePlay,
+        stopPlayer,
         progress,
         duration,
         handleSeek,

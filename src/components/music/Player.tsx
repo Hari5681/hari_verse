@@ -13,6 +13,7 @@ import {
   Shuffle,
   Heart,
   ChevronDown,
+  X
 } from 'lucide-react';
 import {
   Dialog,
@@ -40,7 +41,8 @@ export function Player() {
     isShuffle,
     toggleShuffle,
     isRepeat,
-    toggleRepeat
+    toggleRepeat,
+    stopPlayer
   } = useMusicPlayer();
   const [isLiked, setIsLiked] = useState(false);
 
@@ -134,6 +136,15 @@ export function Player() {
               <div className="flex items-center justify-end md:hidden">
                 <div className="flex items-center gap-2 sm:gap-4">
                   <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        playPrev();
+                      }}
+                      className="text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      <SkipBack size={20} />
+                  </button>
+                  <button
                     onClick={(e) => {
                       e.stopPropagation();
                       togglePlay();
@@ -155,6 +166,15 @@ export function Player() {
                   >
                     <SkipForward size={20} />
                   </button>
+                  <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        stopPlayer();
+                      }}
+                      className="text-muted-foreground transition-colors hover:text-foreground ml-2"
+                    >
+                      <X size={20} />
+                    </button>
                 </div>
               </div>
             </div>
