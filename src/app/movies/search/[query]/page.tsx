@@ -148,4 +148,3 @@ function MovieCard({ movie }: { movie: Movie }) {
     </Card>
   );
 }
-
