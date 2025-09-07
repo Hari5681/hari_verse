@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -11,6 +12,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { usePathname } from 'next/navigation';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -19,17 +21,18 @@ const navLinks = [
   { href: '/ai-tools', label: 'AI Tools' },
   { href: '/quiz', label: 'Quiz' },
   { href: '/about-me', label: 'About Me' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/contact', 'label': 'Contact' },
 ];
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
         <Link href="/" className="text-2xl font-bold tracking-tight text-primary">
-          HariVerse
+          {pathname === '/' ? 'HariVerse' : ''}
         </Link>
         <nav className="hidden items-center space-x-6 md:flex">
           {navLinks.map((link) => (
