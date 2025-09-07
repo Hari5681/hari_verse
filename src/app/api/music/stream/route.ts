@@ -48,6 +48,8 @@ export async function GET(req: NextRequest) {
     }
     headers.set('Accept-Ranges', 'bytes');
 
+    // The Body from R2 is a ReadableStream. We can directly pass it to the Response.
+    // The `any` cast is necessary to work around some type mismatches between Node.js and Web Streams.
     return new Response(Body as any, {
       status: 200,
       headers,
