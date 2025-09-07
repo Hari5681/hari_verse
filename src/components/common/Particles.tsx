@@ -105,9 +105,7 @@ export function Particles({
   const TAU = 2 * Math.PI;
 
   const rgb = useMemo(() => {
-    // Check if color is in HSL format
     if (color.startsWith('hsl')) {
-      // Extract H, S, L values
       const [h, s, l] = color.match(/\d+/g)?.map(Number) || [0, 0, 100];
       return hslToRgb(h, s, l);
     }
@@ -160,9 +158,29 @@ export function Particles({
     },
     [rgb]
   );
-
+  
   const updateCircle = (circle: any) => {
     let { x, y, s, dx, dy, alpha, targetAlpha, magnetism } = circle;
+    
+    // Mouse interaction
+    const mouseX = mouse.current.x;
+    const mouseY = mouse.current.y;
+    const distanceX = mouseX - x;
+    const distanceY = mouseY - y;
+    const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+    
+    const attraction = 150;
+    if (distance < attraction) {
+      const forceDirectionX = distanceX / distance;
+      const forceDirectionY = distanceY / distance;
+      const force = (attraction - distance) / attraction;
+      dx += forceDirectionX * force * 0.05 * magnetism;
+      dy += forceDirectionY * force * 0.05 * magnetism;
+    }
+    
+    // Ease / Friction
+    dx *= (100 - ease) / 100;
+    dy *= (100 - ease) / 100;
 
     // Movement
     x += dx;
@@ -218,10 +236,23 @@ export function Particles({
     requestAnimationFrame(animate);
   }, [animate, circleParams, dpr, quantity]);
 
+  const onMouseMove = (event: MouseEvent) => {
+    const rect = canvasRef.current?.getBoundingClientRect();
+    if (rect) {
+      const { clientX, clientY } = event;
+      mouse.current.x = clientX - rect.left;
+      mouse.current.y = clientY - rect.top;
+    }
+  };
+
   useEffect(() => {
     init();
     window.addEventListener('resize', init);
-    return () => window.removeEventListener('resize', init);
+    window.addEventListener('mousemove', onMouseMove);
+    return () => {
+      window.removeEventListener('resize', init);
+      window.removeEventListener('mousemove', onMouseMove);
+    };
   }, [init]);
 
   useEffect(() => {
