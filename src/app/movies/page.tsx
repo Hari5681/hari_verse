@@ -60,6 +60,12 @@ export default function MoviesPage() {
             sortBy="vote_average.desc"
           />
            <MovieCarousel
+            title="Top Rated Telugu Movies"
+            subtitle="Celebrating the best of Tollywood."
+            language="te"
+            sortBy="vote_average.desc"
+          />
+           <MovieCarousel
             title="Top Rated Hindi Movies"
             language="hi"
             subtitle="Celebrating the best of Bollywood."
