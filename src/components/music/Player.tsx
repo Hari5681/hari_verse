@@ -80,7 +80,7 @@ export function Player() {
     <Dialog>
       <div className="fixed bottom-0 left-0 right-0 z-50">
         <DialogTrigger asChild>
-          <div className="h-16 cursor-pointer border-t border-border/50 bg-background/80 px-4 backdrop-blur-lg">
+          <div className="h-16 cursor-pointer border-t border-border/50 bg-background/80 px-2 sm:px-4 backdrop-blur-lg">
             <div className="container mx-auto flex h-full items-center justify-between gap-4">
               <div className="flex items-center gap-3 overflow-hidden">
                 <Image
