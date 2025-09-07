@@ -96,6 +96,14 @@ export default function MusicPage() {
                 }
                 return acc;
             }, [] as Artist[]);
+
+            if (!uniqueArtists.find(a => a.name === 'Lana Del Rey') && songsWithArtists.some(s => s.artist === 'Lana Del Rey')) {
+                 uniqueArtists.unshift({
+                    name: 'Lana Del Rey',
+                    imageUrl: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
+                 });
+            }
+
             setArtists(uniqueArtists);
         }
       } catch (error: any) {
@@ -176,12 +184,12 @@ export default function MusicPage() {
                 <section>
                     <h2 className="text-2xl font-bold mb-4">Top Picks</h2>
                     {songs.length > 0 ? (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+                        <div className="flex flex-col gap-2">
                             {songs.slice(0, 6).map((song) => (
-                                <TopPickSongCard 
-                                    key={`top-pick-${song.key}`} 
-                                    song={song} 
-                                    onPlay={() => handlePlaySong(song, songs.slice(0, 6))} 
+                                <TopPickListItem
+                                    key={`top-pick-${song.key}`}
+                                    song={song}
+                                    onPlay={() => handlePlaySong(song, songs.slice(0, 6))}
                                 />
                             ))}
                         </div>
@@ -325,26 +333,26 @@ function RecentlyPlayedSongItem({ song, index, onPlay }: { song: Song; index: nu
     );
 }
 
-function TopPickSongCard({ song, onPlay }: { song: Song; onPlay: () => void; }) {
+function TopPickListItem({ song, onPlay }: { song: Song; onPlay: () => void; }) {
     return (
         <div 
             onClick={onPlay} 
-            className="group cursor-pointer"
+            className="group flex items-center p-2 rounded-md hover:bg-white/10 cursor-pointer transition-colors"
         >
-            <div className="relative aspect-square w-full overflow-hidden rounded-lg transition-all duration-300 group-hover:scale-105">
+            <div className="relative flex-shrink-0">
                 <Image
                     src={`https://picsum.photos/seed/${song.key}/200/200`}
                     alt={song.title}
-                    width={200}
-                    height={200}
-                    className="w-full h-full object-cover"
+                    width={56}
+                    height={56}
+                    className="rounded-md object-cover"
                     data-ai-hint="song album cover"
                 />
                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <PlayCircle size={48} className="text-white" />
+                    <PlayCircle size={32} className="text-white" />
                 </div>
             </div>
-            <div className="mt-2">
+            <div className="ml-4 flex-grow overflow-hidden">
                 <p className="text-sm font-semibold truncate text-foreground">
                     {song.title.replace(`${song.artist} - `, '').replace(/\.(mp3|m4a)$/i, '')}
                 </p>
@@ -388,3 +396,5 @@ function SongCard({ song, currentSong, onPlay }: { song: Song; currentSong: Song
         </div>
     );
 }
+
+    
