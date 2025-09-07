@@ -31,9 +31,11 @@ export function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <Link href="/" className="text-2xl font-bold tracking-tight text-primary">
-          {pathname === '/' ? 'HariVerse' : ''}
-        </Link>
+        <div className="flex items-center">
+             <Link href="/" className="text-2xl font-bold tracking-tight text-primary md:hidden">
+                {pathname === '/' ? 'HariVerse' : ''}
+            </Link>
+        </div>
         <nav className="hidden items-center space-x-6 md:flex">
           {navLinks.map((link) => (
             <Link
