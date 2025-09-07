@@ -4,12 +4,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Star, AlertTriangle, ArrowLeft, Plus, Users, Video, Share2 } from 'lucide-react';
+import { Star, AlertTriangle, ArrowLeft, Plus, Users, Video, Share2, PlayCircle, Heart, ThumbsUp, MoreVertical } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { useToast } from '@/hooks/use-toast';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 interface MovieDetails {
   id: number;
@@ -27,6 +28,7 @@ interface MovieDetails {
   trailer: { key: string } | null;
   videos: { results: any[] };
   images: { backdrops: any[], posters: any[], logos: any[] };
+  "watch/providers": any;
 }
 
 export default function MovieDetailPage() {
@@ -64,30 +66,6 @@ export default function MovieDetailPage() {
     fetchMovieDetails();
   }, [id]);
 
-  const handleShare = async () => {
-    const shareData = {
-      title: `Check out ${movie?.title} on HariVerse`,
-      text: `I found this movie, ${movie?.title}, on HariVerse!`,
-      url: window.location.href,
-    };
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-        toast({ title: 'Shared successfully!' });
-      } else {
-        await navigator.clipboard.writeText(window.location.href);
-        toast({ title: 'Link Copied!', description: 'Movie page URL has been copied to your clipboard.' });
-      }
-    } catch (err) {
-      console.error('Share error:', err);
-      toast({
-        variant: 'destructive',
-        title: 'Sharing failed',
-        description: 'Could not share at this moment.',
-      });
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-background">
@@ -118,110 +96,140 @@ export default function MovieDetailPage() {
   const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
     : 'https://picsum.photos/500/750';
+    
+  const backdropUrl = movie.backdrop_path
+    ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
+    : `https://picsum.photos/1280/720?random=${movie.id}`;
   
   const formatRuntime = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
     const mins = minutes % 60;
     return `${hours}h ${mins}m`;
   };
-
+  
   const director = movie.crew?.find(person => person.job === 'Director');
   const writers = movie.crew?.filter(person => person.job === 'Writer' || person.job === 'Screenplay').slice(0, 2);
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-4 pt-20">
-      <div className="container mx-auto max-w-4xl">
-        <Button variant="ghost" className="mb-4" onClick={() => router.back()}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Movies
+    <div className="min-h-screen bg-background text-foreground">
+        <Button variant="ghost" className="absolute top-4 left-4 z-20 flex items-center gap-2" onClick={() => router.back()}>
+            <ArrowLeft className="h-4 w-4" />
+            Back
         </Button>
-        <header className="mb-8 animate-fade-in-down">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">{movie.title}</h1>
-          <div className="flex items-center flex-wrap gap-4 mt-2 text-muted-foreground text-sm">
-            <span>{new Date(movie.release_date).getFullYear()}</span>
-            <span className="w-1 h-1 bg-muted-foreground rounded-full" />
-            <span>{formatRuntime(movie.runtime)}</span>
-          </div>
-        </header>
-
-        <main className="space-y-12">
-            <section className="animate-fade-in-up">
-                <div className="relative">
-                    <Button variant="outline" size="icon" className="absolute top-4 left-4 z-10 bg-background/50 backdrop-blur-sm" onClick={handleShare}>
-                        <Share2 className="h-5 w-5"/>
-                    </Button>
-                    {movie.trailer ? (
-                        <div className="aspect-video">
+      <main className="pb-12">
+        {/* Header section with backdrop */}
+        <header className="relative w-full h-[40vh] md:h-[50vh]">
+          <Image
+            src={backdropUrl}
+            alt={`Backdrop for ${movie.title}`}
+            fill
+            className="object-cover object-top"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+          <div className="absolute inset-0 flex items-center justify-center">
+             <Dialog>
+                <DialogTrigger asChild>
+                    <button className="text-white bg-black/30 backdrop-blur-sm p-4 rounded-full transition-transform hover:scale-105">
+                        <PlayCircle size={64} />
+                    </button>
+                </DialogTrigger>
+                {movie.trailer && (
+                    <DialogContent className="bg-black border-none p-0 max-w-4xl w-full">
+                         <div className="aspect-video">
                             <iframe
-                                className="w-full h-full rounded-lg shadow-lg"
-                                src={`https://www.youtube.com/embed/${movie.trailer.key}`}
+                                className="w-full h-full"
+                                src={`https://www.youtube.com/embed/${movie.trailer.key}?autoplay=1`}
                                 title="YouTube video player"
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowFullScreen
                             ></iframe>
                         </div>
-                    ) : (
-                        <div className="aspect-video bg-muted rounded-lg flex items-center justify-center shadow-lg">
-                            <Video className="w-16 h-16 text-muted-foreground"/>
-                        </div>
-                    )}
+                    </DialogContent>
+                )}
+             </Dialog>
+          </div>
+           <div className="absolute top-4 right-4 z-20 flex gap-2">
+                <Button size="icon" variant="outline" className="bg-background/30 border-none">
+                    <ThumbsUp size={20} />
+                </Button>
+                <Button size="icon" variant="outline" className="bg-background/30 border-none">
+                    <Heart size={20} />
+                </Button>
+                 <Button size="icon" variant="outline" className="bg-background/30 border-none">
+                    <MoreVertical size={20} />
+                </Button>
+           </div>
+          <div className="absolute bottom-4 left-4 md:left-8 text-white">
+            <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-shadow-lg">{movie.title}</h1>
+            <div className="flex items-center flex-wrap gap-x-4 gap-y-1 mt-2 text-sm md:text-base text-shadow">
+                <span>{new Date(movie.release_date).getFullYear()}</span>
+                <span className="w-1 h-1 bg-white/50 rounded-full" />
+                <span>{formatRuntime(movie.runtime)}</span>
+            </div>
+          </div>
+        </header>
+
+        <div className="container mx-auto max-w-5xl px-4 -mt-8 relative z-10 space-y-8">
+            
+            <section className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
+                <div className="w-full md:w-1/4 flex-shrink-0">
+                    <Image
+                        src={posterUrl}
+                        alt={`Poster for ${movie.title}`}
+                        width={500}
+                        height={750}
+                        className="rounded-lg shadow-lg w-full max-w-[200px] md:max-w-full mx-auto"
+                    />
+                     <Button className="w-full mt-4 bg-yellow-500 hover:bg-yellow-600 text-black font-bold">
+                        <Plus className="mr-2 h-4 w-4"/> Add to Watchlist
+                     </Button>
                 </div>
-                 <div className="flex flex-wrap gap-2 mt-4">
-                    {movie.genres.map(genre => (
-                        <Badge key={genre.id} variant="secondary">{genre.name}</Badge>
-                    ))}
+                <div className="w-full md:w-3/4 space-y-4">
+                    <div className="flex flex-wrap gap-2">
+                        {movie.genres.map(genre => (
+                            <Badge key={genre.id} variant="secondary" className="cursor-pointer hover:bg-primary/20">{genre.name}</Badge>
+                        ))}
+                    </div>
+                    <p className="text-base text-foreground/80 leading-relaxed">{movie.overview}</p>
                 </div>
             </section>
             
             <Separator />
             
-            <section className="animate-fade-in-up" style={{animationDelay: '200ms'}}>
-                <h2 className="text-2xl font-bold mb-4">Story Plot</h2>
-                <div className="flex flex-col md:flex-row gap-6">
-                    <div className="w-full md:w-1/4 flex-shrink-0">
-                        <Image
-                            src={posterUrl}
-                            alt={`Poster for ${movie.title}`}
-                            width={500}
-                            height={750}
-                            className="rounded-lg shadow-lg w-full"
-                        />
-                    </div>
-                    <div className="w-full md:w-3/4">
-                        <p className="text-base text-foreground/80 leading-relaxed">{movie.overview}</p>
-                    </div>
-                </div>
-            </section>
-
-            <Separator />
-
-            <section className="animate-fade-in-up" style={{animationDelay: '300ms'}}>
-                <h2 className="text-2xl font-bold mb-4">TMDb Rating</h2>
-                <div className="flex items-center gap-4">
-                    <Star className="h-10 w-10 text-yellow-400 fill-yellow-400" />
+            <section className="flex items-center gap-6 text-lg">
+                <div className="flex items-center gap-2">
+                    <Star className="h-8 w-8 text-yellow-400 fill-yellow-400" />
                     <div>
-                        <p className="text-2xl font-bold">{movie.vote_average.toFixed(1)} <span className="text-xl text-muted-foreground">/ 10</span></p>
-                        <p className="text-sm text-muted-foreground">{movie.vote_count.toLocaleString()} votes</p>
+                        <p><span className="font-bold text-xl">{movie.vote_average.toFixed(1)}</span><span className="text-sm text-muted-foreground">/10</span></p>
+                        <p className="text-xs text-muted-foreground">{movie.vote_count.toLocaleString()}</p>
                     </div>
                 </div>
+                 <div className="h-8 w-px bg-border" />
+                 <Button variant="ghost" className="flex items-center gap-2 text-lg">
+                    <Star className="h-6 w-6" /> Rate
+                 </Button>
             </section>
             
             <Separator />
 
-             <section className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-fade-in-up" style={{animationDelay: '400ms'}}>
+             <section className="space-y-4">
                 {director && (
-                    <div>
-                        <h2 className="text-2xl font-bold mb-4">Director</h2>
+                    <div className="flex items-baseline gap-4">
+                        <h2 className="text-lg font-bold w-24 flex-shrink-0">Director</h2>
                         <p className="text-lg text-primary">{director.name}</p>
                     </div>
                 )}
                 {writers && writers.length > 0 && (
-                    <div>
-                        <h2 className="text-2xl font-bold mb-4">Writers</h2>
-                        <div className="flex flex-col gap-1">
-                            {writers.map(writer => (
-                               <p key={writer.id} className="text-lg text-primary">{writer.name}</p>
+                    <div className="flex items-baseline gap-4">
+                        <h2 className="text-lg font-bold w-24 flex-shrink-0">Writers</h2>
+                        <div className="flex flex-wrap gap-x-2">
+                            {writers.map((writer, index) => (
+                               <React.Fragment key={writer.id}>
+                                    <p className="text-lg text-primary">{writer.name}</p>
+                                    {index < writers.length - 1 && <span className="text-muted-foreground">·</span>}
+                               </React.Fragment>
                             ))}
                         </div>
                     </div>
@@ -231,12 +239,12 @@ export default function MovieDetailPage() {
             <Separator />
 
             {movie.cast && movie.cast.length > 0 && (
-                 <section className="animate-fade-in-up" style={{animationDelay: '500ms'}}>
-                    <h2 className="text-2xl font-bold mb-4 flex items-center gap-2"><Users className="w-6 h-6"/> Top Billed Cast</h2>
+                 <section className="space-y-4">
+                    <h2 className="text-2xl font-bold flex items-center gap-2">Stars</h2>
                     <Carousel
                         opts={{
                             align: 'start',
-                            slidesToScroll: 3,
+                            slidesToScroll: 'auto',
                         }}
                         className="w-full"
                         >
@@ -265,8 +273,10 @@ export default function MovieDetailPage() {
                 </section>
             )}
 
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }
+
+    
