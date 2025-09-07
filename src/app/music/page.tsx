@@ -191,7 +191,7 @@ export default function MusicPage() {
                          >
                             <CarouselContent className="-ml-4">
                                 {artists.map((artist) => (
-                                    <CarouselItem key={artist.name} className="basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6 pl-4">
+                                    <CarouselItem key={artist.name} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                                         <Link href={`/music/artist/${encodeURIComponent(artist.name)}`} passHref>
                                             <div className="group flex flex-col items-center text-center gap-2 cursor-pointer">
                                                 <div className="relative w-24 h-24 md:w-32 md:h-32">
@@ -218,7 +218,7 @@ export default function MusicPage() {
                      >
                         <CarouselContent className="-ml-4">
                             {languages.map(lang => (
-                                <CarouselItem key={lang} className="basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6 pl-4">
+                                <CarouselItem key={lang} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
                                     <div className="group flex flex-col items-center text-center gap-2 cursor-pointer">
                                         <div className="relative w-24 h-24 md:w-32 md:h-32">
                                             <div className="w-full h-full rounded-full bg-primary/10 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
@@ -364,3 +364,5 @@ function SongCard({ song, currentSong, onPlay }: { song: Song; currentSong: Song
         </div>
     );
 }
+
+    
