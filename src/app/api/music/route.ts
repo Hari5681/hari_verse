@@ -35,7 +35,8 @@ export async function GET() {
     const songs = list.Contents
       .filter(item => item.Key && (item.Key.toLowerCase().endsWith('.mp3') || item.Key.toLowerCase().endsWith('.m4a')))
       .map(item => {
-        const url = `${publicUrl}/${encodeURIComponent(item.Key!)}`;
+        // Correctly encode each part of the path
+        const url = `${publicUrl}/${item.Key!.split('/').map(part => encodeURIComponent(part)).join('/')}`;
         return {
           key: item.Key,
           title: item.Key!,

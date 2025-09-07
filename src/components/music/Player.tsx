@@ -66,6 +66,9 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
             }
           });
     }
+    // Reset progress for new song
+    setProgress(0);
+    setDuration(0);
   }, [song, audioRef]);
   
   const handleEnded = () => {
@@ -109,7 +112,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
       if (isPlaying) {
         audioRef.current.pause();
       } else {
-        audioRef.current.play();
+        audioRef.current.play().catch(e => console.error("Audio play failed on toggle:", e));
       }
     }
   };

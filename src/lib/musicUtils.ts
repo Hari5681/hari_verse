@@ -6,23 +6,29 @@
  * 1.  Songs organized in folders by artist (e.g., "Artist Name/Song.mp3").
  * 2.  Songs with the artist in the filename (e.g., "Artist Name - Song.mp3").
  *
+ * It also standardizes 'Lena Del Rey' to 'Lana Del Rey'.
+ *
  * @param title The full title of the song, typically the file path from the bucket.
  * @returns The extracted artist name, or "Unknown Artist" if one cannot be found.
  */
 export const getArtistFromTitle = (title: string): string => {
     if (!title) return 'Unknown Artist';
 
+    // Standardize to "Lana Del Rey"
+    if (title.toLowerCase().includes('lana del rey') || title.toLowerCase().includes('lena del rey')) {
+        return 'Lana Del Rey';
+    }
+
     const parts = title.split('/');
     
     // Case 1: Artist name is the folder name
-    if (parts.length > 1) {
+    if (parts.length > 1 && parts[0].trim() !== '') {
         const artistCandidate = parts[0].trim();
-        // Capitalize first letter of each word for better display
         return artistCandidate.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     }
     
     // Case 2: Artist is in the filename, e.g., "Artist - Song.mp3"
-    const fileName = parts[0] || '';
+    const fileName = parts[parts.length - 1] || '';
     const fileNameParts = fileName.split(' - ');
     if (fileNameParts.length > 1) {
         return fileNameParts[0].trim();
@@ -55,9 +61,10 @@ export const cleanSongTitle = (title: string, artist: string): string => {
         }
     }
     
-    // Remove file extension and other common text
+    // Remove file extension and other common text like (Official Video), etc.
     return cleanTitle
         .replace(/\.(mp3|m4a)$/i, '')
-        .replace(/\s*\(.*\)/i, '') // Removes text in parentheses like (Official Video)
+        .replace(/\s*\(.*?\)/g, '') // Removes text in parentheses
+        .replace(/\[.*?\]/g, '')   // Removes text in square brackets
         .trim();
 }
