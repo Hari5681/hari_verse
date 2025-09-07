@@ -16,7 +16,7 @@ import { getArtistFromTitle, cleanSongTitle } from '@/lib/musicUtils';
 interface Song {
   key: string;
   title: string;
-  url: string;
+  url:string;
   artist: string;
 }
 
@@ -125,7 +125,6 @@ export default function MusicPage() {
     setCurrentSong(playlist[prevIndex]);
   };
   
-  const lanaDelReySongs = songs.filter(song => song.artist.toLowerCase() === 'lana del rey');
   const topPicks = songs.slice(0, 10);
 
   return (
@@ -239,18 +238,6 @@ export default function MusicPage() {
                     <Separator className="my-12"/>
                 </section>
 
-                 {lanaDelReySongs.length > 0 && (
-                   <section>
-                        <h2 className="text-2xl font-bold mb-4">Lana Del Rey</h2>
-                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                            {lanaDelReySongs.map((song) => (
-                                <SongCard key={song.key} song={song} currentSong={currentSong} onPlay={() => handlePlaySong(song, lanaDelReySongs)} />
-                            ))}
-                        </div>
-                         <Separator className="my-12"/>
-                    </section>
-                )}
-
                 {!error && songs.length === 0 && (
                   <p className="text-center text-muted-foreground pt-8">Loading your music library...</p>
                 )}
@@ -267,7 +254,7 @@ export default function MusicPage() {
         />
       )}
 
-      <audio ref={audioRef} />
+      <audio ref={audioRef} onEnded={handleNext} src={currentSong?.url}/>
     </div>
   );
 }
