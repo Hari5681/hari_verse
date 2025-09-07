@@ -49,8 +49,8 @@ const AnimatedRating = ({ rating }: { rating: number }) => {
   return (
     <div className="w-full max-w-xs">
       <div className="flex justify-between items-center mb-1">
-        <span className="text-base font-medium text-primary">TMDb Rating</span>
-        <span className="text-sm font-medium text-primary">{rating.toFixed(1)}/10</span>
+        <span className="text-base font-medium text-foreground">TMDb Rating</span>
+        <span className="text-sm font-medium text-foreground">{rating.toFixed(1)}/10</span>
       </div>
       <div className="w-full bg-secondary rounded-full h-2.5">
         <div
@@ -302,5 +302,3 @@ export default function MovieDetailPage() {
     </div>
   );
 }
-
-    
