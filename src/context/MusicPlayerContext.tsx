@@ -163,7 +163,11 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
     const handlePause = () => setIsPlaying(false);
     const handleError = (e: Event) => {
         const mediaError = (e.target as HTMLAudioElement).error;
-        console.error("Audio Element Error:", mediaError);
+        if (mediaError) {
+          console.error(`Audio Element Error: code ${mediaError.code}, message: ${mediaError.message}`);
+        } else {
+          console.error("An unknown audio error occurred.");
+        }
         setIsPlaying(false); 
     };
 
