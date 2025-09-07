@@ -2,6 +2,7 @@
 'use client';
 
 import React, { createContext, useContext, useRef, useState, useEffect, useCallback } from 'react';
+import { getArtistTheme, ArtistTheme } from '@/lib/musicUtils';
 
 interface Song {
   key: string;
@@ -28,6 +29,7 @@ interface MusicPlayerContextType {
   toggleShuffle: () => void;
   isRepeat: boolean;
   toggleRepeat: () => void;
+  theme: ArtistTheme;
 }
 
 const MusicPlayerContext = createContext<MusicPlayerContextType | undefined>(undefined);
@@ -40,11 +42,13 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
   const [duration, setDuration] = useState(0);
   const [isShuffle, setIsShuffle] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
+  const [theme, setTheme] = useState<ArtistTheme>(getArtistTheme(''));
   
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const playSong = useCallback((song: Song, newPlaylist: Song[] = []) => {
     setCurrentSong(song);
+    setTheme(getArtistTheme(song.artist));
     if (newPlaylist.length > 0) {
       setPlaylist(newPlaylist);
     } else if(playlist.length === 0){
@@ -97,6 +101,7 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
     setIsPlaying(false);
     setProgress(0);
     setDuration(0);
+    setTheme(getArtistTheme(''));
   }
 
   const playNext = useCallback(() => {
@@ -107,20 +112,20 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
         do {
             randomIndex = Math.floor(Math.random() * playlist.length);
         } while (playlist.length > 1 && playlist[randomIndex].key === currentSong?.key);
-        setCurrentSong(playlist[randomIndex]);
+        playSong(playlist[randomIndex]);
         return;
     }
 
     const currentIndex = playlist.findIndex(s => s.key === currentSong?.key);
     const nextIndex = (currentIndex + 1) % playlist.length;
-    setCurrentSong(playlist[nextIndex]);
-  }, [playlist, currentSong, isShuffle]);
+    playSong(playlist[nextIndex]);
+  }, [playlist, currentSong, isShuffle, playSong]);
 
   const playPrev = () => {
     if (playlist.length === 0) return;
     const currentIndex = playlist.findIndex(s => s.key === currentSong?.key);
     const prevIndex = (currentIndex - 1 + playlist.length) % playlist.length;
-    setCurrentSong(playlist[prevIndex]);
+    playSong(playlist[prevIndex]);
   };
   
   const handleSeek = (value: number[]) => {
@@ -214,6 +219,7 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
         toggleShuffle,
         isRepeat,
         toggleRepeat,
+        theme,
       }}
     >
       {children}

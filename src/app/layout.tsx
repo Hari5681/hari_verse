@@ -6,8 +6,9 @@ import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { Header } from '@/components/common/Header';
 import { Particles } from '@/components/common/Particles';
-import { MusicPlayerProvider } from '@/context/MusicPlayerContext';
+import { MusicPlayerProvider, useMusicPlayer } from '@/context/MusicPlayerContext';
 import { GlobalPlayer } from '@/components/music/GlobalPlayer';
+import { useEffect } from 'react';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -30,6 +31,21 @@ export default function RootLayout({
 function MainContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isMusicPage = pathname.startsWith('/music');
+  const { theme } = useMusicPlayer();
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme.color) {
+      root.style.setProperty('--dynamic-primary-h', theme.color.h.toString());
+      root.style.setProperty('--dynamic-primary-s', `${theme.color.s}%`);
+      root.style.setProperty('--dynamic-primary-l', `${theme.color.l}%`);
+    } else {
+      // Fallback to default primary color from globals.css
+      root.style.setProperty('--dynamic-primary-h', '217.2');
+      root.style.setProperty('--dynamic-primary-s', '91.2%');
+      root.style.setProperty('--dynamic-primary-l', '59.8%');
+    }
+  }, [theme]);
 
   return (
     <div className="relative min-h-screen">
@@ -37,7 +53,7 @@ function MainContent({ children }: { children: React.ReactNode }) {
         className="absolute inset-0 -z-10"
         quantity={100}
         ease={80}
-        color="hsl(217.2 91.2% 59.8%)"
+        color="hsl(var(--dynamic-primary-h) var(--dynamic-primary-s) var(--dynamic-primary-l))"
         refresh
       />
       <Header />

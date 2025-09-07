@@ -9,8 +9,10 @@ import { Music, Play, MoreHorizontal, Share, UserPlus, AlertTriangle, ArrowLeft,
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import PlayingAnimation from '@/components/music/PlayingAnimation';
-import { getArtistFromTitle, cleanSongTitle, getArtistImageUrl, getSongImageUrl } from '@/lib/musicUtils';
+import { getArtistFromTitle, cleanSongTitle, getArtistImageUrl, getSongImageUrl, getArtistTheme } from '@/lib/musicUtils';
 import { useMusicPlayer } from '@/context/MusicPlayerContext';
+import { cn } from '@/lib/utils';
+
 
 interface Song {
   key: string;
@@ -40,6 +42,7 @@ export default function ArtistPage() {
   const [isFollowing, setIsFollowing] = useState(false);
   
   const { playSong, currentSong, isPlaying } = useMusicPlayer();
+  const artistTheme = getArtistTheme(artistName);
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -123,7 +126,7 @@ export default function ArtistPage() {
   const artistImageUrl = getArtistImageUrl(artistName);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary/20 to-background p-4 pt-20 pb-40">
+    <div className="min-h-screen p-4 pt-20 pb-40 transition-colors duration-500" style={{ background: artistTheme.gradient }}>
       <div className="w-full max-w-7xl mx-auto">
         <header className="relative flex flex-col items-center text-center pt-8">
             <Button variant="ghost" size="icon" className="absolute top-4 left-0 md:left-4" onClick={() => router.push('/music')}>
@@ -215,7 +218,7 @@ function SongListItem({ song, index, isPlaying, onPlay }: { song: Song; index: n
                 onClick={onPlay}
             />
             <div className="ml-4 flex-grow overflow-hidden" onClick={onPlay}>
-                <p className={`font-semibold truncate ${isPlaying ? 'text-green-400' : 'text-white'}`}>
+                <p className={cn("font-semibold truncate", isPlaying ? 'text-green-400' : 'text-white')}>
                     {cleanSongTitle(song.title, song.artist)}
                 </p>
             </div>

@@ -42,7 +42,8 @@ export function Player() {
     toggleShuffle,
     isRepeat,
     toggleRepeat,
-    stopPlayer
+    stopPlayer,
+    theme
   } = useMusicPlayer();
   const [isLiked, setIsLiked] = useState(false);
 
@@ -184,7 +185,7 @@ export function Player() {
         </DialogTrigger>
       </div>
 
-      <DialogContent className="h-full max-h-full w-full max-w-full !rounded-none !border-none bg-gradient-to-b from-primary/30 to-background p-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-full data-[state=open]:slide-in-from-bottom-full">
+      <DialogContent className="h-full max-h-full w-full max-w-full !rounded-none !border-none p-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-full data-[state=open]:slide-in-from-bottom-full transition-colors duration-500" style={{ background: theme.gradient }}>
         <DialogTitle className="sr-only">Now Playing: {songTitle}</DialogTitle>
         <div className="flex h-full flex-col p-4 pt-8 sm:p-6 overflow-x-hidden">
           <header className="flex items-center justify-between flex-shrink-0">

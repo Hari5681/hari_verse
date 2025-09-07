@@ -1,19 +1,45 @@
 
 
+type HSLColor = { h: number; s: number; l: number };
 
+export interface ArtistTheme {
+    color: HSLColor;
+    gradient: string;
+}
 
+interface ArtistAssets {
+    profile?: string;
+    banner?: string;
+    theme: ArtistTheme;
+}
 
+const defaultTheme: ArtistTheme = {
+    color: { h: 217.2, s: 91.2, l: 59.8 }, // Default primary blue
+    gradient: 'linear-gradient(to bottom, hsl(217.2, 91.2%, 20%), hsl(240, 10%, 3.9%))',
+};
 
-const artistAssets: Record<string, { profile?: string; banner?: string }> = {
+const artistAssets: Record<string, ArtistAssets> = {
     'lana del rey': {
-        profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
+        profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lana%20del%20rey/lana%20del%20rey%20profile.jpg',
+        theme: {
+            color: { h: 350, s: 80, l: 60 }, // Vintage Rose
+            gradient: 'linear-gradient(to bottom, hsl(350, 80%, 30%), hsl(240, 10%, 3.9%))',
+        },
     },
     'the neighbourhood': {
-        profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neighbourhood/the%20neighbourhood%20profile.jpeg'
+        profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neighbourhood/the%20neighbourhood%20profile.jpeg',
+        theme: {
+            color: { h: 0, s: 0, l: 80 }, // Grayscale
+            gradient: 'linear-gradient(to bottom, hsl(0, 0%, 20%), hsl(240, 10%, 3.9%))',
+        },
     },
     'xxx tentacion': {
         profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/images.jpg',
-        banner: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%203.jpg',
+        banner: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%203.jpg?raw=true',
+        theme: {
+            color: { h: 210, s: 50, l: 55 }, // Moody Blue
+            gradient: 'linear-gradient(to bottom, hsl(210, 50%, 25%), hsl(240, 10%, 3.9%))',
+        },
     }
 };
 
@@ -34,15 +60,15 @@ export const getArtistFromTitle = (title: string): string => {
     if (!title) return 'Unknown Artist';
     const lowerCaseTitle = title.toLowerCase();
 
-    // Standardize artist names
+    // Standardize artist names first
+    if (lowerCaseTitle.includes('xxxtentacion') || lowerCaseTitle.includes('xxx tentacion')) {
+        return 'Xxx Tentacion';
+    }
     if (lowerCaseTitle.includes('lana del rey') || lowerCaseTitle.includes('lena del rey')) {
         return 'Lana Del Rey';
     }
     if (lowerCaseTitle.includes('the neighbourhood')) {
         return 'The Neighbourhood';
-    }
-     if (lowerCaseTitle.includes('xxxtentacion')) {
-        return 'Xxx Tentacion';
     }
 
     const parts = title.split('/');
@@ -52,7 +78,6 @@ export const getArtistFromTitle = (title: string): string => {
         const artistCandidate = parts[0].trim();
         // Capitalize first letter of each word
         const formattedArtist = artistCandidate.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-        if (formattedArtist.toLowerCase() === 'xxxtentacion') return 'Xxx Tentacion';
         return formattedArtist;
     }
     
@@ -128,3 +153,13 @@ export const getSongImageUrl = (artistName: string, songKey: string, size: numbe
     
     return `https://picsum.photos/seed/${songKey}/${size}/${size}`;
 };
+
+/**
+ * Gets the theme for a given artist.
+ * @param artistName The name of the artist.
+ * @returns The artist's theme or the default theme.
+ */
+export const getArtistTheme = (artistName: string): ArtistTheme => {
+    const assets = artistAssets[artistName.toLowerCase()];
+    return assets?.theme || defaultTheme;
+}
