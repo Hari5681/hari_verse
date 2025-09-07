@@ -17,10 +17,12 @@ interface Movie {
 interface MovieCarouselProps {
     title: string;
     subtitle: string;
-    language: string;
+    language?: string;
+    sortBy?: string;
+    withKeywords?: string;
 }
 
-export function MovieCarousel({ title, subtitle, language }: MovieCarouselProps) {
+export function MovieCarousel({ title, subtitle, language, sortBy, withKeywords }: MovieCarouselProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -29,11 +31,16 @@ export function MovieCarousel({ title, subtitle, language }: MovieCarouselProps)
     const fetchMovies = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/movies/discover?language=${language}`);
+        const params = new URLSearchParams();
+        if (language) params.append('language', language);
+        if (sortBy) params.append('sort_by', sortBy);
+        if (withKeywords) params.append('with_keywords', withKeywords);
+
+        const response = await fetch(`/api/movies/discover?${params.toString()}`);
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.error || `Failed to fetch ${language} movies.`);
+          throw new Error(data.error || `Failed to fetch movies.`);
         }
 
         setMovies(data.movies);
@@ -47,7 +54,7 @@ export function MovieCarousel({ title, subtitle, language }: MovieCarouselProps)
     };
 
     fetchMovies();
-  }, [language]);
+  }, [language, sortBy, withKeywords]);
 
   return (
     <section>

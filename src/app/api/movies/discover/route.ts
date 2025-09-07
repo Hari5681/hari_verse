@@ -12,19 +12,30 @@ export async function GET(req: NextRequest) {
   }
 
   const { searchParams } = new URL(req.url);
-  const language = searchParams.get('language') || 'en';
+  const language = searchParams.get('language');
+  const sortBy = searchParams.get('sort_by') || 'vote_average.desc';
+  const withKeywords = searchParams.get('with_keywords');
 
   // Construct the URL for the TMDb API
   const url = new URL('https://api.themoviedb.org/3/discover/movie');
   url.searchParams.append('api_key', apiKey);
   url.searchParams.append('language', 'en-US'); // For titles, overviews in English
-  url.searchParams.append('sort_by', 'vote_average.desc');
+  url.searchParams.append('sort_by', sortBy);
   url.searchParams.append('include_adult', 'false');
   url.searchParams.append('include_video', 'false');
   url.searchParams.append('page', '1');
-  url.searchParams.append('vote_count.gte', '1000'); // Ensure movies have a decent number of votes
-  url.searchParams.append('with_original_language', language);
   
+  if (sortBy === 'vote_average.desc') {
+    url.searchParams.append('vote_count.gte', '1000'); // Ensure movies have a decent number of votes
+  }
+  
+  if (language) {
+    url.searchParams.append('with_original_language', language);
+  }
+  
+  if (withKeywords) {
+    url.searchParams.append('with_keywords', withKeywords);
+  }
 
   try {
     const response = await fetch(url.toString(), {
@@ -54,4 +65,3 @@ export async function GET(req: NextRequest) {
     );
   }
 }
-
