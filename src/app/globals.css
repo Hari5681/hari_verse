@@ -57,22 +57,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-.search-suggestions {
-  position: absolute;
-  top: 60px; /* push below the search bar */
-  left: 0;
-  right: 0;
-  background: rgba(20, 20, 20, 0.85); /* semi-transparent dark */
-  backdrop-filter: blur(10px); /* glass effect */
-  color: #fff;
-  border-radius: 10px;
-  padding: 10px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  max-height: 300px; /* limit height */
-  overflow-y: auto;
-  z-index: 2000; /* keep above cards */
-}
-.search-suggestions div:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
