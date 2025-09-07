@@ -41,7 +41,7 @@ function MainContent({ children }: { children: React.ReactNode }) {
         refresh
       />
       <Header />
-      <main className="relative z-10">{children}</main>
+      <main className="relative z-10 pb-16">{children}</main>
       <GlobalPlayer forceShow={isMusicPage} />
       <Toaster />
     </div>
