@@ -220,7 +220,7 @@ export default function MovieDetailPage() {
         )}
 
         <div className="container mx-auto max-w-5xl px-4 mt-8 relative z-10 space-y-8">
-            <section className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
+            <section className="flex flex-col md:flex-row gap-6 md:gap-8 items-start animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                 <div className="w-full space-y-4">
                     <div className="flex flex-wrap gap-2">
                         {movie.genres.map(genre => (
@@ -231,15 +231,15 @@ export default function MovieDetailPage() {
                 </div>
             </section>
             
-            <Separator />
+            <Separator className="animate-fade-in-up" style={{ animationDelay: '200ms' }} />
             
-            <section className="flex items-center justify-start">
+            <section className="flex items-center justify-start animate-fade-in-up" style={{ animationDelay: '300ms' }}>
               <AnimatedRating rating={movie.vote_average} />
             </section>
             
-            <Separator />
+            <Separator className="animate-fade-in-up" style={{ animationDelay: '400ms' }}/>
 
-             <section className="space-y-4">
+             <section className="space-y-4 animate-fade-in-up" style={{ animationDelay: '500ms' }}>
                 {director && (
                     <div className="flex items-baseline gap-4">
                         <h2 className="text-lg font-bold w-24 flex-shrink-0">Director</h2>
@@ -261,10 +261,10 @@ export default function MovieDetailPage() {
                 )}
              </section>
 
-            <Separator />
+            <Separator className="animate-fade-in-up" style={{ animationDelay: '600ms' }}/>
 
             {movie.cast && movie.cast.length > 0 && (
-                 <section className="space-y-4">
+                 <section className="space-y-4 animate-fade-in-up" style={{ animationDelay: '700ms' }}>
                     <h2 className="text-2xl font-bold flex items-center gap-2">Stars</h2>
                     <Carousel
                         opts={{
@@ -298,7 +298,7 @@ export default function MovieDetailPage() {
                 </section>
             )}
 
-            <Separator />
+            <Separator className="animate-fade-in-up" style={{ animationDelay: '800ms' }}/>
 
              <div className="space-y-16">
                  <MovieCarousel
@@ -307,7 +307,7 @@ export default function MovieDetailPage() {
                     endpoint={`/api/movies/${id}/similar`}
                  />
                  
-                <section className="animate-fade-in-up">
+                <section className="animate-fade-in-up" style={{ animationDelay: '1000ms' }}>
                     <h2 className="text-2xl font-bold">Explore Other Sections</h2>
                     <p className="text-muted-foreground mb-6">Browse movies by your favorite genre.</p>
                     <Carousel
