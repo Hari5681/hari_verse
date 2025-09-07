@@ -9,57 +9,30 @@ export default function MoviesPage() {
       <div className="container mx-auto">
         <header className="text-center mb-12">
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
-            Telugu-Dubbed Hollywood Movies
+            Movie Discovery
           </h1>
           <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto">
-            Explore a curated collection of top Hollywood blockbusters, all available in Telugu.
+            Explore popular, top-rated, and upcoming movies.
           </p>
         </header>
 
         <div className="space-y-16">
           <MovieCarousel
-            title="🎬 Action / Adventure"
-            subtitle="Top Telugu-Dubbed Hollywood Movies"
-            withKeywords="9715,236166" // hollywood, telugu dubbed
-            withGenres="28,12" // Action, Adventure
-            sortBy="popularity.desc"
-          />
-          <MovieCarousel
-            title="🧙‍♂️ Fantasy / Sci-Fi"
-            subtitle="Enter new worlds with these dubbed epics."
-            withKeywords="236166,9715" // telugu dubbed, hollywood
-            withGenres="14,878" // Fantasy, Science Fiction
-            sortBy="vote_average.desc"
-          />
-          <MovieCarousel
-            title="😂 Comedy / Family"
-            subtitle="Fun for all ages, now in Telugu."
-            withKeywords="236166,9715" // telugu dubbed, hollywood
-            withGenres="35,10751" // Comedy, Family
-            sortBy="vote_average.desc"
-          />
-          <MovieCarousel
-            title="😱 Thriller / Mystery / Crime"
-            subtitle="Edge-of-your-seat suspense in Telugu."
-            withKeywords="236166,9715" // telugu dubbed, hollywood
-            withGenres="53,9648,80" // Thriller, Mystery, Crime
-            sortBy="vote_average.desc"
+            title="⭐ Top Rated Movies"
+            subtitle="The highest-rated movies on TMDb."
+            endpoint="/api/movies/top-rated"
           />
            <MovieCarousel
-            title="💖 Romance / Drama"
-            subtitle="Powerful stories of love and life."
-            withKeywords="236166,9715" // telugu dubbed, hollywood
-            withGenres="10749,18" // Romance, Drama
-            sortBy="vote_average.desc"
+            title="🔥 Popular Movies"
+            subtitle="What's trending in the world of cinema."
+            endpoint="/api/movies/popular"
           />
           <MovieCarousel
-            title="🧟 Horror / Supernatural"
-            subtitle="Experience the fear in your own language."
-            withKeywords="236166,9715" // telugu dubbed, hollywood
-            withGenres="27,9648" // Horror, Supernatural is not a genre, using Mystery
-            sortBy="vote_average.desc"
+            title="🎬 Upcoming Movies"
+            subtitle="Get a glimpse of future blockbusters."
+            endpoint="/api/movies/upcoming"
           />
-           <MovieCarousel
+          <MovieCarousel
             title="Top Rated Telugu Movies"
             subtitle="Celebrating the best of Tollywood."
             language="te"

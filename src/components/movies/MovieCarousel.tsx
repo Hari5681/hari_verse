@@ -18,13 +18,14 @@ interface Movie {
 interface MovieCarouselProps {
     title: string;
     subtitle: string;
+    endpoint?: string;
     language?: string;
     sortBy?: string;
     withKeywords?: string;
     withGenres?: string;
 }
 
-export function MovieCarousel({ title, subtitle, language, sortBy, withKeywords, withGenres }: MovieCarouselProps) {
+export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, withKeywords, withGenres }: MovieCarouselProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -33,13 +34,19 @@ export function MovieCarousel({ title, subtitle, language, sortBy, withKeywords,
     const fetchMovies = async () => {
       try {
         setLoading(true);
-        const params = new URLSearchParams();
-        if (language) params.append('language', language);
-        if (sortBy) params.append('sort_by', sortBy);
-        if (withKeywords) params.append('with_keywords', withKeywords);
-        if (withGenres) params.append('with_genres', withGenres);
-
-        const response = await fetch(`/api/movies/discover?${params.toString()}`);
+        let url: string;
+        if (endpoint) {
+          url = endpoint;
+        } else {
+          const params = new URLSearchParams();
+          if (language) params.append('language', language);
+          if (sortBy) params.append('sort_by', sortBy);
+          if (withKeywords) params.append('with_keywords', withKeywords);
+          if (withGenres) params.append('with_genres', withGenres);
+          url = `/api/movies/discover?${params.toString()}`;
+        }
+        
+        const response = await fetch(url);
         const data = await response.json();
 
         if (!response.ok) {
@@ -57,7 +64,7 @@ export function MovieCarousel({ title, subtitle, language, sortBy, withKeywords,
     };
 
     fetchMovies();
-  }, [language, sortBy, withKeywords, withGenres]);
+  }, [endpoint, language, sortBy, withKeywords, withGenres]);
 
   return (
     <section>
