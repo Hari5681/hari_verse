@@ -22,6 +22,9 @@ export const getArtistFromTitle = (title: string): string => {
     if (lowerCaseTitle.includes('the neighbourhood')) {
         return 'The Neighbourhood';
     }
+     if (lowerCaseTitle.includes('xxxtentacion')) {
+        return 'XXXTentacion';
+    }
 
     const parts = title.split('/');
     

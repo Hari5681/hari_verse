@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import PlayingAnimation from '@/components/music/PlayingAnimation';
 import { getArtistFromTitle, cleanSongTitle } from '@/lib/musicUtils';
 import { useMusicPlayer } from '@/context/MusicPlayerContext';
+import { BannerCarousel } from '@/components/music/BannerCarousel';
 
 interface Song {
   key: string;
@@ -18,6 +19,13 @@ interface Song {
   url: string;
   artist: string;
 }
+
+const xxxTentacionBanners = [
+    'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%202.jpg',
+    'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%203.jpg',
+    'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%204.jpg',
+    'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%204.jpg',
+]
 
 export default function ArtistPage() {
   const params = useParams();
@@ -30,6 +38,8 @@ export default function ArtistPage() {
     artistName = 'Lana Del Rey';
   } else if (decodedArtistName.toLowerCase() === 'the neighbourhood') {
     artistName = 'The Neighbourhood';
+  } else if (decodedArtistName.toLowerCase() === 'xxxtentacion') {
+    artistName = 'XXXTentacion';
   }
 
   const [songs, setSongs] = useState<Song[]>([]);
@@ -123,6 +133,8 @@ export default function ArtistPage() {
     artistImageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg';
   } else if (artistName.toLowerCase() === 'the neighbourhood') {
     artistImageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neighbourhood/the%20neighbourhood%20profile.jpeg';
+  } else if (artistName.toLowerCase() === 'xxxtentacion') {
+    artistImageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/images.jpg';
   } else {
     artistImageUrl = `https://picsum.photos/seed/${artistName}/400/400`;
   }
@@ -162,6 +174,11 @@ export default function ArtistPage() {
         </header>
 
         <main className="mt-8 md:mt-12">
+            {artistName.toLowerCase() === 'xxxtentacion' && (
+                <div className="mb-8">
+                    <BannerCarousel images={xxxTentacionBanners} />
+                </div>
+            )}
             <h2 className="text-xl md:text-2xl font-bold mb-4">Popular</h2>
             {error && (
                 <div className="flex flex-col items-center justify-center rounded-lg bg-destructive/10 p-6 text-center text-destructive-foreground">

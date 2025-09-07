@@ -76,6 +76,8 @@ export default function MusicPage() {
                         imageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg';
                     } else if (song.artist.toLowerCase() === 'the neighbourhood') {
                         imageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neighbourhood/the%20neighbourhood%20profile.jpeg';
+                    } else if (song.artist.toLowerCase() === 'xxxtentacion') {
+                        imageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/images.jpg';
                     } else {
                         imageUrl = `https://picsum.photos/seed/${encodeURIComponent(song.artist)}/500/500`;
                     }
