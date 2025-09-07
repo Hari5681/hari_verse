@@ -183,14 +183,10 @@ export default function MusicPage() {
 
                 <section>
                     <h2 className="text-2xl font-bold mb-4">Top Picks</h2>
-                    {songs.length > 0 ? (
-                        <div className="flex flex-col gap-2">
-                            {songs.slice(0, 6).map((song) => (
-                                <TopPickListItem
-                                    key={`top-pick-${song.key}`}
-                                    song={song}
-                                    onPlay={() => handlePlaySong(song, songs.slice(0, 6))}
-                                />
+                     {songs.length > 0 ? (
+                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                            {songs.slice(0, 5).map((song) => (
+                                <SongCard key={song.key} song={song} currentSong={currentSong} onPlay={() => handlePlaySong(song, songs)} />
                             ))}
                         </div>
                     ) : (
@@ -396,5 +392,3 @@ function SongCard({ song, currentSong, onPlay }: { song: Song; currentSong: Song
         </div>
     );
 }
-
-    
