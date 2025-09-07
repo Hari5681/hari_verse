@@ -32,7 +32,6 @@ export default function RootLayout({
 
 function MainContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isMusicPage = pathname.startsWith('/music');
   const { theme, currentSong } = useMusicPlayer();
 
   useEffect(() => {
@@ -50,7 +49,7 @@ function MainContent({ children }: { children: React.ReactNode }) {
   }, [theme]);
 
   return (
-    <div className="relative min-h-screen flex flex-col overflow-x-hidden">
+    <div className="relative flex min-h-screen flex-col overflow-x-hidden">
       <Particles
         className="absolute inset-0 -z-10"
         quantity={100}
@@ -58,12 +57,15 @@ function MainContent({ children }: { children: React.ReactNode }) {
         color="hsl(var(--dynamic-primary-h) var(--dynamic-primary-s) var(--dynamic-primary-l))"
         refresh
       />
-      <div className={cn('flex-grow', { 'pb-16': currentSong })}>
-        <Header />
-        <main className="relative z-10">{children}</main>
-      </div>
-      <GlobalPlayer />
+      
+      <Header />
+      
+      <main className={cn("relative z-10 flex-grow", { 'pb-16': currentSong })}>
+        {children}
+      </main>
+
       {!currentSong && <Footer />}
+      <GlobalPlayer />
       <Toaster />
     </div>
   );
