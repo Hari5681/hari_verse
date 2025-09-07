@@ -110,6 +110,12 @@ export default function MusicPage() {
     setRecentlyPlayed(newRecentlyPlayed);
     localStorage.setItem('recentlyPlayed', JSON.stringify(newRecentlyPlayed));
   };
+  
+  const handlePauseSong = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+  };
 
   const handleNext = () => {
     if (!currentSong || playlist.length === 0) return;
@@ -168,7 +174,12 @@ export default function MusicPage() {
                             <CarouselContent className="-ml-4">
                                 {topPicks.map((song) => (
                                     <CarouselItem key={song.key} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-4">
-                                        <SongCard song={song} currentSong={currentSong} onPlay={() => handlePlaySong(song, songs)} />
+                                        <SongCard 
+                                            song={song} 
+                                            currentSong={currentSong} 
+                                            onPlay={() => handlePlaySong(song, songs)}
+                                            onPause={handlePauseSong}
+                                        />
                                     </CarouselItem>
                                 ))}
                             </CarouselContent>
@@ -291,8 +302,16 @@ function RecentlyPlayedSongItem({ song, index, onPlay }: { song: Song; index: nu
     );
 }
 
-function SongCard({ song, currentSong, onPlay }: { song: Song; currentSong: Song | null; onPlay: () => void; }) {
+function SongCard({ song, currentSong, onPlay, onPause }: { song: Song; currentSong: Song | null; onPlay: () => void; onPause: () => void; }) {
     const isPlaying = currentSong?.key === song.key;
+
+    const handlePlayPause = () => {
+        if (isPlaying) {
+            onPause();
+        } else {
+            onPlay();
+        }
+    };
 
     return (
         <div key={song.key} className="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-primary/20">
@@ -310,7 +329,7 @@ function SongCard({ song, currentSong, onPlay }: { song: Song; currentSong: Song
               <p className="text-xs md:text-sm text-gray-300">{song.artist}</p>
           </div>
           <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            <button onClick={onPlay} className="text-white transform transition-transform duration-300 group-hover:scale-110">
+            <button onClick={handlePlayPause} className="text-white transform transition-transform duration-300 group-hover:scale-110">
               <div className="w-12 h-12 md:w-16 md:h-16">
                 {isPlaying ? <PauseCircle className="w-full h-full" /> : <PlayCircle className="w-full h-full" />}
               </div>
