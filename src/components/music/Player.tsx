@@ -135,19 +135,19 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
     <Dialog>
       <div className="fixed bottom-0 left-0 right-0 z-50">
         <DialogTrigger asChild>
-          <div className="h-16 cursor-pointer border-t border-border/50 bg-background/80 px-4 backdrop-blur-lg md:h-20">
+          <div className="h-16 cursor-pointer border-t border-border/50 bg-background/80 px-4 backdrop-blur-lg">
             <div className="container mx-auto flex h-full items-center justify-between gap-4">
-              <div className="flex items-center gap-3 overflow-hidden md:w-1/4">
+              <div className="flex items-center gap-3 overflow-hidden">
                 <Image
                   src={imageUrl}
                   alt={song.title}
-                  width={48}
-                  height={48}
-                  className="rounded-md flex-shrink-0 md:w-12 md:h-12"
+                  width={40}
+                  height={40}
+                  className="rounded-md flex-shrink-0"
                   data-ai-hint="song album cover"
                 />
-                <div className="overflow-hidden whitespace-nowrap">
-                  <p className={cn("font-bold text-sm", isMiniTitleLong ? "animate-marquee-delayed" : "truncate")}>{songTitle}</p>
+                <div className="overflow-hidden whitespace-nowrap min-w-0">
+                  <p className={cn("font-bold text-sm", isMiniTitleLong && "md:animate-marquee-delayed", "truncate")}>{songTitle}</p>
                   <p className="truncate text-xs text-muted-foreground">
                     {song.artist}
                   </p>
@@ -188,17 +188,8 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
                   </button>
               </div>
 
-              <div className="flex items-center justify-end md:w-1/4">
-                <div className="flex items-center gap-2 sm:gap-4 md:hidden">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onPrev();
-                    }}
-                    className="text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    <SkipBack size={20} />
-                  </button>
+              <div className="flex items-center justify-end">
+                <div className="flex items-center gap-2 sm:gap-4">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();

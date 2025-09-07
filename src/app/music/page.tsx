@@ -133,7 +133,7 @@ export default function MusicPage() {
   return (
     <div className="flex min-h-screen flex-col items-center bg-background p-4 pt-20">
       <Card className="w-full max-w-7xl border-none bg-transparent">
-        <CardContent className="pb-32">
+        <CardContent className="pb-40">
             {error && (
                 <div className="mb-8 flex flex-col items-center justify-center rounded-lg bg-destructive/10 p-6 text-center text-destructive-foreground">
                     <AlertTriangle className="h-10 w-10 text-destructive" />
@@ -191,10 +191,10 @@ export default function MusicPage() {
                          >
                             <CarouselContent className="-ml-4">
                                 {artists.map((artist) => (
-                                    <CarouselItem key={artist.name} className="basis-1/3 md:basis-1/4 lg:basis-1/6 pl-4">
+                                    <CarouselItem key={artist.name} className="basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6 pl-4">
                                         <Link href={`/music/artist/${encodeURIComponent(artist.name)}`} passHref>
                                             <div className="group flex flex-col items-center text-center gap-2 cursor-pointer">
-                                                <div className="relative w-28 h-28 md:w-32 md:h-32">
+                                                <div className="relative w-24 h-24 md:w-32 md:h-32">
                                                     <Image src={artist.imageUrl} layout="fill" alt={artist.name} className="rounded-full object-cover transition-all duration-300 group-hover:scale-110" data-ai-hint="artist portrait" />
                                                 </div>
                                                 <p className="font-semibold text-sm mt-2 truncate w-full">{artist.name}</p>
@@ -218,9 +218,9 @@ export default function MusicPage() {
                      >
                         <CarouselContent className="-ml-4">
                             {languages.map(lang => (
-                                <CarouselItem key={lang} className="basis-1/3 md:basis-1/4 lg:basis-1/6 pl-4">
+                                <CarouselItem key={lang} className="basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6 pl-4">
                                     <div className="group flex flex-col items-center text-center gap-2 cursor-pointer">
-                                        <div className="relative w-28 h-28 md:w-32 md:h-32">
+                                        <div className="relative w-24 h-24 md:w-32 md:h-32">
                                             <div className="w-full h-full rounded-full bg-primary/10 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
                                                <span className="text-lg font-bold text-primary-foreground">{lang}</span>
                                             </div>
@@ -240,7 +240,7 @@ export default function MusicPage() {
                 {otherSongs.length > 0 && (
                    <section>
                         <h2 className="text-2xl font-bold mb-4">All Songs</h2>
-                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
                             {songs.map((song) => (
                                 <SongCard key={song.key} song={song} currentSong={currentSong} onPlay={() => handlePlaySong(song, songs)} />
                             ))}
@@ -276,7 +276,7 @@ function RecentlyPlayedSongItem({ song, index, onPlay }: { song: Song; index: nu
             className="group flex items-center p-2 rounded-md hover:bg-white/10 cursor-pointer transition-colors"
         >
             <div className="flex-shrink-0 flex items-center justify-center w-10 text-center">
-                <span className="text-muted-foreground group-hover:hidden">{index}</span>
+                <span className="font-bold text-muted-foreground group-hover:hidden">#{index}</span>
                  <div className="text-white hidden group-hover:flex items-center justify-center">
                     <Play className="h-5 w-5 fill-current" />
                 </div>
@@ -289,7 +289,7 @@ function RecentlyPlayedSongItem({ song, index, onPlay }: { song: Song; index: nu
                 className="rounded-md ml-4 flex-shrink-0"
                 data-ai-hint="song album cover"
             />
-            <div className="ml-4 flex-grow">
+            <div className="ml-4 flex-grow overflow-hidden">
                 <p className="font-semibold truncate text-foreground">
                     {song.title.replace(`${song.artist} - `, '')}
                 </p>
@@ -348,13 +348,15 @@ function SongCard({ song, currentSong, onPlay }: { song: Song; currentSong: Song
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 flex flex-col p-4">
-              <h3 className="truncate text-lg font-bold text-white">{song.title.replace(`${song.artist} - `, '')}</h3>
-              <p className="text-sm text-gray-300">{song.artist}</p>
+              <h3 className="truncate text-base md:text-lg font-bold text-white">{song.title.replace(`${song.artist} - `, '')}</h3>
+              <p className="text-xs md:text-sm text-gray-300">{song.artist}</p>
           </div>
           <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-              <button onClick={onPlay} className="text-white transform transition-transform duration-300 group-hover:scale-110">
-                  {isPlaying ? <PauseCircle size={64} /> : <PlayCircle size={64} />}
-              </button>
+            <button onClick={onPlay} className="text-white transform transition-transform duration-300 group-hover:scale-110">
+              <div className="w-12 h-12 md:w-16 md:h-16">
+                {isPlaying ? <PauseCircle className="w-full h-full" /> : <PlayCircle className="w-full h-full" />}
+              </div>
+            </button>
           </div>
            <a href={song.url} download={song.title} className="absolute top-2 right-2 text-white/70 opacity-0 transition-opacity hover:text-white group-hover:opacity-100">
                 <Download size={20} />

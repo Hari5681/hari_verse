@@ -161,10 +161,10 @@ export default function ArtistPage() {
   }, [handleNext]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary/20 to-background p-4 pt-20 pb-32">
+    <div className="min-h-screen bg-gradient-to-b from-primary/20 to-background p-4 pt-20 pb-40">
       <div className="w-full max-w-7xl mx-auto">
         <header className="relative flex flex-col items-center text-center pt-8">
-            <Button variant="ghost" size="icon" className="absolute top-4 left-0" onClick={() => router.push('/music')}>
+            <Button variant="ghost" size="icon" className="absolute top-4 left-0 md:left-4" onClick={() => router.push('/music')}>
                 <ArrowLeft className="h-6 w-6" />
             </Button>
             <Image 
@@ -173,14 +173,14 @@ export default function ArtistPage() {
                 width={200}
                 height={200}
                 data-ai-hint="artist portrait"
-                className="rounded-full shadow-2xl w-40 h-40 md:w-48 md:h-48 object-cover"
+                className="rounded-full shadow-2xl w-32 h-32 md:w-48 md:h-48 object-cover"
             />
-            <h1 className="text-5xl md:text-7xl font-bold mt-6">{artistName}</h1>
-            <p className="text-muted-foreground mt-2">Digital Creator</p>
-            <div className="mt-6 flex items-center justify-center gap-4 w-full flex-wrap">
+            <h1 className="text-4xl md:text-7xl font-bold mt-4">{artistName}</h1>
+            <p className="text-muted-foreground mt-1 md:mt-2">Digital Creator</p>
+            <div className="mt-4 flex items-center justify-center gap-2 md:gap-4 w-full flex-wrap">
                 <Button 
                     variant={isFollowing ? 'secondary' : 'outline'}
-                    className="rounded-full px-6"
+                    className="rounded-full px-4 md:px-6 text-sm"
                     onClick={handleFollow}
                 >
                     {isFollowing ? 'Following' : 'Follow'}
@@ -194,8 +194,8 @@ export default function ArtistPage() {
             </div>
         </header>
 
-        <main className="mt-12">
-            <h2 className="text-2xl font-bold mb-4">Popular</h2>
+        <main className="mt-8 md:mt-12">
+            <h2 className="text-xl md:text-2xl font-bold mb-4">Popular</h2>
             {error && (
                 <div className="flex flex-col items-center justify-center rounded-lg bg-destructive/10 p-6 text-center text-destructive-foreground">
                     <AlertTriangle className="h-10 w-10 text-destructive" />
@@ -261,7 +261,7 @@ function SongListItem({ song, index, isPlaying, onPlay }: { song: Song; index: n
                 data-ai-hint="song album cover"
                 onClick={onPlay}
             />
-            <div className="ml-4 flex-grow" onClick={onPlay}>
+            <div className="ml-4 flex-grow overflow-hidden" onClick={onPlay}>
                 <p className={`font-semibold truncate ${isPlaying ? 'text-green-400' : 'text-white'}`}>
                     {cleanSongTitle(song.title, song.artist)}
                 </p>
