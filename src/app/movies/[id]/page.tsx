@@ -248,7 +248,7 @@ export default function MovieDetailPage() {
             
             <Separator />
             
-            <section className="flex items-center justify-center">
+            <section className="flex items-center justify-start">
               <AnimatedRating rating={movie.vote_average} />
             </section>
             
