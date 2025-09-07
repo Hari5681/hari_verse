@@ -49,7 +49,7 @@ function MainContent({ children }: { children: React.ReactNode }) {
   }, [theme]);
 
   return (
-    <div className="relative min-h-screen flex flex-col">
+    <div className="relative min-h-screen flex flex-col overflow-x-hidden">
       <Particles
         className="absolute inset-0 -z-10"
         quantity={100}
