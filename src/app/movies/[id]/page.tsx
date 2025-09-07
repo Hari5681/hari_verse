@@ -97,7 +97,7 @@ export default function MovieDetailPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-       <Button variant="ghost" size="icon" className="absolute top-6 left-6 z-20 bg-background/50 backdrop-blur-sm" onClick={() => router.push('/movies')}>
+       <Button variant="ghost" size="icon" className="absolute top-6 left-6 z-20 bg-background/50 backdrop-blur-sm" onClick={() => router.back()}>
             <ArrowLeft className="h-6 w-6" />
        </Button>
       <div className="relative h-[40vh] md:h-[60vh] w-full">

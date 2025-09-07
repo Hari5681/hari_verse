@@ -22,7 +22,7 @@ export default function MoviesPage() {
             subtitle="Top Telugu-Dubbed Hollywood Movies"
             withKeywords="9715,236166" // hollywood, telugu dubbed
             withGenres="28,12" // Action, Adventure
-            sortBy="vote_average.desc"
+            sortBy="popularity.desc"
           />
           <MovieCarousel
             title="🧙‍♂️ Fantasy / Sci-Fi"
