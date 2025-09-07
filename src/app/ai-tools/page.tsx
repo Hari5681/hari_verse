@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { ArrowUpRight, MessageSquare, Image as ImageIcon, Code, Bot, Mic, Video, BrainCircuit, LineChart, PenTool, Search, Palette, Star } from 'lucide-react';
 import Link from 'next/link';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const toolCategories = [
   {
@@ -113,27 +114,42 @@ export default function AiToolsPage() {
                 </div>
                 <h2 className="text-3xl font-bold">{category.category}</h2>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {category.tools.map((tool, toolIndex) => (
-                  <Card 
-                    key={tool.name} 
-                    className="flex flex-col bg-card/50 backdrop-blur-sm border-border/20 transition-all duration-300 hover:border-primary/50 hover:-translate-y-1 animate-fade-in-up"
-                    style={{ animationDelay: `${toolIndex * 100}ms`, animationFillMode: 'both' }}
-                  >
-                    <CardHeader>
-                      <CardTitle>{tool.name}</CardTitle>
-                      <CardDescription>{tool.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex-grow flex items-end">
-                      <Link href={tool.link} target="_blank" rel="noopener noreferrer" className="w-full">
-                        <Button variant="outline" className="w-full">
-                          Visit <ArrowUpRight className="h-4 w-4 ml-2" />
-                        </Button>
-                      </Link>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              <Carousel
+                opts={{
+                  align: 'start',
+                  slidesToScroll: 'auto',
+                }}
+                className="w-full"
+              >
+                <CarouselContent>
+                  {category.tools.map((tool, toolIndex) => (
+                    <CarouselItem key={tool.name} className="basis-full md:basis-1/2 lg:basis-1/3">
+                      <div 
+                        className="h-full p-1"
+                        style={{ animationDelay: `${toolIndex * 100}ms`, animationFillMode: 'both' }}
+                      >
+                        <Card 
+                          className="flex flex-col h-full bg-card/50 backdrop-blur-sm border-border/20 transition-all duration-300 hover:border-primary/50 hover:-translate-y-1"
+                        >
+                          <CardHeader>
+                            <CardTitle>{tool.name}</CardTitle>
+                            <CardDescription>{tool.description}</CardDescription>
+                          </CardHeader>
+                          <CardContent className="flex-grow flex items-end mt-auto">
+                            <Link href={tool.link} target="_blank" rel="noopener noreferrer" className="w-full">
+                              <Button variant="outline" className="w-full">
+                                Visit <ArrowUpRight className="h-4 w-4 ml-2" />
+                              </Button>
+                            </Link>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="hidden md:flex" />
+                <CarouselNext className="hidden md:flex" />
+              </Carousel>
             </section>
           ))}
         </div>
