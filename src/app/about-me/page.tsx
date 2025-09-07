@@ -39,7 +39,7 @@ export default function AboutMePage() {
         </CardContent>
         <CardFooter className="flex flex-col items-center gap-6 border-t border-border/20 pt-6">
             <Link href={`/redirect?url=${encodeURIComponent("https://www.hariportfolio.xyz")}`} target="_blank" rel="noopener noreferrer">
-              <Button>
+              <Button className="shadow-[0_0_20px_theme(colors.primary/0.4)] transition-shadow hover:shadow-[0_0_30px_theme(colors.primary/0.6)]">
                 <Globe className="h-5 w-5 mr-2" />
                 View My Portfolio
               </Button>
@@ -51,13 +51,13 @@ export default function AboutMePage() {
                     <span className="sr-only">GitHub</span>
                   </Button>
                 </Link>
-                <Link href={`/redirect?url=${encodeURIComponent("#")}`} target="_blank" rel="noopener noreferrer">
+                <Link href={`/redirect?url=${encodeURIComponent("https://www.linkedin.com/in/hari5681/")}`} target="_blank" rel="noopener noreferrer">
                   <Button variant="outline" size="icon">
                     <Linkedin className="h-5 w-5" />
                     <span className="sr-only">LinkedIn</span>
                   </Button>
                 </Link>
-                <Link href={`/redirect?url=${encodeURIComponent("https://www.instagram.com/hari_5681/")}`} target="_blank" rel="noopener noreferrer">
+                <Link href={`/redirect?url=${encodeURIComponent("https://www.instagram.com/hari.krishna.00/")}`} target="_blank" rel="noopener noreferrer">
                    <Button variant="outline" size="icon">
                     <Instagram className="h-5 w-5" />
                      <span className="sr-only">Instagram</span>
