@@ -9,7 +9,7 @@ import { Music, Play, MoreHorizontal, Share, UserPlus, AlertTriangle, ArrowLeft,
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import PlayingAnimation from '@/components/music/PlayingAnimation';
-import { getArtistFromTitle, cleanSongTitle } from '@/lib/musicUtils';
+import { getArtistFromTitle, cleanSongTitle, getArtistImageUrl, getSongImageUrl } from '@/lib/musicUtils';
 import { useMusicPlayer } from '@/context/MusicPlayerContext';
 import { BannerCarousel } from '@/components/music/BannerCarousel';
 
@@ -128,16 +128,7 @@ export default function ArtistPage() {
     }
   }
 
-  let artistImageUrl;
-  if (artistName.toLowerCase() === 'lana del rey') {
-    artistImageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg';
-  } else if (artistName.toLowerCase() === 'the neighbourhood') {
-    artistImageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neighbourhood/the%20neighbourhood%20profile.jpeg';
-  } else if (artistName.toLowerCase() === 'xxxtentacion') {
-    artistImageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/images.jpg';
-  } else {
-    artistImageUrl = `https://picsum.photos/seed/${artistName}/400/400`;
-  }
+  const artistImageUrl = getArtistImageUrl(artistName);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary/20 to-background p-4 pt-20 pb-40">
@@ -210,6 +201,7 @@ export default function ArtistPage() {
 
 
 function SongListItem({ song, index, isPlaying, onPlay }: { song: Song; index: number; isPlaying: boolean; onPlay: () => void; }) {
+    const imageUrl = getSongImageUrl(song.artist, song.key);
     return (
         <div 
             className="flex items-center p-2 rounded-md hover:bg-white/10 cursor-pointer group transition-colors"
@@ -227,11 +219,11 @@ function SongListItem({ song, index, isPlaying, onPlay }: { song: Song; index: n
                 <Play className="h-5 w-5 fill-current" />
             </div>
             <Image 
-                src={`https://picsum.photos/seed/${song.key}/200/200`}
+                src={imageUrl}
                 alt={song.title}
                 width={40}
                 height={40}
-                className="rounded-md ml-4 flex-shrink-0"
+                className="rounded-md ml-4 flex-shrink-0 object-cover aspect-square"
                 data-ai-hint="song album cover"
                 onClick={onPlay}
             />

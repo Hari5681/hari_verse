@@ -9,7 +9,7 @@ import { PlayCircle, Download, AlertTriangle, PauseCircle, Play } from 'lucide-r
 import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { getArtistFromTitle, cleanSongTitle } from '@/lib/musicUtils';
+import { getArtistFromTitle, cleanSongTitle, getArtistImageUrl, getSongImageUrl } from '@/lib/musicUtils';
 import { useMusicPlayer } from '@/context/MusicPlayerContext';
 
 
@@ -71,19 +71,9 @@ export default function MusicPage() {
             
             const uniqueArtists = songsWithArtists.reduce((acc, song) => {
                 if (!acc.find(a => a.name === song.artist) && song.artist !== 'Unknown Artist') {
-                    let imageUrl;
-                    if (song.artist.toLowerCase() === 'lana del rey') {
-                        imageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg';
-                    } else if (song.artist.toLowerCase() === 'the neighbourhood') {
-                        imageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neighbourhood/the%20neighbourhood%20profile.jpeg';
-                    } else if (song.artist.toLowerCase() === 'xxxtentacion') {
-                        imageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/images.jpg';
-                    } else {
-                        imageUrl = `https://picsum.photos/seed/${encodeURIComponent(song.artist)}/500/500`;
-                    }
                     acc.push({
                          name: song.artist,
-                         imageUrl: imageUrl
+                         imageUrl: getArtistImageUrl(song.artist)
                     });
                 }
                 return acc;
@@ -250,6 +240,7 @@ export default function MusicPage() {
 }
 
 function RecentlyPlayedSongItem({ song, index, onPlay }: { song: Song; index: number; onPlay: () => void; }) {
+    const imageUrl = getSongImageUrl(song.artist, song.key);
     return (
         <div 
             onClick={onPlay} 
@@ -262,11 +253,11 @@ function RecentlyPlayedSongItem({ song, index, onPlay }: { song: Song; index: nu
                 </div>
             </div>
             <Image
-                src={`https://picsum.photos/seed/${song.key}/200/200`}
+                src={imageUrl}
                 alt={song.title}
                 width={40}
                 height={40}
-                className="rounded-md ml-4 flex-shrink-0"
+                className="rounded-md ml-4 flex-shrink-0 object-cover aspect-square"
                 data-ai-hint="song album cover"
             />
             <div className="ml-4 flex-grow overflow-hidden">
@@ -283,6 +274,7 @@ function RecentlyPlayedSongItem({ song, index, onPlay }: { song: Song; index: nu
 
 function SongCard({ song, currentSong, onPlay, onPause }: { song: Song; currentSong: Song | null; onPlay: () => void; onPause: () => void; }) {
     const isPlaying = currentSong?.key === song.key;
+    const imageUrl = getSongImageUrl(song.artist, song.key, 500);
 
     const handlePlayPause = () => {
         if (isPlaying) {
@@ -295,7 +287,7 @@ function SongCard({ song, currentSong, onPlay, onPause }: { song: Song; currentS
     return (
         <div key={song.key} className="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-primary/20">
           <Image 
-            src={`https://picsum.photos/seed/${song.key}/500/500`} 
+            src={imageUrl} 
             alt={song.title} 
             width={500} 
             height={500} 

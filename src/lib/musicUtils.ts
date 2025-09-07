@@ -1,4 +1,24 @@
 
+
+const artistAssets: Record<string, { profile?: string; banners?: string[] }> = {
+    'lana del rey': {
+        profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
+    },
+    'the neighbourhood': {
+        profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neighbourhood/the%20neighbourhood%20profile.jpeg'
+    },
+    'xxxtentacion': {
+        profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/images.jpg',
+        banners: [
+            'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%202.jpg',
+            'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%203.jpg',
+            'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%204.jpg',
+            'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%204.jpg',
+        ]
+    }
+};
+
+
 /**
  * Extracts the artist's name from a song's title (which is often a file path).
  *
@@ -31,6 +51,7 @@ export const getArtistFromTitle = (title: string): string => {
     // Case 1: Artist name is the folder name
     if (parts.length > 1 && parts[0].trim() !== '') {
         const artistCandidate = parts[0].trim();
+        // Capitalize first letter of each word
         return artistCandidate.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     }
     
@@ -74,4 +95,36 @@ export const cleanSongTitle = (title: string, artist: string): string => {
         .replace(/\s*\(.*?\)/g, '') // Removes text in parentheses
         .replace(/\[.*?\]/g, '')   // Removes text in square brackets
         .trim();
-}
+};
+
+
+/**
+ * Gets the profile image URL for a given artist.
+ * @param artistName The name of the artist.
+ * @returns A URL for the artist's profile image.
+ */
+export const getArtistImageUrl = (artistName: string): string => {
+    const assets = artistAssets[artistName.toLowerCase()];
+    return assets?.profile || `https://picsum.photos/seed/${encodeURIComponent(artistName)}/400/400`;
+};
+
+
+/**
+ * Gets an image URL for a song. For specific artists, it may return a random banner.
+ * Otherwise, it returns a placeholder image based on the song's key.
+ * @param artistName The name of the song's artist.
+ * @param songKey A unique key for the song.
+ * @param size The desired size of the image (for picsum placeholders).
+ * @returns A URL for the song's image.
+ */
+export const getSongImageUrl = (artistName: string, songKey: string, size: number = 200): string => {
+    const lowerArtistName = artistName.toLowerCase();
+    const assets = artistAssets[lowerArtistName];
+    
+    if (assets?.banners && assets.banners.length > 0) {
+        const randomIndex = Math.floor(Math.random() * assets.banners.length);
+        return assets.banners[randomIndex];
+    }
+    
+    return `https://picsum.photos/seed/${songKey}/${size}/${size}`;
+};

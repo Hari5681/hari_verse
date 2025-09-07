@@ -23,7 +23,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
-import { cleanSongTitle } from '@/lib/musicUtils';
+import { cleanSongTitle, getSongImageUrl } from '@/lib/musicUtils';
 import { useMusicPlayer } from '@/context/MusicPlayerContext';
 
 
@@ -63,7 +63,7 @@ export function Player() {
     toggleRepeat();
   };
 
-  const imageUrl = `https://picsum.photos/seed/${currentSong.key}/500/500`;
+  const imageUrl = getSongImageUrl(currentSong.artist, currentSong.key, 500);
   const songTitle = cleanSongTitle(currentSong.title, currentSong.artist);
 
   const isTitleLong = songTitle.length > 25;
@@ -88,7 +88,7 @@ export function Player() {
                   alt={currentSong.title}
                   width={40}
                   height={40}
-                  className="rounded-md flex-shrink-0"
+                  className="rounded-md flex-shrink-0 object-cover aspect-square"
                   data-ai-hint="song album cover"
                 />
                 <div className="overflow-hidden whitespace-nowrap min-w-0">
@@ -206,7 +206,7 @@ export function Player() {
                 alt={currentSong.title}
                 width={500}
                 height={500}
-                className="aspect-square w-full max-w-[70vw] sm:max-w-md mx-auto rounded-lg shadow-2xl transition-transform duration-500 group-data-[state=open]:scale-100 animate-fade-in-up"
+                className="aspect-square w-full max-w-[70vw] sm:max-w-md mx-auto rounded-lg shadow-2xl transition-transform duration-500 group-data-[state=open]:scale-100 animate-fade-in-up object-cover"
                 data-ai-hint="song album cover"
                 style={{ animationDelay: '200ms' }}
               />
