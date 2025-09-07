@@ -60,19 +60,21 @@ const AnimatedRating = ({ rating }: { rating: number }) => {
   };
 
   return (
-    <div className="w-full max-w-xs">
-      <div className="flex justify-between items-center mb-1">
-        <div className="flex items-center gap-2">
-            <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-            <span className="text-base font-medium text-foreground">TMDb Rating</span>
+    <div className="flex items-center gap-4 w-full max-w-sm">
+      <Star className="h-8 w-8 text-yellow-400 fill-yellow-400 flex-shrink-0" />
+      <div className="w-full">
+        <div className="flex justify-between items-center mb-1">
+          <span className="text-base font-medium text-foreground">TMDb Rating</span>
+          <span className={cn("text-sm font-semibold", getRatingTextColor(rating))}>
+            {rating.toFixed(1)}/10
+          </span>
         </div>
-        <span className={cn("text-sm font-medium", getRatingTextColor(rating))}>{rating.toFixed(1)}/10</span>
-      </div>
-      <div className="w-full bg-secondary rounded-full h-2.5">
-        <div
-          className={cn("h-2.5 rounded-full transition-all duration-1000 ease-out", getRatingColor(rating))}
-          style={{ width: `${width}%` }}
-        ></div>
+        <div className="w-full bg-secondary rounded-full h-2.5">
+          <div
+            className={cn("h-2.5 rounded-full transition-all duration-1000 ease-out", getRatingColor(rating))}
+            style={{ width: `${width}%` }}
+          ></div>
+        </div>
       </div>
     </div>
   );
