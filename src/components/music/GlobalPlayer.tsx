@@ -5,7 +5,7 @@ import { useMusicPlayer } from '@/context/MusicPlayerContext';
 import { Player } from './Player';
 import { useEffect, useState } from 'react';
 
-export function GlobalPlayer({ isMusicPage }: { isMusicPage: boolean }) {
+export function GlobalPlayer() {
     const { currentSong } = useMusicPlayer();
     const [hasMounted, setHasMounted] = useState(false);
 
