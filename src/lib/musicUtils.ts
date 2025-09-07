@@ -1,6 +1,7 @@
 
 
 
+
 const artistAssets: Record<string, { profile?: string; banners?: string[] }> = {
     'lana del rey': {
         profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
@@ -8,7 +9,7 @@ const artistAssets: Record<string, { profile?: string; banners?: string[] }> = {
     'the neighbourhood': {
         profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neighbourhood/the%20neighbourhood%20profile.jpeg'
     },
-    'xxxtentacion': {
+    'xxx tentacion': {
         profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/images.jpg',
         banners: [
             'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%202.jpg',
@@ -44,7 +45,7 @@ export const getArtistFromTitle = (title: string): string => {
         return 'The Neighbourhood';
     }
      if (lowerCaseTitle.includes('xxxtentacion')) {
-        return 'XXXTentacion';
+        return 'Xxx Tentacion';
     }
 
     const parts = title.split('/');
@@ -54,7 +55,7 @@ export const getArtistFromTitle = (title: string): string => {
         const artistCandidate = parts[0].trim();
         // Capitalize first letter of each word
         const formattedArtist = artistCandidate.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-        if (formattedArtist.toLowerCase() === 'xxxtentacion') return 'XXXTentacion';
+        if (formattedArtist.toLowerCase() === 'xxxtentacion') return 'Xxx Tentacion';
         return formattedArtist;
     }
     

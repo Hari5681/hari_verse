@@ -39,7 +39,7 @@ export default function ArtistPage() {
   } else if (decodedArtistName.toLowerCase() === 'the neighbourhood') {
     artistName = 'The Neighbourhood';
   } else if (decodedArtistName.toLowerCase() === 'xxxtentacion') {
-    artistName = 'XXXTentacion';
+    artistName = 'Xxx Tentacion';
   }
 
   const [songs, setSongs] = useState<Song[]>([]);
@@ -165,7 +165,7 @@ export default function ArtistPage() {
         </header>
 
         <main className="mt-8 md:mt-12">
-            {artistName.toLowerCase() === 'xxxtentacion' && (
+            {artistName.toLowerCase() === 'xxx tentacion' && (
                 <div className="mb-8">
                     <BannerCarousel images={xxxTentacionBanners} />
                 </div>
