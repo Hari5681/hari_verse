@@ -253,6 +253,9 @@ export default function MusicPage() {
                   <p className="text-center text-muted-foreground pt-8">Loading your music library...</p>
                 )}
             </div>
+             <div className="mt-12 text-center text-muted-foreground">
+                <p>Music updates in progress… Please stay tuned!</p>
+            </div>
         </CardContent>
       </Card>
     </div>
@@ -338,3 +341,6 @@ function SongCard({ song, currentSong, onPlay, onPause }: { song: Song; currentS
     
 
 
+
+
+    
