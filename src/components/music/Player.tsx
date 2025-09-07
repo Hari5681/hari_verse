@@ -70,7 +70,7 @@ export function Player() {
   const isMiniTitleLong = songTitle.length > 20;
 
   const formatDuration = (secs: number) => {
-    if (isNaN(secs)) return '0:00';
+    if (isNaN(secs) || secs < 0) return '0:00';
     const minutes = Math.floor(secs / 60);
     const seconds = Math.floor(secs % 60);
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;

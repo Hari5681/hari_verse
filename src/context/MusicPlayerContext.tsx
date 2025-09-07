@@ -54,7 +54,9 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
   
   useEffect(() => {
     if (audioRef.current && currentSong?.url) {
-        audioRef.current.src = currentSong.url;
+        if (audioRef.current.src !== currentSong.url) {
+          audioRef.current.src = currentSong.url;
+        }
         audioRef.current.play().then(() => {
             setIsPlaying(true);
         }).catch(e => {
@@ -75,7 +77,7 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
   };
 
   const togglePlay = () => {
-    if (audioRef.current) {
+    if (audioRef.current && currentSong) {
       if (isPlaying) {
         audioRef.current.pause();
       } else {
@@ -85,8 +87,14 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
   };
 
   const stopPlayer = () => {
-    pauseSong();
+    if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = '';
+    }
     setCurrentSong(null);
+    setIsPlaying(false);
+    setProgress(0);
+    setDuration(0);
   }
 
   const playNext = useCallback(() => {
@@ -191,7 +199,7 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
       }}
     >
       {children}
-      <audio ref={audioRef} />
+      <audio ref={audioRef} crossOrigin="anonymous" />
     </MusicPlayerContext.Provider>
   );
 };
