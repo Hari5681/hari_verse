@@ -156,9 +156,9 @@ export default function MovieDetailPage() {
   const writers = movie.crew?.filter(person => person.job === 'Writer' || person.job === 'Screenplay').slice(0, 2);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground pt-16">
       {!showTrailer && (
-        <Button variant="ghost" className="absolute top-4 left-4 z-20 flex items-center gap-2" onClick={() => router.back()}>
+        <Button variant="ghost" className="absolute top-20 left-4 z-20 flex items-center gap-2" onClick={() => router.back()}>
             <ArrowLeft className="h-4 w-4" />
             Back
         </Button>
@@ -360,3 +360,4 @@ export default function MovieDetailPage() {
       </main>
     </div>
   );
+}
