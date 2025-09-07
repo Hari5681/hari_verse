@@ -57,3 +57,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+.search-suggestions {
+  background-color: #1e1e1e;  /* dark background */
+  color: #fff;               /* text color */
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4); /* soft shadow */
+  position: absolute;        /* so it floats below input */
+  width: 100%;               /* matches search bar width */
+  z-index: 1000;             /* stays above other elements */
+}
+.search-suggestions div:hover {
+  background-color: #333;  /* hover effect */
+}

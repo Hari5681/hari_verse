@@ -109,7 +109,7 @@ export default function MoviesPage() {
                 </Button>
             </div>
              {showSuggestions && (searchQuery.length >= 2) && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+              <div className="search-suggestions top-full left-0 right-0 mt-2">
                 {isSuggestionsLoading ? (
                   <div className="flex items-center justify-center p-4">
                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -118,7 +118,7 @@ export default function MoviesPage() {
                   suggestions.map(movie => (
                     <Link key={movie.id} href={`/movies/${movie.id}`} passHref>
                         <div 
-                            className="flex items-center p-3 hover:bg-accent cursor-pointer transition-colors"
+                            className="flex items-center p-3 cursor-pointer transition-colors"
                             onClick={() => setShowSuggestions(false)}
                         >
                             <Image
