@@ -1,15 +1,29 @@
 
 'use client';
 
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { MovieCarousel } from '@/components/movies/MovieCarousel';
 import { Separator } from '@/components/ui/separator';
 import { genres } from '@/lib/genres';
 import Link from 'next/link';
 import { Card, CardTitle, CardHeader } from '@/components/ui/card';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Search } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 export default function MoviesPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/movies/search/${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background p-4 pt-20">
       <div className="container mx-auto">
@@ -18,8 +32,20 @@ export default function MoviesPage() {
             Movie Discovery
           </h1>
           <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto">
-            Explore popular, top-rated, and upcoming movies.
+            Explore popular, top-rated, and upcoming movies, or search for something specific.
           </p>
+          <form onSubmit={handleSearch} className="mt-6 max-w-xl mx-auto flex items-center gap-2">
+            <Input 
+              type="text"
+              placeholder="Search for a movie..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="bg-background/80"
+            />
+            <Button type="submit" size="icon">
+              <Search className="h-5 w-5" />
+            </Button>
+          </form>
         </header>
 
         <div className="space-y-16">
