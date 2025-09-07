@@ -253,8 +253,10 @@ export default function MusicPage() {
                   <p className="text-center text-muted-foreground pt-8">Loading your music library...</p>
                 )}
             </div>
-             <div className="mt-12 text-center text-muted-foreground">
-                <p>Music updates in progress… Please stay tuned!</p>
+             <div className="mt-12 text-center text-muted-foreground animate-fade-in-up" style={{ animationDelay: '500ms' }}>
+                <p className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
+                    Music updates in progress… Please stay tuned!
+                </p>
             </div>
         </CardContent>
       </Card>
@@ -335,12 +337,3 @@ function SongCard({ song, currentSong, onPlay, onPause }: { song: Song; currentS
         </div>
     );
 }
-
-    
-
-    
-
-
-
-
-    

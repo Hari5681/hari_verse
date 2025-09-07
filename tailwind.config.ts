@@ -119,6 +119,14 @@ const config = {
           '0%, 100%': { height: '0.75rem' },
           '50%': { height: '1.1rem' },
         },
+        "shimmer": {
+          "0%, 100%": {
+            "background-position": "calc(-100% - var(--shimmer-width, 0px)) 0",
+          },
+          "50%": {
+            "background-position": "calc(100% + var(--shimmer-width, 0px)) 0",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -131,6 +139,7 @@ const config = {
         bar1: 'bar1 1.2s infinite ease-in-out',
         bar2: 'bar2 1.2s infinite ease-in-out',
         bar3: 'bar3 1.2s infinite ease-in-out',
+        "shimmer": "shimmer 3s infinite linear",
       },
     },
   },
