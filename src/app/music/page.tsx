@@ -233,15 +233,7 @@ export default function MusicPage() {
                             <p className="text-muted-foreground">Loading your top picks...</p>
                         </div>
                     )}
-                    <Separator className="my-12"/>
                 </section>
-                
-                <div className="mt-12 text-center text-muted-foreground animate-fade-in-up" style={{ animationDelay: '500ms' }}>
-                    <div className="text-4xl mb-4 animate-spin [animation-duration:3s]">🎶</div>
-                    <p className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
-                        Music updates in progress… Please stay tuned!
-                    </p>
-                </div>
                 
                 {artists.length > 0 && (
                     <section>
@@ -274,6 +266,13 @@ export default function MusicPage() {
                 {!error && songs.length === 0 && (
                   <p className="text-center text-muted-foreground pt-8">Loading your music library...</p>
                 )}
+
+                <div className="mt-12 text-center text-muted-foreground animate-fade-in-up" style={{ animationDelay: '500ms' }}>
+                    <div className="text-4xl mb-4 animate-spin [animation-duration:3s]">🎶</div>
+                    <p className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
+                        Music updates in progress… Please stay tuned!
+                    </p>
+                </div>
             </div>
         </CardContent>
       </Card>
@@ -359,3 +358,4 @@ function SongCard({ song, currentSong, onPlay, onPause }: { song: Song; currentS
     
 
     
+
