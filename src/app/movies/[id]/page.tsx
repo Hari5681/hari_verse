@@ -4,13 +4,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { Star, AlertTriangle, ArrowLeft, Plus, Users, Video, Share2, PlayCircle, Heart, ThumbsUp, MoreVertical } from 'lucide-react';
+import { Star, AlertTriangle, ArrowLeft, Users, Video, Share2, PlayCircle, Heart, ThumbsUp, MoreVertical } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import './rating.css';
 
 interface MovieDetails {
   id: number;
@@ -30,6 +31,54 @@ interface MovieDetails {
   images: { backdrops: any[], posters: any[], logos: any[] };
   "watch/providers": any;
 }
+
+const AnimatedRating = ({ rating }: { rating: number }) => {
+  const [offset, setOffset] = useState(251.2); // Circumference of circle with r=40
+
+  useEffect(() => {
+    const percentage = rating / 10;
+    const newOffset = 251.2 * (1 - percentage);
+    // Delay to allow for initial render before animation
+    const timer = setTimeout(() => setOffset(newOffset), 100); 
+    return () => clearTimeout(timer);
+  }, [rating]);
+
+  const ratingColor = rating >= 7 ? '#22c55e' : rating >= 4 ? '#f59e0b' : '#ef4444';
+
+  return (
+    <div className="relative h-24 w-24">
+      <svg className="h-full w-full" viewBox="0 0 100 100">
+        {/* Background circle */}
+        <circle
+          cx="50"
+          cy="50"
+          r="40"
+          className="stroke-current text-secondary"
+          strokeWidth="8"
+          fill="transparent"
+        />
+        {/* Progress circle */}
+        <circle
+          cx="50"
+          cy="50"
+          r="40"
+          className="progress-ring-circle"
+          strokeWidth="8"
+          strokeDasharray="251.2"
+          strokeDashoffset={offset}
+          fill="transparent"
+          strokeLinecap="round"
+          transform="rotate(-90 50 50)"
+          style={{ stroke: ratingColor }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-2xl font-bold">{rating.toFixed(1)}</span>
+      </div>
+    </div>
+  );
+};
+
 
 export default function MovieDetailPage() {
   const params = useParams();
@@ -200,13 +249,10 @@ export default function MovieDetailPage() {
             
             <Separator />
             
-            <section className="flex items-center gap-6 text-lg">
-                <div className="flex items-center gap-2">
-                    <Star className="h-8 w-8 text-yellow-400 fill-yellow-400" />
-                    <div>
-                        <p><span className="font-bold text-xl">{movie.vote_average.toFixed(1)}</span><span className="text-sm text-muted-foreground">/10</span></p>
-                        <p className="text-xs text-muted-foreground">{movie.vote_count.toLocaleString()}</p>
-                    </div>
+            <section className="flex items-center justify-center gap-6 text-lg">
+                <div className="flex flex-col items-center gap-2">
+                    <h2 className="text-xl font-bold mb-2">TMDb Rating</h2>
+                    <AnimatedRating rating={movie.vote_average} />
                 </div>
             </section>
             
