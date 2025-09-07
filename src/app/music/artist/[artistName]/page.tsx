@@ -24,8 +24,13 @@ export default function ArtistPage() {
   const router = useRouter();
   const decodedArtistName = params.artistName ? decodeURIComponent(params.artistName as string) : 'Unknown Artist';
   
-  // Standardize to "Lana Del Rey"
-  const artistName = decodedArtistName.toLowerCase() === 'lena del rey' ? 'Lana Del Rey' : decodedArtistName;
+  // Standardize artist names
+  let artistName = decodedArtistName;
+  if (decodedArtistName.toLowerCase() === 'lena del rey') {
+    artistName = 'Lana Del Rey';
+  } else if (decodedArtistName.toLowerCase() === 'the neighbourhood') {
+    artistName = 'The Neighbourhood';
+  }
 
   const [songs, setSongs] = useState<Song[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -113,9 +118,14 @@ export default function ArtistPage() {
     }
   }
 
-  const artistImageUrl = artistName.toLowerCase() === 'lana del rey' 
-    ? 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
-    : `https://picsum.photos/seed/${artistName}/400/400`;
+  let artistImageUrl;
+  if (artistName.toLowerCase() === 'lana del rey') {
+    artistImageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg';
+  } else if (artistName.toLowerCase() === 'the neighbourhood') {
+    artistImageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neighbourhood/the%20neighbourhood%20profile.jpeg';
+  } else {
+    artistImageUrl = `https://picsum.photos/seed/${artistName}/400/400`;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary/20 to-background p-4 pt-20 pb-40">

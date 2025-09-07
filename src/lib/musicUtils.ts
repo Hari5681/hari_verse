@@ -13,10 +13,14 @@
  */
 export const getArtistFromTitle = (title: string): string => {
     if (!title) return 'Unknown Artist';
+    const lowerCaseTitle = title.toLowerCase();
 
-    // Standardize to "Lana Del Rey"
-    if (title.toLowerCase().includes('lana del rey') || title.toLowerCase().includes('lena del rey')) {
+    // Standardize artist names
+    if (lowerCaseTitle.includes('lana del rey') || lowerCaseTitle.includes('lena del rey')) {
         return 'Lana Del Rey';
+    }
+    if (lowerCaseTitle.includes('the neighbourhood')) {
+        return 'The Neighbourhood';
     }
 
     const parts = title.split('/');

@@ -71,11 +71,17 @@ export default function MusicPage() {
             
             const uniqueArtists = songsWithArtists.reduce((acc, song) => {
                 if (!acc.find(a => a.name === song.artist) && song.artist !== 'Unknown Artist') {
+                    let imageUrl;
+                    if (song.artist.toLowerCase() === 'lana del rey') {
+                        imageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg';
+                    } else if (song.artist.toLowerCase() === 'the neighbourhood') {
+                        imageUrl = 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neighbourhood/the%20neighbourhood%20profile.jpeg';
+                    } else {
+                        imageUrl = `https://picsum.photos/seed/${encodeURIComponent(song.artist)}/500/500`;
+                    }
                     acc.push({
                          name: song.artist,
-                         imageUrl: song.artist.toLowerCase() === 'lana del rey' 
-                            ? 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
-                            : `https://picsum.photos/seed/${encodeURIComponent(song.artist)}/500/500`
+                         imageUrl: imageUrl
                     });
                 }
                 return acc;
