@@ -21,7 +21,8 @@ const defaultTheme: ArtistTheme = {
 
 const artistAssets: Record<string, ArtistAssets> = {
     'lana del rey': {
-        profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lana%20del%20rey/lana%20del%20rey%20profile.jpg',
+        profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/LENA/profile.jpg',
+        banner: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/LENA/banner.jpg',
         wallpaper: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lana%20del%20rey/wallpaper.jpg',
         theme: {
             color: { h: 350, s: 80, l: 60 }, // Vintage Rose
@@ -29,7 +30,8 @@ const artistAssets: Record<string, ArtistAssets> = {
         },
     },
     'the neighbourhood': {
-        profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neighbourhood/the%20neighbourhood%20profile.jpeg',
+        profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neither/profile.jpg',
+        banner: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neither/banner.jpg',
         wallpaper: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20neighbourhood/wallpaper.jpg',
         theme: {
             color: { h: 0, s: 0, l: 80 }, // Grayscale
@@ -46,6 +48,8 @@ const artistAssets: Record<string, ArtistAssets> = {
         },
     },
     'nf': {
+        profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/NF/nf_profile.jpg',
+        banner: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/NF/nf.jpg',
         wallpaper: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/nf/wallpaper.jpg',
         theme: {
             color: { h: 60, s: 80, l: 60 }, // Yellow
@@ -62,6 +66,8 @@ const artistAssets: Record<string, ArtistAssets> = {
         },
     },
     'the weeknd': {
+        profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/The%20Weekend/weekend_profile.jpg',
+        banner: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/The%20Weekend/weekend_banner.jpg',
         wallpaper: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/the%20weeknd/wallpaper.jpg',
         theme: {
             color: { h: 270, s: 80, l: 60 }, // Violet
