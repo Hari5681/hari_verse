@@ -93,10 +93,6 @@ export default function MovieDetailPage() {
     );
   }
   
-  const posterUrl = movie.poster_path
-    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-    : 'https://picsum.photos/500/750';
-    
   const backdropUrl = movie.backdrop_path
     ? `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`
     : `https://picsum.photos/1280/720?random=${movie.id}`;
@@ -171,22 +167,10 @@ export default function MovieDetailPage() {
           </div>
         </header>
 
-        <div className="container mx-auto max-w-5xl px-4 -mt-8 relative z-10 space-y-8">
+        <div className="container mx-auto max-w-5xl px-4 mt-8 relative z-10 space-y-8">
             
             <section className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
-                <div className="w-full md:w-1/4 flex-shrink-0">
-                    <Image
-                        src={posterUrl}
-                        alt={`Poster for ${movie.title}`}
-                        width={500}
-                        height={750}
-                        className="rounded-lg shadow-lg w-full max-w-[200px] md:max-w-full mx-auto"
-                    />
-                     <Button className="w-full mt-4 bg-yellow-500 hover:bg-yellow-600 text-black font-bold">
-                        <Plus className="mr-2 h-4 w-4"/> Add to Watchlist
-                     </Button>
-                </div>
-                <div className="w-full md:w-3/4 space-y-4">
+                <div className="w-full space-y-4">
                     <div className="flex flex-wrap gap-2">
                         {movie.genres.map(genre => (
                             <Badge key={genre.id} variant="secondary" className="cursor-pointer hover:bg-primary/20">{genre.name}</Badge>
