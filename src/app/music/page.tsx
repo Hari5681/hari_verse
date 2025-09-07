@@ -25,8 +25,6 @@ interface Artist {
     imageUrl: string;
 }
 
-const languages = ['Telugu', 'English', 'Hindi', 'Tamil'];
-
 export default function MusicPage() {
   const [songs, setSongs] = useState<Song[]>([]);
   const [artists, setArtists] = useState<Artist[]>([]);
@@ -251,32 +249,6 @@ export default function MusicPage() {
                     </section>
                 )}
 
-                <section>
-                    <h2 className="text-2xl font-bold mb-4">Languages</h2>
-                     <Carousel 
-                        opts={{ align: "start", loop: false }} 
-                        className="w-full"
-                     >
-                        <CarouselContent className="-ml-4">
-                            {languages.map(lang => (
-                                <CarouselItem key={lang} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-4">
-                                    <div className="group flex flex-col items-center text-center gap-2 cursor-pointer">
-                                        <div className="relative w-24 h-24 md:w-32 md:h-32">
-                                            <div className="w-full h-full rounded-full bg-primary/10 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
-                                               <span className="text-lg font-bold text-primary-foreground">{lang}</span>
-                                            </div>
-                                        </div>
-                                         <p className="font-semibold text-sm mt-2 truncate w-full">{lang}</p>
-                                    </div>
-                                </CarouselItem>
-                            ))}
-                        </CarouselContent>
-                        <CarouselPrevious className="hidden md:flex"/>
-                        <CarouselNext className="hidden md:flex"/>
-                    </Carousel>
-                    <Separator className="my-12"/>
-                </section>
-
                 {!error && songs.length === 0 && (
                   <p className="text-center text-muted-foreground pt-8">Loading your music library...</p>
                 )}
@@ -364,4 +336,5 @@ function SongCard({ song, currentSong, onPlay, onPause }: { song: Song; currentS
     
 
     
+
 
