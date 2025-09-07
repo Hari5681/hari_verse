@@ -109,7 +109,7 @@ export default function MoviesPage() {
                 </Button>
             </div>
              {showSuggestions && (searchQuery.length >= 2) && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-background border border-border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
                 {isSuggestionsLoading ? (
                   <div className="flex items-center justify-center p-4">
                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -118,15 +118,15 @@ export default function MoviesPage() {
                   suggestions.map(movie => (
                     <Link key={movie.id} href={`/movies/${movie.id}`} passHref>
                         <div 
-                            className="flex items-center p-3 hover:bg-accent cursor-pointer"
+                            className="flex items-center p-3 hover:bg-accent cursor-pointer transition-colors"
                             onClick={() => setShowSuggestions(false)}
                         >
                             <Image
-                                src={movie.poster_path ? `https://image.tmdb.org/t/p/w92${movie.poster_path}` : 'https://picsum.photos/92/138'}
+                                src={movie.poster_path ? `https://image.tmdb.org/t/p/w92${movie.poster_path}` : `https://picsum.photos/40/60?random=${movie.id}`}
                                 alt={movie.title}
                                 width={40}
                                 height={60}
-                                className="rounded-md"
+                                className="rounded-md object-cover"
                             />
                             <div className="ml-4">
                                 <p className="font-semibold">{movie.title}</p>
