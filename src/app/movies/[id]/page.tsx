@@ -11,7 +11,6 @@ import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import './rating.css';
 
 interface MovieDetails {
   id: number;
@@ -33,47 +32,31 @@ interface MovieDetails {
 }
 
 const AnimatedRating = ({ rating }: { rating: number }) => {
-  const [offset, setOffset] = useState(251.2); // Circumference of circle with r=40
+  const [width, setWidth] = useState(0);
 
   useEffect(() => {
-    const percentage = rating / 10;
-    const newOffset = 251.2 * (1 - percentage);
     // Delay to allow for initial render before animation
-    const timer = setTimeout(() => setOffset(newOffset), 100); 
+    const timer = setTimeout(() => setWidth(rating * 10), 100);
     return () => clearTimeout(timer);
   }, [rating]);
 
-  const ratingColor = rating >= 7 ? '#22c55e' : rating >= 4 ? '#f59e0b' : '#ef4444';
+  const getRatingColor = (r: number) => {
+    if (r >= 7) return 'bg-green-500';
+    if (r >= 4) return 'bg-yellow-500';
+    return 'bg-red-500';
+  };
 
   return (
-    <div className="relative h-24 w-24">
-      <svg className="h-full w-full" viewBox="0 0 100 100">
-        {/* Background circle */}
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          className="stroke-current text-secondary"
-          strokeWidth="8"
-          fill="transparent"
-        />
-        {/* Progress circle */}
-        <circle
-          cx="50"
-          cy="50"
-          r="40"
-          className="progress-ring-circle"
-          strokeWidth="8"
-          strokeDasharray="251.2"
-          strokeDashoffset={offset}
-          fill="transparent"
-          strokeLinecap="round"
-          transform="rotate(-90 50 50)"
-          style={{ stroke: ratingColor }}
-        />
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-2xl font-bold">{rating.toFixed(1)}</span>
+    <div className="w-full max-w-xs">
+      <div className="flex justify-between items-center mb-1">
+        <span className="text-base font-medium text-primary">TMDb Rating</span>
+        <span className="text-sm font-medium text-primary">{rating.toFixed(1)}/10</span>
+      </div>
+      <div className="w-full bg-secondary rounded-full h-2.5">
+        <div
+          className={`h-2.5 rounded-full transition-all duration-1000 ease-out ${getRatingColor(rating)}`}
+          style={{ width: `${width}%` }}
+        ></div>
       </div>
     </div>
   );
@@ -249,11 +232,8 @@ export default function MovieDetailPage() {
             
             <Separator />
             
-            <section className="flex items-center justify-center gap-6 text-lg">
-                <div className="flex flex-col items-center gap-2">
-                    <h2 className="text-xl font-bold mb-2">TMDb Rating</h2>
-                    <AnimatedRating rating={movie.vote_average} />
-                </div>
+            <section className="flex items-center justify-center">
+              <AnimatedRating rating={movie.vote_average} />
             </section>
             
             <Separator />
@@ -322,3 +302,5 @@ export default function MovieDetailPage() {
     </div>
   );
 }
+
+    
