@@ -176,7 +176,7 @@ export default function MovieDetailPage() {
         </header>
 
         <div className="container mx-auto max-w-5xl px-4 mt-8 relative z-10 space-y-8">
-            
+            <h1 className="text-4xl font-bold tracking-tight">{movie.title}</h1>
             <section className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
                 <div className="w-full space-y-4">
                     <div className="flex flex-wrap gap-2">
@@ -269,3 +269,5 @@ export default function MovieDetailPage() {
       </main>
     </div>
   );
+
+    
