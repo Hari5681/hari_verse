@@ -241,5 +241,3 @@ export default function MovieDetailPage() {
     </div>
   );
 }
-
-    
