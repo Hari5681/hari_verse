@@ -71,6 +71,13 @@ export default function MoviesPage() {
               <CarouselNext className="hidden md:flex" />
             </Carousel>
           </section>
+
+          <MovieCarousel
+            title="🎌 Anime"
+            subtitle="Explore the world of Japanese animation."
+            withGenres="16"
+            withKeywords="210024" 
+          />
           
           <MovieCarousel
             title="🎬 Upcoming Movies"
