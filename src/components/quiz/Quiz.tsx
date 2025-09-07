@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { AlertTriangle, Loader2 } from 'lucide-react';
 import QuestionCard from './QuestionCard';
 import { Progress } from '@/components/ui/progress';
+import he from 'he';
 
 interface Question {
   category: string;
@@ -19,8 +20,6 @@ interface QuizProps {
   difficulty: 'easy' | 'medium' | 'hard';
   onLevelComplete: (score: number) => void;
 }
-
-const he = require('he');
 
 export default function Quiz({ difficulty, onLevelComplete }: QuizProps) {
   const [questions, setQuestions] = useState<Question[]>([]);
