@@ -109,7 +109,7 @@ export default function MoviesPage() {
                 </Button>
             </div>
              {showSuggestions && (searchQuery.length >= 2) && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
+              <div className="absolute top-full left-0 right-0 mt-2 bg-black border border-border rounded-lg shadow-lg z-50 max-h-96 overflow-y-auto">
                 {isSuggestionsLoading ? (
                   <div className="flex items-center justify-center p-4">
                     <Loader2 className="h-6 w-6 animate-spin text-primary" />
