@@ -16,7 +16,7 @@ export function GlobalPlayer({ forceShow = false }: { forceShow?: boolean }) {
     if (!hasMounted) {
         // On the server and during initial client render, render a static placeholder
         // that takes up the same space as the player.
-        return <div className="h-16" />;
+        return <div className="fixed bottom-0 left-0 right-0 z-50 h-16" />;
     }
 
     const isVisible = !!currentSong || forceShow;
