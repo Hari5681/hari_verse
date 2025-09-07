@@ -11,6 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { cn } from '@/lib/utils';
 
 interface MovieDetails {
   id: number;
@@ -45,16 +46,22 @@ const AnimatedRating = ({ rating }: { rating: number }) => {
     if (r >= 4) return 'bg-yellow-500';
     return 'bg-red-500';
   };
+  
+  const getRatingTextColor = (r: number) => {
+    if (r >= 7) return 'text-green-500';
+    if (r >= 4) return 'text-yellow-500';
+    return 'text-red-500';
+  };
 
   return (
     <div className="w-full max-w-xs">
       <div className="flex justify-between items-center mb-1">
         <span className="text-base font-medium text-foreground">TMDb Rating</span>
-        <span className="text-sm font-medium text-foreground">{rating.toFixed(1)}/10</span>
+        <span className={cn("text-sm font-medium", getRatingTextColor(rating))}>{rating.toFixed(1)}/10</span>
       </div>
       <div className="w-full bg-secondary rounded-full h-2.5">
         <div
-          className={`h-2.5 rounded-full transition-all duration-1000 ease-out ${getRatingColor(rating)}`}
+          className={cn("h-2.5 rounded-full transition-all duration-1000 ease-out", getRatingColor(rating))}
           style={{ width: `${width}%` }}
         ></div>
       </div>
@@ -301,4 +308,5 @@ export default function MovieDetailPage() {
       </main>
     </div>
   );
-}
+
+    
