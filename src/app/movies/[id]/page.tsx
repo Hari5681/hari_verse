@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Star, AlertTriangle, ArrowLeft, Plus, Users, Video, Share2, PlayCircle, Heart, ThumbsUp, MoreVertical } from 'lucide-react';
@@ -278,5 +278,3 @@ export default function MovieDetailPage() {
     </div>
   );
 }
-
-    
