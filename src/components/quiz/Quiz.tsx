@@ -34,7 +34,7 @@ export default function Quiz({ difficulty, onLevelComplete }: QuizProps) {
         setLoading(true);
         setError(null);
         const response = await fetch(
-          `https://opentdb.com/api.php?amount=5&difficulty=${difficulty}&type=multiple`
+          `https://opentdb.com/api.php?amount=10&difficulty=${difficulty}&type=multiple`
         );
         if (!response.ok) {
           throw new Error('Failed to fetch questions from the server.');
@@ -121,4 +121,5 @@ export default function Quiz({ difficulty, onLevelComplete }: QuizProps) {
     </div>
   );
 }
+
 
