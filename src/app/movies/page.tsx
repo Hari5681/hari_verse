@@ -2,6 +2,7 @@
 'use client';
 
 import { MovieCarousel } from '@/components/movies/MovieCarousel';
+import { Separator } from '@/components/ui/separator';
 
 export default function MoviesPage() {
   return (
@@ -27,30 +28,45 @@ export default function MoviesPage() {
             subtitle="The highest-rated movies on TMDb."
             endpoint="/api/movies/top-rated"
           />
-          <MovieCarousel
-            title="💥 Action Movies"
-            subtitle="Get your adrenaline pumping."
-            withGenres="28"
-            sortBy="popularity.desc"
-          />
-          <MovieCarousel
-            title="💖 Romance Movies"
-            subtitle="Fall in love with these stories."
-            withGenres="10749"
-            sortBy="popularity.desc"
-          />
-           <MovieCarousel
-            title="😂 Comedy Movies"
-            subtitle="Have a laugh with these picks."
-            withGenres="35"
-            sortBy="popularity.desc"
-          />
-           <MovieCarousel
-            title="😱 Horror Movies"
-            subtitle="Dare to watch these scary films."
-            withGenres="27"
-            sortBy="popularity.desc"
-          />
+
+          <section>
+            <div className='text-center'>
+              <h2 className="text-4xl sm:text-5xl font-bold tracking-tight">
+                Categories
+              </h2>
+              <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto">
+                Browse movies by your favorite genre.
+              </p>
+            </div>
+            <Separator className="my-12"/>
+            <div className="space-y-16">
+              <MovieCarousel
+                title="💥 Action Movies"
+                subtitle="Get your adrenaline pumping."
+                withGenres="28"
+                sortBy="popularity.desc"
+              />
+              <MovieCarousel
+                title="💖 Romance Movies"
+                subtitle="Fall in love with these stories."
+                withGenres="10749"
+                sortBy="popularity.desc"
+              />
+              <MovieCarousel
+                title="😂 Comedy Movies"
+                subtitle="Have a laugh with these picks."
+                withGenres="35"
+                sortBy="popularity.desc"
+              />
+              <MovieCarousel
+                title="😱 Horror Movies"
+                subtitle="Dare to watch these scary films."
+                withGenres="27"
+                sortBy="popularity.desc"
+              />
+            </div>
+          </section>
+          
           <MovieCarousel
             title="🎬 Upcoming Movies"
             subtitle="Get a glimpse of future blockbusters."
