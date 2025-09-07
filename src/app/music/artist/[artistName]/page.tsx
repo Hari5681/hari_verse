@@ -9,49 +9,13 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Player } from '@/components/music/Player';
 import PlayingAnimation from '@/components/music/PlayingAnimation';
+import { getArtistFromTitle, cleanSongTitle } from '@/lib/musicUtils';
 
 interface Song {
   key: string;
   title: string;
   url: string;
   artist: string;
-}
-
-const getArtistFromTitle = (title: string): string => {
-    // If the title contains a path separator, the artist is the first part (folder name)
-    const parts = title.split('/');
-    if (parts.length > 1) {
-        const artistCandidate = parts[0].trim();
-        // Capitalize first letter of each word
-        return artistCandidate.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    }
-    
-    // Otherwise, try to get it from the filename "Artist - Song" format
-    const fileNameParts = (parts[0] || '').split(' - ');
-    if (fileNameParts.length > 1) {
-        return fileNameParts[0].trim();
-    }
-
-    return 'Unknown Artist';
-};
-
-
-const cleanSongTitle = (title: string, artist: string): string => {
-    let cleanTitle = title;
-    
-    // Get just the filename if it's in a folder
-    if (cleanTitle.includes('/')) {
-        cleanTitle = cleanTitle.split('/').pop() || '';
-    }
-
-    // Remove the artist prefix if it exists, e.g., "Lana Del Rey - "
-    const artistPrefix = `${artist} - `;
-    if (cleanTitle.toLowerCase().startsWith(artistPrefix.toLowerCase())) {
-        cleanTitle = cleanTitle.substring(artistPrefix.length);
-    }
-    
-    // Remove common extra text like (Official Music Video) and file extension
-    return cleanTitle.replace(/\s*\(.*\)/i, '').replace(/\.(mp3|m4a)$/i, '').trim();
 }
 
 export default function ArtistPage() {

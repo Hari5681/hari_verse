@@ -38,7 +38,7 @@ export async function GET() {
         const url = `${publicUrl}/${encodeURIComponent(item.Key!)}`;
         return {
           key: item.Key,
-          title: item.Key!.split('/').pop()?.replace(/\.(mp3|m4a)$/i, '') || 'Unknown Title',
+          title: item.Key!,
           url: url,
         };
       });
@@ -46,7 +46,6 @@ export async function GET() {
     return NextResponse.json({ songs: songs });
   } catch (error: any) {
     console.error('Error fetching from R2:', error);
-    // Provide a more specific error message if the error is an AWS SDK error
     if (error.name) {
          return NextResponse.json({ error: `Failed to fetch songs from R2. Reason: ${error.name} - ${error.message}` }, { status: 500 });
     }

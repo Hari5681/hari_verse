@@ -22,6 +22,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import { cleanSongTitle } from '@/lib/musicUtils';
+
 
 interface Song {
   key: string;
@@ -59,13 +61,9 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
         .play()
         .then(() => setIsPlaying(true))
         .catch((e) => {
-            if (e.name === 'AbortError') {
-              // This error is expected when a user quickly navigates between songs.
-              // The previous play() request is aborted by the new one.
-              // We can safely ignore it.
-              return;
+            if (e.name !== 'AbortError') {
+              console.error('Audio play failed:', e)
             }
-            console.error('Audio play failed:', e)
           });
     }
   }, [song, audioRef]);
@@ -95,9 +93,6 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
     audio.addEventListener('loadedmetadata', updateDuration);
     audio.addEventListener('play', handlePlay);
     audio.addEventListener('pause', handlePause);
-    
-    // We remove the passed onEnded from the main audio tag and use the one in the player
-    // to have control over the repeat functionality
     audio.addEventListener('ended', handleEnded);
 
     return () => {
@@ -107,7 +102,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
       audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, [audioRef, onNext, isRepeat]); // isRepeat is needed to re-evaluate the ended listener
+  }, [audioRef, onNext, isRepeat]);
 
   const togglePlay = () => {
     if (audioRef.current) {
@@ -126,18 +121,20 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
     }
   };
   
-  const handleShuffle = () => {
+  const handleShuffle = (e: React.MouseEvent) => {
+    e.stopPropagation();
     setIsShuffle(!isShuffle);
     if (!isShuffle && isRepeat) setIsRepeat(false);
   };
   
-  const handleRepeat = () => {
+  const handleRepeat = (e: React.MouseEvent) => {
+    e.stopPropagation();
       setIsRepeat(!isRepeat);
       if (!isRepeat && isShuffle) setIsShuffle(false);
   };
 
   const imageUrl = `https://picsum.photos/seed/${song.key}/500/500`;
-  const songTitle = song.title.replace(`${song.artist} - `, '').replace(/\.(mp3|m4a)$/i, '');
+  const songTitle = cleanSongTitle(song.title, song.artist);
 
   const isTitleLong = songTitle.length > 25;
   const isMiniTitleLong = songTitle.length > 20;
@@ -232,7 +229,7 @@ export function Player({ song, audioRef, onNext, onPrev }: PlayerProps) {
       </div>
 
       <DialogContent className="h-full max-h-full w-full max-w-full !rounded-none !border-none bg-gradient-to-b from-primary/30 to-background p-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-full data-[state=open]:slide-in-from-bottom-full">
-        <DialogTitle className="sr-only">Now Playing</DialogTitle>
+        <DialogTitle className="sr-only">Now Playing: {songTitle}</DialogTitle>
         <div className="flex h-full flex-col p-4 pt-8 sm:p-6">
           <header className="flex items-center justify-between flex-shrink-0">
             <DialogClose>

@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Separator } from '@/components/ui/separator';
 import { Player } from '@/components/music/Player';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { getArtistFromTitle, cleanSongTitle } from '@/lib/musicUtils';
 
 
 interface Song {
@@ -23,24 +24,6 @@ interface Artist {
     name: string;
     imageUrl: string;
 }
-
-const getArtistFromTitle = (title: string): string => {
-  // If the title contains a path separator, the artist is the first part (folder name)
-  const parts = title.split('/');
-  if (parts.length > 1) {
-      const artistCandidate = parts[0].trim();
-      // Capitalize first letter of each word
-      return artistCandidate.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-  }
-  
-  // Otherwise, try to get it from the filename "Artist - Song" format
-  const fileNameParts = (parts[0] || '').split(' - ');
-  if (fileNameParts.length > 1) {
-      return fileNameParts[0].trim();
-  }
-
-  return 'Unknown Artist';
-};
 
 const languages = ['Telugu', 'English', 'Hindi', 'Tamil'];
 
@@ -99,14 +82,6 @@ export default function MusicPage() {
                 return acc;
             }, [] as Artist[]);
 
-            // Ensure Lana Del Rey is in the list if she has songs
-            if (!uniqueArtists.find(a => a.name.toLowerCase() === 'lana del rey') && songsWithArtists.some(s => s.artist.toLowerCase() === 'lana del rey')) {
-                 uniqueArtists.unshift({
-                    name: 'Lana Del Rey',
-                    imageUrl: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
-                 });
-            }
-
             setArtists(uniqueArtists);
         }
       } catch (error: any) {
@@ -152,6 +127,7 @@ export default function MusicPage() {
   
   const lanaDelReySongs = songs.filter(song => song.artist.toLowerCase() === 'lana del rey');
   const otherSongs = songs.filter(song => song.artist.toLowerCase() !== 'lana del rey' && song.artist !== 'Unknown Artist');
+  const topPicks = songs.slice(0, 10);
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-background p-4 pt-20">
@@ -186,13 +162,13 @@ export default function MusicPage() {
 
                 <section>
                     <h2 className="text-2xl font-bold mb-4">Top Picks</h2>
-                     {songs.length > 0 ? (
+                     {topPicks.length > 0 ? (
                         <Carousel
-                            opts={{ align: "start", loop: songs.slice(0, 10).length > 5 }}
+                            opts={{ align: "start", loop: topPicks.length > 5 }}
                             className="w-full"
                         >
                             <CarouselContent className="-ml-4">
-                                {songs.slice(0, 10).map((song) => (
+                                {topPicks.map((song) => (
                                     <CarouselItem key={song.key} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-4">
                                         <SongCard song={song} currentSong={currentSong} onPlay={() => handlePlaySong(song, songs)} />
                                     </CarouselItem>
@@ -202,7 +178,7 @@ export default function MusicPage() {
                             <CarouselNext className="hidden md:flex"/>
                         </Carousel>
                     ) : (
-                         <div className="flex items-center justify-center h-40 rounded-lg bg-muted/20">
+                         !error && <div className="flex items-center justify-center h-40 rounded-lg bg-muted/20">
                             <p className="text-muted-foreground">Loading your top picks...</p>
                         </div>
                     )}
@@ -241,7 +217,7 @@ export default function MusicPage() {
                 <section>
                     <h2 className="text-2xl font-bold mb-4">Languages</h2>
                      <Carousel 
-                        opts={{ align: "start", loop: languages.length > 5 }} 
+                        opts={{ align: "start", loop: languages.length > 4 }} 
                         className="w-full"
                      >
                         <CarouselContent className="-ml-4">
@@ -288,7 +264,7 @@ export default function MusicPage() {
                     </section>
                 )}
 
-                {!error && songs.length === 0 && artists.length === 0 && (
+                {!error && songs.length === 0 && (
                   <p className="text-center text-muted-foreground pt-8">Loading your music library...</p>
                 )}
             </div>
@@ -304,7 +280,7 @@ export default function MusicPage() {
         />
       )}
 
-      <audio ref={audioRef} onEnded={handleNext}/>
+      <audio ref={audioRef} />
     </div>
   );
 }
@@ -331,7 +307,7 @@ function RecentlyPlayedSongItem({ song, index, onPlay }: { song: Song; index: nu
             />
             <div className="ml-4 flex-grow overflow-hidden">
                 <p className="font-semibold truncate text-foreground">
-                    {song.title.replace(`${song.artist} - `, '').replace(/\.(mp3|m4a)$/i, '')}
+                    {cleanSongTitle(song.title, song.artist)}
                 </p>
                 <p className="text-xs truncate text-muted-foreground">
                     {song.artist}
@@ -340,38 +316,6 @@ function RecentlyPlayedSongItem({ song, index, onPlay }: { song: Song; index: nu
         </div>
     );
 }
-
-function TopPickListItem({ song, onPlay }: { song: Song; onPlay: () => void; }) {
-    return (
-        <div 
-            onClick={onPlay} 
-            className="group flex items-center p-2 rounded-md hover:bg-white/10 cursor-pointer transition-colors"
-        >
-            <div className="relative flex-shrink-0">
-                <Image
-                    src={`https://picsum.photos/seed/${song.key}/200/200`}
-                    alt={song.title}
-                    width={56}
-                    height={56}
-                    className="rounded-md object-cover"
-                    data-ai-hint="song album cover"
-                />
-                 <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <PlayCircle size={32} className="text-white" />
-                </div>
-            </div>
-            <div className="ml-4 flex-grow overflow-hidden">
-                <p className="text-sm font-semibold truncate text-foreground">
-                    {song.title.replace(`${song.artist} - `, '').replace(/\.(mp3|m4a)$/i, '')}
-                </p>
-                <p className="text-xs truncate text-muted-foreground">
-                    {song.artist}
-                </p>
-            </div>
-        </div>
-    );
-}
-
 
 function SongCard({ song, currentSong, onPlay }: { song: Song; currentSong: Song | null; onPlay: () => void; }) {
     const isPlaying = currentSong?.key === song.key;
@@ -388,7 +332,7 @@ function SongCard({ song, currentSong, onPlay }: { song: Song; currentSong: Song
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 flex flex-col p-4">
-              <h3 className="truncate text-base md:text-lg font-bold text-white">{song.title.replace(`${song.artist} - `, '').replace(/\.(mp3|m4a)$/i, '')}</h3>
+              <h3 className="truncate text-base md:text-lg font-bold text-white">{cleanSongTitle(song.title, song.artist)}</h3>
               <p className="text-xs md:text-sm text-gray-300">{song.artist}</p>
           </div>
           <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
@@ -398,7 +342,7 @@ function SongCard({ song, currentSong, onPlay }: { song: Song; currentSong: Song
               </div>
             </button>
           </div>
-           <a href={song.url} download={song.title} className="absolute top-2 right-2 text-white/70 opacity-0 transition-opacity hover:text-white group-hover:opacity-100">
+           <a href={song.url} download={cleanSongTitle(song.title, song.artist)} className="absolute top-2 right-2 text-white/70 opacity-0 transition-opacity hover:text-white group-hover:opacity-100" onClick={(e) => e.stopPropagation()}>
                 <Download size={20} />
            </a>
         </div>
