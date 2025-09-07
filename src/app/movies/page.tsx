@@ -20,7 +20,7 @@ export default function MoviesPage() {
           <MovieCarousel
             title="🎬 Action / Adventure"
             subtitle="Top Telugu-Dubbed Hollywood Movies"
-            withKeywords="236166,9715" // telugu dubbed, hollywood
+            withKeywords="9715,236166" // hollywood, telugu dubbed
             withGenres="28,12" // Action, Adventure
             sortBy="vote_average.desc"
           />
