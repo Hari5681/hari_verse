@@ -64,7 +64,7 @@ export default function CategoryPage() {
   return (
     <div className="min-h-screen bg-background p-4 pt-20">
       <div className="container mx-auto">
-        <header className="mb-8 flex items-center gap-4">
+        <header className="mb-8 flex items-center gap-4 animate-fade-in-down">
           <Button variant="outline" size="icon" onClick={() => router.back()}>
             <ArrowLeft className="h-6 w-6" />
           </Button>
@@ -96,9 +96,14 @@ export default function CategoryPage() {
 
         {!loading && !error && (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-            {movies.map((movie) => (
+            {movies.map((movie, index) => (
               <Link key={movie.id} href={`/movies/${movie.id}`} passHref>
-                <MovieCard movie={movie} />
+                <div 
+                  className="animate-fade-in-up" 
+                  style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'both' }}
+                >
+                  <MovieCard movie={movie} />
+                </div>
               </Link>
             ))}
           </div>
@@ -114,7 +119,7 @@ function MovieCard({ movie }: { movie: Movie }) {
     : `https://picsum.photos/500/750?random=${movie.id}`;
 
   return (
-    <Card className="overflow-hidden bg-card border-none shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-primary/20">
+    <Card className="overflow-hidden bg-card border-none shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-primary/20">
       <CardContent className="p-0">
         <div className="relative aspect-[2/3]">
           <Image

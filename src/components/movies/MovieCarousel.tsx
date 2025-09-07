@@ -67,7 +67,7 @@ export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, wit
   }, [endpoint, language, sortBy, withKeywords, withGenres]);
 
   return (
-    <section>
+    <section className="animate-fade-in-up">
         <h2 className="text-3xl font-bold">{title}</h2>
         <p className="text-muted-foreground mb-6">{subtitle}</p>
 
@@ -119,7 +119,7 @@ function MovieCard({ movie }: { movie: Movie }) {
     : `https://picsum.photos/500/750?random=${movie.id}`;
 
   return (
-    <Card className="overflow-hidden bg-card border-none shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-primary/20">
+    <Card className="overflow-hidden bg-card border-none shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-primary/20">
       <CardContent className="p-0">
         <div className="relative aspect-[2/3]">
           <Image

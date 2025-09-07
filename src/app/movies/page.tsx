@@ -13,7 +13,7 @@ export default function MoviesPage() {
   return (
     <div className="min-h-screen bg-background p-4 pt-20">
       <div className="container mx-auto">
-        <header className="text-center mb-12">
+        <header className="text-center mb-12 animate-fade-in-down">
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
             Movie Discovery
           </h1>
@@ -34,7 +34,7 @@ export default function MoviesPage() {
             endpoint="/api/movies/top-rated"
           />
 
-          <section>
+          <section className="animate-fade-in-up">
             <div className='text-center'>
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight">
                 Categories
@@ -52,10 +52,13 @@ export default function MoviesPage() {
               className="w-full"
             >
               <CarouselContent>
-                {genres.map((genre) => (
+                {genres.map((genre, index) => (
                   <CarouselItem key={genre.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
                     <Link href={`/movies/category/${genre.name.toLowerCase()}`} passHref>
-                      <Card className="group flex flex-col justify-between h-40 overflow-hidden rounded-lg bg-card text-card-foreground shadow-lg transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-primary/20 hover:border-primary/50">
+                      <Card 
+                        className="group flex flex-col justify-between h-40 overflow-hidden rounded-lg bg-card text-card-foreground shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-primary/20 hover:border-primary/50"
+                        style={{ animationDelay: `${index * 100}ms` }}
+                      >
                         <CardHeader>
                           <CardTitle className="text-xl font-bold flex items-center justify-between">
                             <span>{genre.name}</span>
