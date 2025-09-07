@@ -61,7 +61,7 @@ const AnimatedRating = ({ rating }: { rating: number }) => {
 
   return (
     <div className="flex items-center gap-4 w-full max-w-sm">
-      <Star className="h-8 w-8 text-yellow-400 fill-yellow-400 flex-shrink-0" />
+      <Star className="h-6 w-6 text-yellow-400 fill-yellow-400 flex-shrink-0" />
       <div className="w-full">
         <div className="flex justify-between items-center mb-1">
           <span className="text-base font-medium text-foreground">TMDb Rating</span>
