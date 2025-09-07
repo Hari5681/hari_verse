@@ -81,7 +81,9 @@ export default function ArtistPage() {
       }
     };
 
-    fetchSongs();
+    if (artistName) {
+      fetchSongs();
+    }
   }, [artistName, toast]);
 
   const handlePlaySong = (song: Song) => {
@@ -147,18 +149,15 @@ export default function ArtistPage() {
     
     const handlePlayEvent = () => setIsPlaying(true);
     const handlePauseEvent = () => setIsPlaying(false);
-    const handleEndedEvent = () => handleNext();
     
     audio.addEventListener('play', handlePlayEvent);
     audio.addEventListener('pause', handlePauseEvent);
-    audio.addEventListener('ended', handleEndedEvent);
     
     return () => {
       audio.removeEventListener('play', handlePlayEvent);
       audio.removeEventListener('pause', handlePauseEvent);
-      audio.removeEventListener('ended', handleEndedEvent);
     }
-  }, [handleNext]);
+  }, []);
 
   const artistImageUrl = artistName === 'Lana Del Rey' 
     ? 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
@@ -233,6 +232,7 @@ export default function ArtistPage() {
           onPrev={handlePrev}
         />
       )}
+      
       <audio ref={audioRef} />
     </div>
   );
