@@ -128,7 +128,8 @@ export default function MusicPage() {
     setCurrentSong(playlist[prevIndex]);
   };
   
-  const otherSongs = songs.filter(song => song.artist !== 'Lana Del Rey' || !artists.some(a => a.name === 'Lana Del Rey'));
+  const lanaDelReySongs = songs.filter(song => song.artist === 'Lana Del Rey');
+  const otherSongs = songs.filter(song => song.artist !== 'Lana Del Rey');
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-background p-4 pt-20">
@@ -165,11 +166,11 @@ export default function MusicPage() {
                     <h2 className="text-2xl font-bold mb-4">Top Picks</h2>
                     {songs.length > 0 ? (
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-                            {songs.slice(0, 5).map((song) => (
+                            {songs.slice(0, 6).map((song) => (
                                 <TopPickSongCard 
                                     key={`top-pick-${song.key}`} 
                                     song={song} 
-                                    onPlay={() => handlePlaySong(song, songs.slice(0, 5))} 
+                                    onPlay={() => handlePlaySong(song, songs.slice(0, 6))} 
                                 />
                             ))}
                         </div>
@@ -191,7 +192,7 @@ export default function MusicPage() {
                          >
                             <CarouselContent className="-ml-4">
                                 {artists.map((artist) => (
-                                    <CarouselItem key={artist.name} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
+                                    <CarouselItem key={artist.name} className="basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6 pl-4">
                                         <Link href={`/music/artist/${encodeURIComponent(artist.name)}`} passHref>
                                             <div className="group flex flex-col items-center text-center gap-2 cursor-pointer">
                                                 <div className="relative w-24 h-24 md:w-32 md:h-32">
@@ -210,6 +211,18 @@ export default function MusicPage() {
                     </section>
                 )}
 
+                 {lanaDelReySongs.length > 0 && (
+                   <section>
+                        <h2 className="text-2xl font-bold mb-4">Lana Del Rey</h2>
+                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                            {lanaDelReySongs.map((song) => (
+                                <SongCard key={song.key} song={song} currentSong={currentSong} onPlay={() => handlePlaySong(song, lanaDelReySongs)} />
+                            ))}
+                        </div>
+                         <Separator className="my-12"/>
+                    </section>
+                )}
+
                 <section>
                     <h2 className="text-2xl font-bold mb-4">Languages</h2>
                      <Carousel 
@@ -218,7 +231,7 @@ export default function MusicPage() {
                      >
                         <CarouselContent className="-ml-4">
                             {languages.map(lang => (
-                                <CarouselItem key={lang} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6 pl-4">
+                                <CarouselItem key={lang} className="basis-1/3 sm:basis-1/4 md:basis-1/5 lg:basis-1/6 pl-4">
                                     <div className="group flex flex-col items-center text-center gap-2 cursor-pointer">
                                         <div className="relative w-24 h-24 md:w-32 md:h-32">
                                             <div className="w-full h-full rounded-full bg-primary/10 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
@@ -241,8 +254,8 @@ export default function MusicPage() {
                    <section>
                         <h2 className="text-2xl font-bold mb-4">All Songs</h2>
                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                            {songs.map((song) => (
-                                <SongCard key={song.key} song={song} currentSong={currentSong} onPlay={() => handlePlaySong(song, songs)} />
+                            {otherSongs.map((song) => (
+                                <SongCard key={song.key} song={song} currentSong={currentSong} onPlay={() => handlePlaySong(song, otherSongs)} />
                             ))}
                         </div>
                     </section>
@@ -364,5 +377,3 @@ function SongCard({ song, currentSong, onPlay }: { song: Song; currentSong: Song
         </div>
     );
 }
-
-    

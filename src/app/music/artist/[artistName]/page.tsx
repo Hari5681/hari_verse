@@ -160,6 +160,10 @@ export default function ArtistPage() {
     }
   }, [handleNext]);
 
+  const artistImageUrl = artistName === 'Lana Del Rey' 
+    ? 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
+    : `https://picsum.photos/seed/${artistName}/400/400`;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary/20 to-background p-4 pt-20 pb-40">
       <div className="w-full max-w-7xl mx-auto">
@@ -168,7 +172,7 @@ export default function ArtistPage() {
                 <ArrowLeft className="h-6 w-6" />
             </Button>
             <Image 
-                src="https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg"
+                src={artistImageUrl}
                 alt={artistName}
                 width={200}
                 height={200}
