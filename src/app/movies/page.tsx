@@ -18,14 +18,38 @@ export default function MoviesPage() {
 
         <div className="space-y-16">
           <MovieCarousel
+            title="🔥 Popular Movies"
+            subtitle="What's trending in the world of cinema."
+            endpoint="/api/movies/popular"
+          />
+          <MovieCarousel
             title="⭐ Top Rated Movies"
             subtitle="The highest-rated movies on TMDb."
             endpoint="/api/movies/top-rated"
           />
+          <MovieCarousel
+            title="💥 Action Movies"
+            subtitle="Get your adrenaline pumping."
+            withGenres="28"
+            sortBy="popularity.desc"
+          />
+          <MovieCarousel
+            title="💖 Romance Movies"
+            subtitle="Fall in love with these stories."
+            withGenres="10749"
+            sortBy="popularity.desc"
+          />
            <MovieCarousel
-            title="🔥 Popular Movies"
-            subtitle="What's trending in the world of cinema."
-            endpoint="/api/movies/popular"
+            title="😂 Comedy Movies"
+            subtitle="Have a laugh with these picks."
+            withGenres="35"
+            sortBy="popularity.desc"
+          />
+           <MovieCarousel
+            title="😱 Horror Movies"
+            subtitle="Dare to watch these scary films."
+            withGenres="27"
+            sortBy="popularity.desc"
           />
           <MovieCarousel
             title="🎬 Upcoming Movies"
