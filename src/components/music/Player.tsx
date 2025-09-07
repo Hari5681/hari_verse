@@ -166,15 +166,17 @@ export function Player() {
                   >
                     <SkipForward size={20} />
                   </button>
-                  <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        stopPlayer();
-                      }}
-                      className="text-muted-foreground transition-colors hover:text-foreground ml-2"
-                    >
-                      <X size={20} />
-                    </button>
+                  {!isPlaying && (
+                    <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          stopPlayer();
+                        }}
+                        className="text-muted-foreground transition-colors hover:text-foreground ml-2"
+                      >
+                        <X size={20} />
+                      </button>
+                  )}
                 </div>
               </div>
             </div>
