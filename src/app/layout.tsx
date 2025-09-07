@@ -10,6 +10,7 @@ import { MusicPlayerProvider, useMusicPlayer } from '@/context/MusicPlayerContex
 import { GlobalPlayer } from '@/components/music/GlobalPlayer';
 import { useEffect } from 'react';
 import { Footer } from '@/components/common/Footer';
+import { cn } from '@/lib/utils';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -57,10 +58,11 @@ function MainContent({ children }: { children: React.ReactNode }) {
         color="hsl(var(--dynamic-primary-h) var(--dynamic-primary-s) var(--dynamic-primary-l))"
         refresh
       />
-      <Header />
-      <main className="relative z-10 flex-grow">{children}</main>
+      <div className={cn('flex-grow', { 'pb-16': currentSong })}>
+        <Header />
+        <main className="relative z-10">{children}</main>
+      </div>
       <GlobalPlayer isMusicPage={isMusicPage} />
-      {currentSong && <div className="h-16" />}
       <Footer />
       <Toaster />
     </div>
