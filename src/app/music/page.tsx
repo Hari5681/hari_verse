@@ -186,7 +186,7 @@ export default function MusicPage() {
                     <h2 className="text-2xl font-bold mb-4">Top Picks</h2>
                      {topPicks.length > 0 ? (
                         <Carousel
-                            opts={{ align: "start", loop: topPicks.length > 5 }}
+                            opts={{ align: "start", loop: false }}
                             className="w-full"
                         >
                             <CarouselContent className="-ml-4">
@@ -217,7 +217,7 @@ export default function MusicPage() {
                     <section>
                         <h2 className="text-2xl font-bold mb-4">Artists</h2>
                          <Carousel 
-                            opts={{ align: "start", loop: artists.length > 5 }} 
+                            opts={{ align: "start", loop: false }} 
                             className="w-full"
                          >
                             <CarouselContent className="-ml-4">
@@ -244,7 +244,7 @@ export default function MusicPage() {
                 <section>
                     <h2 className="text-2xl font-bold mb-4">Languages</h2>
                      <Carousel 
-                        opts={{ align: "start", loop: languages.length > 4 }} 
+                        opts={{ align: "start", loop: false }} 
                         className="w-full"
                      >
                         <CarouselContent className="-ml-4">

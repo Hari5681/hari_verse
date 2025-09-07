@@ -93,7 +93,7 @@ export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, wit
         )}
 
         {!loading && !error && movies.length > 0 && (
-            <Carousel opts={{ align: "start", loop: movies.length > 6 }} className="w-full">
+            <Carousel opts={{ align: "start", loop: false }} className="w-full">
                 <CarouselContent className="-ml-4">
                     {movies.map((movie) => (
                         <CarouselItem key={movie.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6 pl-4">
