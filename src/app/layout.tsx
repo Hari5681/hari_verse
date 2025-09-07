@@ -9,6 +9,7 @@ import { Particles } from '@/components/common/Particles';
 import { MusicPlayerProvider, useMusicPlayer } from '@/context/MusicPlayerContext';
 import { GlobalPlayer } from '@/components/music/GlobalPlayer';
 import { useEffect } from 'react';
+import { Footer } from '@/components/common/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -48,7 +49,7 @@ function MainContent({ children }: { children: React.ReactNode }) {
   }, [theme]);
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen flex flex-col">
       <Particles
         className="absolute inset-0 -z-10"
         quantity={100}
@@ -57,8 +58,9 @@ function MainContent({ children }: { children: React.ReactNode }) {
         refresh
       />
       <Header />
-      <main className="relative z-10 pb-16">{children}</main>
+      <main className="relative z-10 flex-grow pb-16">{children}</main>
       <GlobalPlayer isMusicPage={isMusicPage} />
+      <Footer />
       <Toaster />
     </div>
   );
