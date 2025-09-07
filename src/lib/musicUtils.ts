@@ -3,7 +3,8 @@
 
 
 
-const artistAssets: Record<string, { profile?: string; banners?: string[] }> = {
+
+const artistAssets: Record<string, { profile?: string; banner?: string }> = {
     'lana del rey': {
         profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'
     },
@@ -12,12 +13,7 @@ const artistAssets: Record<string, { profile?: string; banners?: string[] }> = {
     },
     'xxx tentacion': {
         profile: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/images.jpg',
-        banners: [
-            'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%202.jpg',
-            'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%203.jpg',
-            'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%204.jpg',
-            'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%204.jpg',
-        ]
+        banner: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/xxx%20tentacion/banner%203.jpg',
     }
 };
 
@@ -115,7 +111,7 @@ export const getArtistImageUrl = (artistName: string): string => {
 
 
 /**
- * Gets an image URL for a song. For specific artists, it may return a random banner.
+ * Gets an image URL for a song. For specific artists, it may return a specific banner.
  * Otherwise, it returns a placeholder image based on the song's key.
  * @param artistName The name of the song's artist.
  * @param songKey A unique key for the song.
@@ -126,9 +122,8 @@ export const getSongImageUrl = (artistName: string, songKey: string, size: numbe
     const lowerArtistName = artistName.toLowerCase();
     const assets = artistAssets[lowerArtistName];
     
-    if (assets?.banners && assets.banners.length > 0) {
-        const randomIndex = Math.floor(Math.random() * assets.banners.length);
-        return assets.banners[randomIndex];
+    if (assets?.banner) {
+        return assets.banner;
     }
     
     return `https://picsum.photos/seed/${songKey}/${size}/${size}`;
