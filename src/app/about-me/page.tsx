@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { User, Github, Linkedin, Instagram, Mail } from 'lucide-react';
+import { User, Github, Linkedin, Instagram, Mail, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
@@ -14,21 +14,36 @@ export default function AboutMePage() {
           </div>
           <CardTitle className="text-3xl font-bold">Hari Krishna</CardTitle>
           <CardDescription className="text-md text-muted-foreground">
-            3rd-year B.Tech Student | Aspiring Developer
+            App & Web Developer
           </CardDescription>
         </CardHeader>
         <CardContent className="text-left text-base text-foreground/80 space-y-4 px-8 pb-8">
           <p>
-            Hi, I’m Hari Krishna, a 3rd-year B.Tech student in Electronics and Communication Engineering at Chaitanya Engineering College, Kommadi. I’m passionate about technology, coding, animations, and app development.
+            Hi, I’m Hari Krishna, a 3rd-year ECE student at Chaitanya Engineering College, Kommadi. I’m an App & Web Developer who loves building creative digital experiences.
           </p>
           <p>
-            Currently, I’m building projects like HariVerse, a creative portfolio app that blends design, music, and interactive features. I love experimenting with Android Studio, Jetpack Compose, and modern UI/UX designs.
+            I’ve been working on projects like HariVerse, where I combine Android app development, web design, animations, and AI tools to create something unique.
           </p>
+          <div>
+            <h4 className="font-semibold text-foreground mb-2">💡 My interests:</h4>
+            <ul className="list-none space-y-2 text-foreground/80">
+              <li>📱 App Development (Android Studio, Jetpack Compose, Kotlin)</li>
+              <li>🌐 Web Development (creative portfolio sites, interactive designs)</li>
+              <li>🤖 AI Tools & APIs</li>
+              <li>🎶 Music-based apps & platforms</li>
+            </ul>
+          </div>
           <p>
-            Beyond coding, I’m curious about AI tools, music apps, and 3D animation websites. My goal is to become a skilled developer and create apps that are both useful and fun for people.
+            My goal is to keep learning, experimenting, and developing apps & websites that are not just functional but also fun to use.
           </p>
         </CardContent>
         <CardFooter className="flex justify-center gap-4 border-t border-border/20 pt-6">
+            <Link href="https://www.hariportfolio.xyz" target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" size="icon">
+                <Globe className="h-5 w-5" />
+                <span className="sr-only">Portfolio</span>
+              </Button>
+            </Link>
             <Link href="https://github.com/Hari5681" target="_blank" rel="noopener noreferrer">
               <Button variant="outline" size="icon">
                 <Github className="h-5 w-5" />
