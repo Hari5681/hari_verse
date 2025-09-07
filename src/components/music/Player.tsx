@@ -93,7 +93,7 @@ export function Player() {
                   data-ai-hint="song album cover"
                 />
                 <div className="overflow-hidden whitespace-nowrap min-w-0">
-                  <p className={cn("font-bold text-sm", isMiniTitleLong && "animate-marquee-delayed", "truncate")}>{songTitle}</p>
+                  <p className={cn("font-bold text-sm", isMiniTitleLong && "animate-marquee")}>{songTitle}</p>
                   <p className="truncate text-xs text-muted-foreground">
                     {currentSong.artist}
                   </p>
@@ -187,100 +187,108 @@ export function Player() {
 
       <DialogContent className="h-full max-h-full w-full max-w-full !rounded-none !border-none p-0 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:slide-out-to-bottom-full data-[state=open]:slide-in-from-bottom-full transition-colors duration-500" style={{ background: theme.gradient }}>
         <DialogTitle className="sr-only">Now Playing: {songTitle}</DialogTitle>
-        <div className="flex h-full flex-col p-4 pt-8 sm:p-6 overflow-x-hidden">
-          <header className="flex items-center justify-between flex-shrink-0">
+        
+        <Image
+          src={imageUrl}
+          alt={`Background for ${songTitle}`}
+          fill
+          className="object-cover object-center opacity-20 blur-2xl"
+        />
+
+        <div className="relative flex h-full flex-col justify-between p-6 pt-8 sm:p-8">
+          <header className="flex items-center justify-between">
             <DialogClose>
               <ChevronDown className="h-6 w-6 opacity-70" />
             </DialogClose>
             <div className="relative w-full max-w-xs overflow-hidden">
-              <p className={`px-4 font-semibold text-center whitespace-nowrap ${isTitleLong ? 'animate-marquee-delayed' : 'truncate'}`}>
+              <p className={`px-4 font-semibold text-center whitespace-nowrap ${isTitleLong ? 'animate-marquee' : 'truncate'}`}>
                 {songTitle}
               </p>
             </div>
-            <div className="w-6" /> 
+             <button onClick={() => setIsLiked(!isLiked)} className="ml-4 flex-shrink-0">
+                <Heart
+                    className={`h-5 w-5 sm:h-6 sm:w-6 transition-all ${
+                    isLiked
+                        ? 'fill-green-500 text-green-500'
+                        : 'text-muted-foreground'
+                    }`}
+                />
+            </button>
           </header>
 
-          <main className="flex flex-1 flex-col items-center justify-center gap-4 text-center px-4 animate-fade-in-up">
-            <div className="w-full max-w-xs sm:max-w-md">
+          <main className="flex-1 flex flex-col items-center justify-center py-6 animate-fade-in-up">
+            <div className="w-full max-w-[70vw] sm:max-w-xs">
               <Image
                 src={imageUrl}
                 alt={currentSong.title}
                 width={500}
                 height={500}
-                className="aspect-square w-full max-w-[70vw] sm:max-w-md mx-auto rounded-lg shadow-2xl transition-transform duration-500 group-data-[state=open]:scale-100 animate-fade-in-up object-cover"
+                className="aspect-square w-full rounded-lg shadow-2xl animate-fade-in-up object-cover"
                 data-ai-hint="song album cover"
                 style={{ animationDelay: '200ms' }}
               />
-              <div className="flex items-center justify-between mt-6 sm:mt-8 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
-                <div className="text-left flex-1 overflow-hidden">
-                  <h2 className="text-xl font-bold sm:text-2xl truncate">
-                    {songTitle}
-                  </h2>
-                  <p className="text-sm text-muted-foreground truncate">{currentSong.artist}</p>
-                </div>
-                <button onClick={() => setIsLiked(!isLiked)} className="ml-4 flex-shrink-0">
-                  <Heart
-                    className={`h-5 w-5 sm:h-6 sm:w-6 transition-all ${
-                      isLiked
-                        ? 'fill-green-500 text-green-500'
-                        : 'text-muted-foreground'
-                    }`}
-                  />
-                </button>
-              </div>
-
-              <div className="mt-4 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
-                <Slider
-                  value={[progress]}
-                  max={duration || 1}
-                  step={1}
-                  onValueChange={handleSeek}
-                  className="w-full"
-                />
-                <div className="mt-2 flex justify-between text-xs text-muted-foreground">
-                  <span>{formatDuration(progress)}</span>
-                  <span>{formatDuration(duration)}</span>
-                </div>
-              </div>
-
-              <div className="mt-4 flex items-center justify-around animate-fade-in-up" style={{ animationDelay: '500ms' }}>
-                <button 
-                  onClick={handleShuffleClick}
-                  className={cn("text-muted-foreground transition-colors hover:text-foreground", {"text-primary": isShuffle})}
-                >
-                  <Shuffle className="h-5 w-5" />
-                </button>
-                <button
-                  onClick={playPrev}
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <SkipBack size={32} />
-                </button>
-                <button
-                  onClick={togglePlay}
-                  className="rounded-full bg-white p-4 text-background"
-                >
-                  {isPlaying ? (
-                    <PauseIcon className="h-8 w-8" />
-                  ) : (
-                    <PlayIcon className="h-8 w-8" />
-                  )}
-                </button>
-                <button
-                  onClick={playNext}
-                  className="text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <SkipForward size={32} />
-                </button>
-                <button 
-                  onClick={handleRepeatClick}
-                  className={cn("text-muted-foreground transition-colors hover:text-foreground", {"text-primary": isRepeat})}
-                >
-                  <Repeat className="h-5 w-5" />
-                </button>
-              </div>
             </div>
           </main>
+
+          <footer className="animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+            <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold sm:text-3xl truncate">
+                    {songTitle}
+                </h2>
+                <p className="text-sm text-muted-foreground truncate">{currentSong.artist}</p>
+            </div>
+
+            <div className="space-y-2">
+              <Slider
+                value={[progress]}
+                max={duration || 1}
+                step={1}
+                onValueChange={handleSeek}
+                className="w-full"
+              />
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>{formatDuration(progress)}</span>
+                <span>{formatDuration(duration)}</span>
+              </div>
+            </div>
+
+            <div className="mt-4 flex items-center justify-around">
+              <button 
+                onClick={handleShuffleClick}
+                className={cn("text-muted-foreground transition-colors hover:text-foreground", {"text-primary": isShuffle})}
+              >
+                <Shuffle className="h-5 w-5" />
+              </button>
+              <button
+                onClick={playPrev}
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <SkipBack size={32} />
+              </button>
+              <button
+                onClick={togglePlay}
+                className="rounded-full bg-white p-4 text-background"
+              >
+                {isPlaying ? (
+                  <PauseIcon className="h-8 w-8" />
+                ) : (
+                  <PlayIcon className="h-8 w-8" />
+                )}
+              </button>
+              <button
+                onClick={playNext}
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <SkipForward size={32} />
+              </button>
+              <button 
+                onClick={handleRepeatClick}
+                className={cn("text-muted-foreground transition-colors hover:text-foreground", {"text-primary": isRepeat})}
+              >
+                <Repeat className="h-5 w-5" />
+              </button>
+            </div>
+          </footer>
         </div>
       </DialogContent>
     </Dialog>
