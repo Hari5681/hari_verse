@@ -127,15 +127,24 @@ export default function ArtistPage() {
   const artistImageUrl = getArtistImageUrl(artistName);
 
   const backgroundStyle = {
-    backgroundImage: `${artistTheme.gradient}, url(${artistWallpaperUrl})`,
+    backgroundImage: `url(${artistWallpaperUrl})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    backgroundBlendMode: 'overlay',
+    backgroundRepeat: 'no-repeat',
   };
 
   return (
-    <div className="min-h-screen p-4 pt-20 pb-40 transition-colors duration-500" style={backgroundStyle}>
-      <div className="w-full max-w-7xl mx-auto">
+    <div className="relative min-h-screen p-4 pt-20 pb-40 transition-colors duration-500">
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={backgroundStyle}
+        ></div>
+        <div 
+          className="absolute inset-0"
+          style={{ background: artistTheme.gradient, backgroundBlendMode: 'overlay' }}
+        ></div>
+
+      <div className="relative w-full max-w-7xl mx-auto">
         <header className="relative flex flex-col items-center text-center pt-8">
             <Button variant="ghost" size="icon" className="absolute top-4 left-0 md:left-4" onClick={() => router.push('/music')}>
                 <ArrowLeft className="h-6 w-6" />
@@ -148,7 +157,7 @@ export default function ArtistPage() {
                 data-ai-hint="artist portrait"
                 className="rounded-full shadow-2xl w-32 h-32 md:w-48 md:h-48 object-cover"
             />
-            <h1 className="text-4xl md:text-7xl font-bold mt-4">{artistName}</h1>
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mt-4">{artistName}</h1>
             <p className="text-muted-foreground mt-1 md:mt-2">Digital Creator</p>
             <div className="mt-4 flex items-center justify-center gap-2 md:gap-4 w-full flex-wrap">
                 <Button 

@@ -93,7 +93,7 @@ export function Player() {
                   data-ai-hint="song album cover"
                 />
                 <div className="overflow-hidden whitespace-nowrap min-w-0">
-                  <p className={cn("font-bold text-sm", isMiniTitleLong && "md:animate-marquee-delayed", "truncate")}>{songTitle}</p>
+                  <p className={cn("font-bold text-sm", isMiniTitleLong && "animate-marquee-delayed", "truncate")}>{songTitle}</p>
                   <p className="truncate text-xs text-muted-foreground">
                     {currentSong.artist}
                   </p>
