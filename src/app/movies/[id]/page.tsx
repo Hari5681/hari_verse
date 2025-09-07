@@ -208,10 +208,6 @@ export default function MovieDetailPage() {
                         <p className="text-xs text-muted-foreground">{movie.vote_count.toLocaleString()}</p>
                     </div>
                 </div>
-                 <div className="h-8 w-px bg-border" />
-                 <Button variant="ghost" className="flex items-center gap-2 text-lg">
-                    <Star className="h-6 w-6" /> Rate
-                 </Button>
             </section>
             
             <Separator />
