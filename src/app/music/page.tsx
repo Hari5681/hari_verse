@@ -25,6 +25,7 @@ interface Artist {
 }
 
 const getArtistFromTitle = (title: string): string => {
+  // If the title contains a path separator, the artist is the first part (folder name)
   const parts = title.split('/');
   if (parts.length > 1) {
       const artistCandidate = parts[0].trim();
@@ -32,6 +33,7 @@ const getArtistFromTitle = (title: string): string => {
       return artistCandidate.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   }
   
+  // Otherwise, try to get it from the filename "Artist - Song" format
   const fileNameParts = (parts[0] || '').split(' - ');
   if (fileNameParts.length > 1) {
       return fileNameParts[0].trim();
@@ -97,7 +99,8 @@ export default function MusicPage() {
                 return acc;
             }, [] as Artist[]);
 
-            if (!uniqueArtists.find(a => a.name === 'Lana Del Rey') && songsWithArtists.some(s => s.artist === 'Lana Del Rey')) {
+            // Ensure Lana Del Rey is in the list if she has songs
+            if (!uniqueArtists.find(a => a.name.toLowerCase() === 'lana del rey') && songsWithArtists.some(s => s.artist.toLowerCase() === 'lana del rey')) {
                  uniqueArtists.unshift({
                     name: 'Lana Del Rey',
                     imageUrl: 'https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/lena%20del%20rey/lena%20del%20rey%20profile.jpg'

@@ -18,6 +18,7 @@ interface Song {
 }
 
 const getArtistFromTitle = (title: string): string => {
+    // If the title contains a path separator, the artist is the first part (folder name)
     const parts = title.split('/');
     if (parts.length > 1) {
         const artistCandidate = parts[0].trim();
@@ -25,6 +26,7 @@ const getArtistFromTitle = (title: string): string => {
         return artistCandidate.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     }
     
+    // Otherwise, try to get it from the filename "Artist - Song" format
     const fileNameParts = (parts[0] || '').split(' - ');
     if (fileNameParts.length > 1) {
         return fileNameParts[0].trim();
@@ -37,11 +39,12 @@ const getArtistFromTitle = (title: string): string => {
 const cleanSongTitle = (title: string, artist: string): string => {
     let cleanTitle = title;
     
-    // Get just the filename
+    // Get just the filename if it's in a folder
     if (cleanTitle.includes('/')) {
         cleanTitle = cleanTitle.split('/').pop() || '';
     }
 
+    // Remove the artist prefix if it exists, e.g., "Lana Del Rey - "
     const artistPrefix = `${artist} - `;
     if (cleanTitle.toLowerCase().startsWith(artistPrefix.toLowerCase())) {
         cleanTitle = cleanTitle.substring(artistPrefix.length);
