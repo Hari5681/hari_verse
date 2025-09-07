@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Star, AlertTriangle } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
@@ -85,7 +86,9 @@ export function MovieCarousel({ title, subtitle, language, sortBy, withKeywords 
                 <CarouselContent className="-ml-4">
                     {movies.map((movie) => (
                         <CarouselItem key={movie.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-4">
-                            <MovieCard movie={movie} />
+                            <Link href={`/movies/${movie.id}`} passHref>
+                                <MovieCard movie={movie} />
+                            </Link>
                         </CarouselItem>
                     ))}
                 </CarouselContent>
