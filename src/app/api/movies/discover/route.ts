@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
   const language = searchParams.get('language');
   const sortBy = searchParams.get('sort_by') || 'vote_average.desc';
   const withKeywords = searchParams.get('with_keywords');
+  const withGenres = searchParams.get('with_genres');
 
   // Construct the URL for the TMDb API
   const url = new URL('https://api.themoviedb.org/3/discover/movie');
@@ -25,7 +26,7 @@ export async function GET(req: NextRequest) {
   url.searchParams.append('include_video', 'false');
   url.searchParams.append('page', '1');
   
-  if (sortBy === 'vote_average.desc') {
+  if (sortBy.includes('vote_average')) {
     url.searchParams.append('vote_count.gte', '1000'); // Ensure movies have a decent number of votes
   }
   
@@ -35,6 +36,10 @@ export async function GET(req: NextRequest) {
   
   if (withKeywords) {
     url.searchParams.append('with_keywords', withKeywords);
+  }
+
+  if (withGenres) {
+    url.searchParams.append('with_genres', withGenres);
   }
 
   try {

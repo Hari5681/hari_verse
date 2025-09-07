@@ -21,9 +21,10 @@ interface MovieCarouselProps {
     language?: string;
     sortBy?: string;
     withKeywords?: string;
+    withGenres?: string;
 }
 
-export function MovieCarousel({ title, subtitle, language, sortBy, withKeywords }: MovieCarouselProps) {
+export function MovieCarousel({ title, subtitle, language, sortBy, withKeywords, withGenres }: MovieCarouselProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -36,6 +37,7 @@ export function MovieCarousel({ title, subtitle, language, sortBy, withKeywords 
         if (language) params.append('language', language);
         if (sortBy) params.append('sort_by', sortBy);
         if (withKeywords) params.append('with_keywords', withKeywords);
+        if (withGenres) params.append('with_genres', withGenres);
 
         const response = await fetch(`/api/movies/discover?${params.toString()}`);
         const data = await response.json();
@@ -55,17 +57,17 @@ export function MovieCarousel({ title, subtitle, language, sortBy, withKeywords 
     };
 
     fetchMovies();
-  }, [language, sortBy, withKeywords]);
+  }, [language, sortBy, withKeywords, withGenres]);
 
   return (
     <section>
-        <h2 className="text-2xl font-bold">{title}</h2>
-        <p className="text-muted-foreground mb-4">{subtitle}</p>
+        <h2 className="text-3xl font-bold">{title}</h2>
+        <p className="text-muted-foreground mb-6">{subtitle}</p>
 
         {loading && (
              <div className="flex space-x-4">
-                {Array.from({ length: 5 }).map((_, index) => (
-                <div key={index} className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/5 shrink-0">
+                {Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/6 shrink-0">
                     <div className="animate-pulse bg-muted/50 rounded-lg aspect-[2/3]"></div>
                 </div>
                 ))}
@@ -82,10 +84,10 @@ export function MovieCarousel({ title, subtitle, language, sortBy, withKeywords 
         )}
 
         {!loading && !error && movies.length > 0 && (
-            <Carousel opts={{ align: "start", loop: movies.length > 5 }} className="w-full">
+            <Carousel opts={{ align: "start", loop: movies.length > 6 }} className="w-full">
                 <CarouselContent className="-ml-4">
                     {movies.map((movie) => (
-                        <CarouselItem key={movie.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 pl-4">
+                        <CarouselItem key={movie.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6 pl-4">
                             <Link href={`/movies/${movie.id}`} passHref>
                                 <MovieCard movie={movie} />
                             </Link>
@@ -118,15 +120,17 @@ function MovieCard({ movie }: { movie: Movie }) {
             alt={movie.title}
             fill
             className="object-cover"
-            sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 20vw"
+            sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, (max-width: 1280px) 20vw, 16vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-          <div className="absolute bottom-0 left-0 p-3 text-white">
+          <div className="absolute bottom-0 left-0 p-3 text-white w-full">
             <h3 className="font-bold text-sm sm:text-base truncate">{movie.title}</h3>
-            <div className="flex items-center gap-1 mt-1">
-              <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-              <span className="text-xs font-semibold">{movie.vote_average.toFixed(1)}</span>
-            </div>
+            {movie.vote_average > 0 && (
+                <div className="flex items-center gap-1 mt-1">
+                <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                <span className="text-xs font-semibold">{movie.vote_average.toFixed(1)}</span>
+                </div>
+            )}
           </div>
         </div>
       </CardContent>
