@@ -1,11 +1,15 @@
 
 'use client';
-import { usePathname } from 'next/navigation';
+
+import { useMusicPlayer } from '@/context/MusicPlayerContext';
 import { Player } from './Player';
 
 export function GlobalPlayer() {
-    const pathname = usePathname();
-    const isMusicPage = pathname.startsWith('/music');
+    const { currentSong } = useMusicPlayer();
 
+    if (!currentSong) {
+        return null;
+    }
+    
     return <Player />;
 }
