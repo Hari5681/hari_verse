@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={cn(inter.className, 'overflow-x-hidden')}>
         <MusicPlayerProvider>
           <MainContent>{children}</MainContent>
         </MusicPlayerProvider>
@@ -49,7 +49,7 @@ function MainContent({ children }: { children: React.ReactNode }) {
   }, [theme]);
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-x-hidden">
+    <div className="relative flex min-h-screen flex-col">
       <Particles
         className="absolute inset-0 -z-10"
         quantity={100}
