@@ -181,10 +181,10 @@ export default function MusicPage() {
             <div className="space-y-12">
                 <header className="text-center animate-fade-in-down">
                     <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-primary">
-                        HariVerse Music
+                        Music Discovery
                     </h1>
                     <p className="mt-3 text-lg text-muted-foreground">
-                        Stream. Groove. Repeat.
+                        Stream your favorite tracks, explore trending hits, and find new artists to vibe with.
                     </p>
                     <Separator className="my-12"/>
                 </header>
