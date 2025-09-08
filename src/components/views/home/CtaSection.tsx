@@ -34,7 +34,7 @@ export function CtaSection() {
     };
 
     return (
-        <section className="w-full py-16 sm:py-24 animate-fade-in-up">
+        <section className="w-full py-16 sm:py-24">
             <div className="container mx-auto max-w-2xl text-center">
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-4 animate-pulse-glow">
                     <Mail className="h-8 w-8 text-primary" />

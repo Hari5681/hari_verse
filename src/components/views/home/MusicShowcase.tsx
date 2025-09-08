@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 export function MusicShowcase() {
     return (
-        <section className="animate-fade-in-up container mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
                 <h2 className="text-4xl font-bold sm:text-5xl tracking-tight">
                     <span className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
