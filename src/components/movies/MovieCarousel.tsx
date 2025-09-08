@@ -75,14 +75,14 @@ export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, wit
   const emoji = match ? match[0] : '';
   const textTitle = title.replace(emojiRegex, '').trim();
 
-  const shimmerClass = "animate-shimmer bg-gradient-to-r from-foreground via-muted to-foreground bg-[length:200%_100%] bg-clip-text text-transparent";
+  const shimmerClass = "animate-shimmer bg-gradient-to-r from-foreground via-muted-foreground to-foreground bg-[length:200%_100%] bg-clip-text text-transparent";
 
   return (
-    <section className="animate-fade-in-up">
+    <section>
         {hasTitle && (
-            <div className="mb-6">
+            <div className="mb-6 px-4">
                 <h2 className="text-3xl font-bold">
-                    {emoji && <span className="inline-block animate-pulse-glow mr-2">{emoji}</span>}
+                    {emoji && <span className="inline-block mr-2">{emoji}</span>}
                     <span className={shimmerClass}>
                         {textTitle}
                     </span>
@@ -92,9 +92,9 @@ export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, wit
         )}
 
         {loading && (
-             <div className="flex space-x-4">
+             <div className="flex space-x-4 pl-4">
                 {Array.from({ length: 6 }).map((_, index) => (
-                <div key={index} className="w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/6 shrink-0">
+                <div key={index} className="w-2/5 sm:w-1/4 md:w-1/5 lg:w-1/6 shrink-0">
                     <div className="animate-pulse bg-muted/50 rounded-lg aspect-[2/3]"></div>
                 </div>
                 ))}
@@ -102,7 +102,7 @@ export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, wit
         )}
 
         {error && (
-          <div className="flex flex-col items-center justify-center rounded-lg bg-destructive/10 p-6 text-center text-destructive-foreground">
+          <div className="flex flex-col items-center justify-center rounded-lg bg-destructive/10 p-6 text-center text-destructive-foreground mx-4">
             <AlertTriangle className="h-10 w-10 text-destructive" />
             <h3 className="mt-4 text-lg font-semibold">An Error Occurred</h3>
             <p className="mt-1 text-sm">{error}</p>
@@ -114,20 +114,20 @@ export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, wit
             <Carousel opts={{ align: "start", loop: false }} className="w-full">
                 <CarouselContent className="-ml-4">
                     {movies.map((movie) => (
-                        <CarouselItem key={movie.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6 pl-4">
+                        <CarouselItem key={movie.id} className="basis-2/5 sm:basis-1/3 md:basis-1/4 lg:basis-1/6 pl-4">
                             <Link href={`/movies/${movie.id}`} passHref>
                                 <MovieCard movie={movie} />
                             </Link>
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-                <CarouselPrevious className="transition-opacity disabled:opacity-0" />
-                <CarouselNext className="transition-opacity disabled:opacity-0" />
+                <CarouselPrevious className="hidden sm:flex transition-opacity disabled:opacity-0" />
+                <CarouselNext className="hidden sm:flex transition-opacity disabled:opacity-0" />
             </Carousel>
         )}
 
         {!loading && !error && movies.length === 0 && (
-             <p className="text-muted-foreground">No movies found for this category.</p>
+             <p className="text-muted-foreground px-4">No movies found for this category.</p>
         )}
     </section>
   );
@@ -147,7 +147,7 @@ function MovieCard({ movie }: { movie: Movie }) {
             alt={movie.title}
             fill
             className="object-cover"
-            sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, (max-width: 1280px) 20vw, 16vw"
+            sizes="(max-width: 640px) 40vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, (max-width: 1280px) 20vw, 16vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
           <div className="absolute bottom-0 left-0 p-3 text-white w-full">

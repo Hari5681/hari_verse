@@ -35,7 +35,7 @@ const featuredTools = [
 
 export function FeaturedAiTools() {
   return (
-    <section className="animate-fade-in-up container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
             <h2 className="text-4xl font-bold sm:text-5xl tracking-tight">
                 <span className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
@@ -46,18 +46,18 @@ export function FeaturedAiTools() {
                Boost your creativity and productivity with a curated collection of powerful AI tools.
             </p>
         </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {featuredTools.map((tool, index) => (
-            <Card key={tool.name} className="group h-full flex flex-col justify-between p-6 bg-card/50 hover:bg-card transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20">
+            <Card key={tool.name} className="group h-full flex flex-col justify-between p-4 sm:p-6 bg-card/50 hover:bg-card transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20">
               <div>
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20">
+                <div className="mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-primary/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20">
                   {tool.icon}
                 </div>
                 <CardHeader className="p-0">
-                  <CardTitle className="text-xl font-semibold">{tool.name}</CardTitle>
+                  <CardTitle className="text-lg sm:text-xl font-semibold">{tool.name}</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0 pt-2">
-                  <CardDescription>{tool.description}</CardDescription>
+                  <CardDescription className="text-sm sm:text-base">{tool.description}</CardDescription>
                 </CardContent>
               </div>
             </Card>
