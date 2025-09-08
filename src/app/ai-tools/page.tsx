@@ -134,7 +134,7 @@ export default function AiToolsPage() {
                 <section key={category.category} className="animate-fade-in-up">
                   <div className="flex items-center gap-3 mb-4">
                     {category.icon}
-                    <h2 className="text-2xl font-bold">{category.category}</h2>
+                    <h2 className="text-xl sm:text-2xl font-bold">{category.category}</h2>
                   </div>
                   <Separator className="mb-6 bg-border/20"/>
                    <Carousel
