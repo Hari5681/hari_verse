@@ -146,7 +146,7 @@ export default function AiToolsPage() {
                     >
                       <CarouselContent className="-ml-4">
                         {category.tools.map((tool, index) => (
-                          <CarouselItem key={tool.name} className="basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/3 xl:basis-1/4 pl-4 pb-4">
+                          <CarouselItem key={tool.name} className="basis-1/2 sm:basis-1/2 md:basis-1/2 lg:basis-1/3 xl:basis-1/4 pl-4 pb-4">
                             <AIToolCard tool={{...tool, category: category.category}} index={index} />
                           </CarouselItem>
                         ))}
