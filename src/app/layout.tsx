@@ -73,12 +73,15 @@ function MainContent({ children }: { children: React.ReactNode }) {
       
       {!isRedirectPage && <Header />}
       
-      <main className={cn("relative z-10 flex-grow", { 'pb-16': currentSong && !isRedirectPage })}>
+      <main className={cn("relative z-10 flex-grow", { 'pb-16': !isRedirectPage })}>
         {children}
       </main>
+      
+      <div className="relative z-10">
+        {!isRedirectPage && !currentSong && <Footer />}
+        {!isRedirectPage && <GlobalPlayer />}
+      </div>
 
-      {!isRedirectPage && !currentSong && <Footer />}
-      {!isRedirectPage && <GlobalPlayer />}
       <Toaster />
     </div>
   );
