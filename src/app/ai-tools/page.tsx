@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { SlidersHorizontal, Search, Check, X } from 'lucide-react';
 import { toolCategories } from '@/lib/ai-tools';
 import { AIToolCard } from '@/components/ai/AIToolCard';
-import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogClose, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogClose, DialogFooter } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
