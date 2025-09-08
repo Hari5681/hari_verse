@@ -130,7 +130,7 @@ export default function AiToolsPage() {
               {filteredCategories.map(category => (
                 <section key={category.category} className="animate-fade-in-up">
                   <div className="flex items-center gap-3 mb-4">
-                    {category.icon}
+                    <div className="text-primary w-6 h-6">{category.icon}</div>
                     <h2 className="text-xl sm:text-2xl font-bold">{category.category}</h2>
                   </div>
                   <Separator className="mb-6 bg-border/20"/>

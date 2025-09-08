@@ -17,7 +17,7 @@ export interface AIToolCategory {
 export const toolCategories: AIToolCategory[] = [
   {
     category: 'Conversational AI / Chatbots',
-    icon: <MessageSquare className="h-5 w-5" />,
+    icon: <MessageSquare className="w-full h-full" />,
     tools: [
       { name: 'ChatGPT (OpenAI)', description: 'Conversational AI, coding help, and creativity.', link: 'https://openai.com/chatgpt' },
       { name: 'Claude (Anthropic)', description: 'Reasoning-focused AI assistant.', link: 'https://claude.ai/' },
@@ -27,7 +27,7 @@ export const toolCategories: AIToolCategory[] = [
   },
   {
     category: 'Image Generation & Design',
-    icon: <Palette className="h-5 w-5" />,
+    icon: <Palette className="w-full h-full" />,
     tools: [
       { name: 'MidJourney', description: 'Artistic AI image creation.', link: 'https://www.midjourney.com/' },
       { name: 'Stable Diffusion', description: 'Open-source image generation.', link: 'https://stability.ai/stable-diffusion' },
@@ -38,7 +38,7 @@ export const toolCategories: AIToolCategory[] = [
   },
   {
     category: 'Developer Tools & Coding',
-    icon: <Code className="h-5 w-5" />,
+    icon: <Code className="w-full h-full" />,
     tools: [
       { name: 'GitHub Copilot', description: 'Code suggestions in IDE.', link: 'https://github.com/features/copilot' },
       { name: 'Replit Ghostwriter', description: 'AI coding + instant hosting.', link: 'https://replit.com/ghostwriter' },
@@ -48,7 +48,7 @@ export const toolCategories: AIToolCategory[] = [
   },
   {
     category: 'Audio & Video Editing',
-    icon: <Clapperboard className="h-5 w-5" />,
+    icon: <Clapperboard className="w-full h-full" />,
     tools: [
       { name: 'Descript', description: 'Audio/video editing + transcription.', link: 'https://www.descript.com/' },
       { name: 'Runway ML', description: 'Video editing, text-to-video.', link: 'https://runwayml.com/' },
@@ -59,7 +59,7 @@ export const toolCategories: AIToolCategory[] = [
   },
   {
     category: 'Research & Knowledge',
-    icon: <Search className="h-5 w-5" />,
+    icon: <Search className="w-full h-full" />,
     tools: [
       { name: 'NotebookLM (Google)', description: 'Summarize & analyze PDFs, docs.', link: 'https://notebooklm.google.com/' },
       { name: 'Elicit', description: 'AI for academic research.', link: 'https://elicit.com/' },
@@ -69,7 +69,7 @@ export const toolCategories: AIToolCategory[] = [
   },
   {
     category: 'Writing & Copywriting',
-    icon: <PenTool className="h-5 w-5" />,
+    icon: <PenTool className="w-full h-full" />,
     tools: [
       { name: 'Jasper', description: 'AI copywriting for ads & blogs.', link: 'https://www.jasper.ai/' },
       { name: 'Copy.ai', description: 'AI for marketing content.', link: 'https://www.copy.ai/' },
@@ -79,7 +79,7 @@ export const toolCategories: AIToolCategory[] = [
   },
   {
     category: 'Productivity & Workflow',
-    icon: <BrainCircuit className="h-5 w-5" />,
+    icon: <BrainCircuit className="w-full h-full" />,
     tools: [
       { name: 'Notion AI', description: 'Notes, docs, and summaries.', link: 'https://www.notion.so/product/ai' },
       { name: 'Coda AI', description: 'Automates tasks in documents.', link: 'https://coda.io/ai' },
@@ -89,7 +89,7 @@ export const toolCategories: AIToolCategory[] = [
   },
   {
     category: 'Data & Analytics',
-    icon: <LineChart className="h-5 w-5" />,
+    icon: <LineChart className="w-full h-full" />,
     tools: [
       { name: 'ChatGPT (Advanced Data Analysis)', description: 'Run code, analyze data.', link: 'https://openai.com/blog/chatgpt-can-now-see-hear-and-speak' },
       { name: 'Tableau + AI', description: 'Smart dashboards with AI insights.', link: 'https://www.tableau.com/products/einstein-discovery' },
@@ -99,7 +99,7 @@ export const toolCategories: AIToolCategory[] = [
   },
     {
     category: 'Music & Sound',
-    icon: <Music className="h-5 w-5" />,
+    icon: <Music className="w-full h-full" />,
     tools: [
       { name: 'Soundraw', description: 'AI music generation.', link: 'https://soundraw.io/' },
       { name: 'Aiva', description: 'Compose soundtracks with AI.', link: 'https://www.aiva.ai/' },
@@ -108,7 +108,7 @@ export const toolCategories: AIToolCategory[] = [
   },
   {
     category: 'Business, Marketing & Sales',
-    icon: <Briefcase className="h-5 w-5" />,
+    icon: <Briefcase className="w-full h-full" />,
     tools: [
       { name: 'HubSpot AI', description: 'CRM + AI tools.', link: 'https://www.hubspot.com/artificial-intelligence' },
       { name: 'Ocoya', description: 'AI for content + scheduling.', link: 'https://www.ocoya.com/' },
@@ -117,7 +117,7 @@ export const toolCategories: AIToolCategory[] = [
   },
   {
     category: 'Education & Learning',
-    icon: <BookOpen className="h-5 w-5" />,
+    icon: <BookOpen className="w-full h-full" />,
     tools: [
       { name: 'Khanmigo (Khan Academy)', description: 'AI tutor.', link: 'https://www.khanacademy.org/khan-labs' },
       { name: 'QuillBot', description: 'Paraphrasing + grammar.', link: 'https://quillbot.com/' },
@@ -127,7 +127,7 @@ export const toolCategories: AIToolCategory[] = [
   },
   {
     category: 'Specialized / Other Tools',
-    icon: <Sparkles className="h-5 w-5" />,
+    icon: <Sparkles className="w-full h-full" />,
     tools: [
       { name: 'Runway Gen-2', description: 'Text-to-video.', link: 'https://runwayml.com/ai-magic-tools/gen-2/' },
       { name: 'Beautiful.ai', description: 'Smart AI presentations.', link: 'https://www.beautiful.ai/' },
