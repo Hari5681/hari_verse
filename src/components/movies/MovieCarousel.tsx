@@ -74,7 +74,11 @@ export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, wit
     <section className="animate-fade-in-up">
         {hasTitle && (
             <div className="mb-6">
-                <h2 className="text-3xl font-bold">{title}</h2>
+                <h2 className="text-3xl font-bold">
+                    <span className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
+                        {title}
+                    </span>
+                </h2>
                 <p className="text-muted-foreground">{subtitle}</p>
             </div>
         )}
