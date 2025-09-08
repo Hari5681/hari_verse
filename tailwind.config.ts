@@ -19,6 +19,9 @@ const config = {
       },
     },
     extend: {
+      backgroundImage: {
+          'ai-tools-bg': "url('https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/wallpapers/ai-tools-bg.jpg')",
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -127,6 +130,14 @@ const config = {
             "background-position": "calc(100% + var(--shimmer-width, 0px)) 0",
           },
         },
+        "pulse-glow": {
+          "0%, 100%": {
+            "box-shadow": "0 0 20px hsl(var(--primary)/0.2)",
+          },
+          "50%": {
+            "box-shadow": "0 0 35px hsl(var(--primary)/0.5)",
+          },
+        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -140,6 +151,7 @@ const config = {
         bar2: 'bar2 1.2s infinite ease-in-out',
         bar3: 'bar3 1.2s infinite ease-in-out',
         "shimmer": "shimmer 3s infinite linear",
+        "pulse-glow": "pulse-glow 3s infinite ease-in-out",
       },
     },
   },
@@ -147,3 +159,5 @@ const config = {
 } satisfies Config
 
 export default config
+
+    

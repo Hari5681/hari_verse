@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -70,4 +71,42 @@
     .text-shadow-lg {
         text-shadow: 0 4px 8px rgba(0,0,0,0.5);
     }
+    .bg-grid-pattern {
+        background-image: 
+          linear-gradient(to right, hsl(var(--primary) / 0.1) 1px, transparent 1px),
+          linear-gradient(to bottom, hsl(var(--primary) / 0.1) 1px, transparent 1px);
+        background-size: 3rem 3rem;
+    }
+    .shadow-inner-glow {
+        box-shadow: inset 0 0 10px hsl(var(--primary)/0.3);
+    }
+
+    .card-content {
+        transform-style: preserve-3d;
+    }
+    
+    .mouse-orb {
+        --mouse-x: -100px;
+        --mouse-y: -100px;
+        position: absolute;
+        top: var(--mouse-y);
+        left: var(--mouse-x);
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(
+            circle at center,
+            hsl(var(--primary) / 0.2) 0%,
+            transparent 70%
+        );
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .group:hover .mouse-orb {
+        opacity: 1;
+    }
 }
+
+    

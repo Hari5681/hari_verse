@@ -3,9 +3,11 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowUpRight, MessageSquare, Image as ImageIcon, Code, Bot, Mic, Video, BrainCircuit, LineChart, PenTool, Search, Palette, Star, Music, Briefcase, BookOpen, Sparkles, Clapperboard } from 'lucide-react';
+import { ArrowUpRight, MessageSquare, Code, Bot, Music, Briefcase, BookOpen, Sparkles, Clapperboard, Palette, PenTool, Search, BrainCircuit, LineChart } from 'lucide-react';
 import Link from 'next/link';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { cn } from '@/lib/utils';
+import React from 'react';
+
 
 const toolCategories = [
   {
@@ -133,67 +135,81 @@ const toolCategories = [
   },
 ];
 
+
+const ToolCard = ({ tool }: { tool: { name: string; description: string; link: string } }) => {
+    const cardRef = React.useRef<HTMLDivElement>(null);
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        const card = cardRef.current;
+        if (!card) return;
+
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+    };
+
+    return (
+        <div
+            ref={cardRef}
+            onMouseMove={handleMouseMove}
+            className="group relative flex flex-col h-full rounded-2xl bg-black/30 backdrop-blur-sm border border-white/10 p-1 transition-all duration-300 hover:border-white/20"
+            style={{ perspective: '800px' }}
+        >
+            <div className="card-content flex flex-col h-full rounded-[14px] bg-background/80 p-4 transition-transform duration-300 group-hover:transform-[rotateX(8deg)]">
+                <CardHeader className="p-0">
+                    <CardTitle className="text-base sm:text-lg">{tool.name}</CardTitle>
+                    <CardDescription className="text-xs sm:text-sm mt-1">{tool.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-grow flex items-end mt-auto p-0 pt-4">
+                    <Link href={`/redirect?url=${encodeURIComponent(tool.link)}`} target="_blank" rel="noopener noreferrer" className="w-full">
+                        <Button variant="outline" className="w-full h-9 text-xs sm:h-10 sm:text-sm bg-background/50 hover:bg-white/10 hover:text-white">
+                            Visit <ArrowUpRight className="h-4 w-4 ml-1 sm:ml-2" />
+                        </Button>
+                    </Link>
+                </CardContent>
+            </div>
+            <div className="mouse-orb"></div>
+        </div>
+    );
+};
+
+
 export default function AiToolsPage() {
   return (
-    <div className="min-h-screen bg-background p-4 pt-20">
-      <div className="container mx-auto">
-        <header className="text-center mb-12 animate-fade-in-down">
-            <div className="inline-block bg-primary/10 p-4 rounded-full mb-4">
+    <div className="min-h-screen bg-ai-tools-bg bg-cover bg-fixed p-4 pt-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-pattern opacity-30"></div>
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+
+      <div className="container mx-auto relative z-10">
+        <header className="text-center mb-16 animate-fade-in-down">
+            <div className="inline-block bg-primary/10 p-4 rounded-full mb-4 animate-pulse-glow">
                 <Bot className="h-10 w-10 text-primary" />
             </div>
-          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
-            AI Tool Directory
-          </h1>
-          <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto">
-            A curated list of powerful AI tools to enhance your productivity, creativity, and workflow.
-          </p>
+            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
+                AI Tool Directory
+            </h1>
+            <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto">
+                A curated list of powerful AI tools to enhance your productivity, creativity, and workflow.
+            </p>
         </header>
 
         <div className="space-y-16">
           {toolCategories.map((category, catIndex) => (
             <section key={category.category} className="animate-fade-in-up" style={{ animationDelay: `${catIndex * 150}ms`, animationFillMode: 'both' }}>
               <div className="flex items-center gap-4 mb-6">
-                <div className="bg-primary/10 p-3 rounded-lg">
+                <div className="bg-primary/10 p-3 rounded-lg shadow-inner-glow">
                   {category.icon}
                 </div>
                 <h2 className="text-3xl font-bold">{category.category}</h2>
               </div>
-              <Carousel
-                opts={{
-                  align: 'start',
-                  slidesToScroll: 'auto',
-                }}
-                className="w-full"
-              >
-                <CarouselContent>
-                  {category.tools.map((tool, toolIndex) => (
-                    <CarouselItem key={tool.name} className="basis-1/2 md:basis-1/2 lg:basis-1/3">
-                      <div 
-                        className="h-full p-1"
-                        style={{ animationDelay: `${toolIndex * 100}ms`, animationFillMode: 'both' }}
-                      >
-                        <Card 
-                          className="flex flex-col h-full bg-card/50 backdrop-blur-sm border-border/20 transition-all duration-300 hover:border-primary/50 hover:-translate-y-1"
-                        >
-                          <CardHeader className="p-4">
-                            <CardTitle className="text-base sm:text-lg">{tool.name}</CardTitle>
-                            <CardDescription className="text-xs sm:text-sm">{tool.description}</CardDescription>
-                          </CardHeader>
-                          <CardContent className="flex-grow flex items-end mt-auto p-4 pt-0">
-                            <Link href={`/redirect?url=${encodeURIComponent(tool.link)}`} target="_blank" rel="noopener noreferrer" className="w-full">
-                              <Button variant="outline" className="w-full h-9 text-xs sm:h-10 sm:text-sm">
-                                Visit <ArrowUpRight className="h-4 w-4 ml-1 sm:ml-2" />
-                              </Button>
-                            </Link>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
+               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {category.tools.map((tool) => (
+                    <ToolCard key={tool.name} tool={tool} />
                   ))}
-                </CarouselContent>
-                <CarouselPrevious className="hidden md:flex" />
-                <CarouselNext className="hidden md:flex" />
-              </Carousel>
+                </div>
             </section>
           ))}
         </div>
@@ -201,3 +217,5 @@ export default function AiToolsPage() {
     </div>
   );
 }
+
+    
