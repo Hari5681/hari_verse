@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { SlidersHorizontal } from 'lucide-react';
 import { toolCategories } from '@/lib/ai-tools';
 import { AIToolCard } from '@/components/ai/AIToolCard';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
@@ -102,17 +102,17 @@ export default function AiToolsPage() {
             <div className="flex flex-col sm:flex-row justify-end items-center mb-6">
               <div className="flex items-center gap-2">
                 {/* Mobile Filter Trigger */}
-                <Sheet>
-                  <SheetTrigger asChild>
+                <Dialog>
+                  <DialogTrigger asChild>
                     <Button variant="outline" className="md:hidden">
                       <SlidersHorizontal className="h-4 w-4 mr-2" />
                       Filter
                     </Button>
-                  </SheetTrigger>
-                  <SheetContent side="left" className="w-full max-w-sm">
+                  </DialogTrigger>
+                  <DialogContent className="w-full max-w-sm">
                      <FilterSidebar selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} />
-                  </SheetContent>
-                </Sheet>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
 
