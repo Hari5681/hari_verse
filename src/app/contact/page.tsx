@@ -25,7 +25,7 @@ export default function ContactPage() {
     try {
       const { error } = await supabase
         .from('contect_me')
-        .insert({ name, email, message });
+        .insert({ name: name, email: email, message: message });
 
       if (error) throw error;
       
