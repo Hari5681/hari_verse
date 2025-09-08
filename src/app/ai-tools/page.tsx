@@ -75,10 +75,10 @@ export default function AiToolsPage() {
       {/* Hero Section */}
       <header className="text-center my-8 md:my-16 animate-fade-in-down">
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
-          Discover The Next Generation of AI Tools
+          AI Made Simple
         </h1>
         <p className="mt-3 text-lg text-muted-foreground max-w-3xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-          Explore a curated list of AI tools for creativity, productivity, development, and more.
+          The best free tools, all in one place. No fluff, just what you need.
         </p>
       </header>
 
