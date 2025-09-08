@@ -38,7 +38,7 @@ export function FeaturedAiTools() {
     <section className="animate-fade-in-up">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
             <div>
-                <h2 className="text-3xl font-bold">🤖 Top AI Tools</h2>
+                <h2 className="text-3xl font-bold">Top AI Tools</h2>
                 <p className="text-muted-foreground mt-1">Boost your creativity and productivity.</p>
             </div>
             <Link href="/ai-tools" passHref className="mt-4 sm:mt-0">
