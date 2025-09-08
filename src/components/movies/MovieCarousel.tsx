@@ -75,7 +75,7 @@ export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, wit
   const emoji = match ? match[0] : '';
   const textTitle = title.replace(emojiRegex, '').trim();
 
-  const shimmerClass = "animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent";
+  const shimmerClass = "animate-shimmer bg-gradient-to-r from-foreground via-muted to-foreground bg-[length:200%_100%] bg-clip-text text-transparent";
 
   return (
     <section className="animate-fade-in-up">
