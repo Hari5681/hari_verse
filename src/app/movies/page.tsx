@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { MovieCarousel } from '@/components/movies/MovieCarousel';
 import { Separator } from '@/components/ui/separator';
@@ -13,66 +13,16 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
-interface Movie {
-  id: number;
-  title: string;
-}
-
 export default function MoviesPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [suggestions, setSuggestions] = useState<Movie[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
   const router = useRouter();
-  const searchRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const fetchPopularMovies = async () => {
-        try {
-            const response = await fetch('/api/movies/popular');
-            const data = await response.json();
-            if (response.ok) {
-                const popularTitles = data.movies.slice(0, 10);
-                if (searchQuery.length > 1) {
-                    const filtered = popularTitles.filter((movie: Movie) => 
-                        movie.title.toLowerCase().includes(searchQuery.toLowerCase())
-                    );
-                    setSuggestions(filtered);
-                } else {
-                    setSuggestions(popularTitles);
-                }
-            }
-        } catch (error) {
-            console.error("Failed to fetch suggestions:", error);
-        }
-    };
-    
-    if (showSuggestions) {
-        fetchPopularMovies();
-    }
-  }, [searchQuery, showSuggestions]);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setShowSuggestions(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/movies/search/${encodeURIComponent(searchQuery.trim())}`);
-      setShowSuggestions(false);
     }
   };
-
-  const handleSuggestionClick = (movie: Movie) => {
-    router.push(`/movies/${movie.id}`);
-    setShowSuggestions(false);
-  }
 
   return (
     <div className="min-h-screen bg-background p-4 pt-20">
@@ -84,7 +34,7 @@ export default function MoviesPage() {
           <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto">
             Find popular hits, top-rated gems, and the latest releases — or search for your favorites.
           </p>
-          <div ref={searchRef} className="mt-6 max-w-xl mx-auto relative">
+          <div className="mt-6 max-w-xl mx-auto relative">
             <form onSubmit={handleSearchSubmit}>
                 <div className="group relative">
                     <div className="absolute -inset-0.5 bg-gradient-to-r from-primary via-purple-500 to-pink-500 rounded-full blur-md opacity-50 group-hover:opacity-75 transition-opacity duration-300 animate-pulse-glow" />
@@ -94,7 +44,6 @@ export default function MoviesPage() {
                         placeholder="Search for a movie..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        onFocus={() => setShowSuggestions(true)}
                         className="bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 w-full"
                         />
                         <Button type="submit" size="icon" className="rounded-full flex-shrink-0">
@@ -103,21 +52,6 @@ export default function MoviesPage() {
                     </div>
                 </div>
             </form>
-            {showSuggestions && (
-                 <Card className="absolute top-full left-0 right-0 mt-2 z-20 animate-fade-in-down">
-                    <ul className="p-2">
-                        {suggestions.length > 0 ? (
-                            suggestions.map(movie => (
-                                <li key={movie.id} onClick={() => handleSuggestionClick(movie)} className="px-4 py-2 rounded-md hover:bg-accent cursor-pointer">
-                                    {movie.title}
-                                </li>
-                            ))
-                        ) : (
-                             <li className="px-4 py-2 text-muted-foreground">No suggestions found.</li>
-                        )}
-                    </ul>
-                 </Card>
-            )}
           </div>
         </header>
 

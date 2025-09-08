@@ -11,7 +11,7 @@
     --card-foreground: 210 40% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
+    --primary: 0 84.2% 60.2%;
     --primary-foreground: 210 40% 98%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -23,13 +23,13 @@
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 217.2 91.2% 59.8%;
+    --ring: 0 84.2% 60.2%;
     --radius: 0.5rem;
 
     /* Dynamic Primary Color for particles */
-    --dynamic-primary-h: 217.2;
-    --dynamic-primary-s: 91.2%;
-    --dynamic-primary-l: 59.8%;
+    --dynamic-primary-h: 0;
+    --dynamic-primary-s: 84.2%;
+    --dynamic-primary-l: 60.2%;
   }
 
   .dark {
@@ -39,7 +39,7 @@
     --card-foreground: 210 40% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
+    --primary: 0 84.2% 60.2%;
     --primary-foreground: 210 40% 98%;
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -51,7 +51,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 217.2 91.2% 59.8%;
+    --ring: 0 84.2% 60.2%;
   }
 }
 
@@ -108,4 +108,3 @@
         opacity: 1;
     }
 }
-    
