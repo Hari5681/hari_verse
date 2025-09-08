@@ -10,6 +10,7 @@ import { AIToolCard } from '@/components/ai/AIToolCard';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { cn } from '@/lib/utils';
 
 const FilterSidebar = ({ selectedCategories, setSelectedCategories }: { selectedCategories: string[], setSelectedCategories: (cats: string[]) => void }) => {
 
@@ -22,14 +23,19 @@ const FilterSidebar = ({ selectedCategories, setSelectedCategories }: { selected
   };
 
   return (
-    <Card className="p-4 bg-background/80 backdrop-blur-sm border-none">
-      <h3 className="text-lg font-semibold mb-4">Categories</h3>
+    <Card className="p-4 bg-background/80 backdrop-blur-sm border-none shadow-inner-glow transition-shadow hover:shadow-primary/20">
+      <h3 className="text-lg font-semibold mb-4 animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
+          Categories
+      </h3>
       <div className="space-y-2">
         {toolCategories.map(category => (
           <Button
             key={category.category}
             variant={selectedCategories.includes(category.category) ? 'secondary' : 'ghost'}
-            className="w-full justify-start"
+            className={cn(
+                "w-full justify-start transition-all duration-300 ease-in-out",
+                "hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-1"
+            )}
             onClick={() => toggleCategory(category.category)}
           >
             {category.icon}
