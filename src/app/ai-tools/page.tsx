@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { SlidersHorizontal } from 'lucide-react';
 import { toolCategories } from '@/lib/ai-tools';
 import { AIToolCard } from '@/components/ai/AIToolCard';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
@@ -110,6 +110,9 @@ export default function AiToolsPage() {
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="w-full max-w-sm">
+                    <DialogHeader>
+                        <DialogTitle className="sr-only">Filter AI Tools</DialogTitle>
+                    </DialogHeader>
                      <FilterSidebar selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} />
                   </DialogContent>
                 </Dialog>
