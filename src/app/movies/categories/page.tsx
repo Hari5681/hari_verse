@@ -14,18 +14,16 @@ export default function AllCategoriesPage() {
   return (
     <div className="min-h-screen bg-background p-4 pt-20">
       <div className="container mx-auto">
-        <header className="mb-8 flex items-center gap-4 animate-fade-in-down">
-           <Button variant="outline" size="icon" onClick={() => router.back()}>
+        <header className="mb-12 text-center animate-fade-in-down">
+          <Button variant="outline" size="icon" onClick={() => router.back()} className="absolute top-20 left-4 md:left-6">
             <ArrowLeft className="h-6 w-6" />
           </Button>
-          <div>
-            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
-              All Movie Genres
-            </h1>
-            <p className="mt-1 text-lg text-muted-foreground">
-              Pick a genre to start exploring.
-            </p>
-          </div>
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
+            All Movie Genres
+          </h1>
+          <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+            From action-packed blockbusters to heartfelt dramas, pick a genre to start exploring.
+          </p>
         </header>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
