@@ -75,13 +75,15 @@ export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, wit
   const emoji = match ? match[0] : '';
   const textTitle = title.replace(emojiRegex, '').trim();
 
+  const shimmerClass = "animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent";
+
   return (
     <section className="animate-fade-in-up">
         {hasTitle && (
             <div className="mb-6">
                 <h2 className="text-3xl font-bold">
                     {emoji && <span className="inline-block animate-pulse-glow mr-2">{emoji}</span>}
-                    <span className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
+                    <span className={shimmerClass}>
                         {textTitle}
                     </span>
                 </h2>
