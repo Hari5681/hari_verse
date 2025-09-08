@@ -4,7 +4,6 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button';
 import { ArrowUpRight } from 'lucide-react';
 import type { AITool } from '@/lib/ai-tools';
-import { ToolLogo } from './ToolLogo';
 import React, { useRef, useState } from 'react';
 
 interface AIToolCardProps {
@@ -54,7 +53,11 @@ export function AIToolCard({ tool, index }: AIToolCardProps) {
                 
                 <div className="flex-grow flex flex-col transition-transform duration-300 ease-out group-hover:-translate-y-4">
                     <CardHeader className="p-0">
-                      <CardTitle className="text-lg font-semibold truncate">{tool.name}</CardTitle>
+                      <CardTitle className="text-lg font-semibold truncate">
+                        <span className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
+                            {tool.name}
+                        </span>
+                      </CardTitle>
                     </CardHeader>
                     <CardContent className="p-0 pt-3">
                       <CardDescription>{tool.description}</CardDescription>
