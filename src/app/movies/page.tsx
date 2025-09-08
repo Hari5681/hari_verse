@@ -82,7 +82,7 @@ export default function MoviesPage() {
             Movie Discovery
           </h1>
           <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto">
-            Explore popular, top-rated, and upcoming movies, or search for something specific.
+            Find popular hits, top-rated gems, and the latest releases — or search for your favorites.
           </p>
           <div ref={searchRef} className="mt-6 max-w-xl mx-auto relative">
             <form onSubmit={handleSearchSubmit}>
