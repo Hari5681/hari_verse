@@ -68,10 +68,16 @@ export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, wit
     fetchMovies();
   }, [endpoint, language, sortBy, withKeywords, withGenres, primaryReleaseDateLte]);
 
+  const hasTitle = title && subtitle;
+
   return (
     <section className="animate-fade-in-up">
-        <h2 className="text-3xl font-bold">{title}</h2>
-        <p className="text-muted-foreground mb-6">{subtitle}</p>
+        {hasTitle && (
+            <div className="mb-6">
+                <h2 className="text-3xl font-bold">{title}</h2>
+                <p className="text-muted-foreground">{subtitle}</p>
+            </div>
+        )}
 
         {loading && (
              <div className="flex space-x-4">
