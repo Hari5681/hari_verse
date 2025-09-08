@@ -6,7 +6,7 @@ import { CtaSection } from './home/CtaSection';
 import { MusicShowcase } from './home/MusicShowcase';
 import { MoviesShowcase } from './home/MoviesShowcase';
 import { FeaturedAiTools } from './home/FeaturedAiTools';
-import { User, Globe } from 'lucide-react';
+import { User } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -27,7 +27,7 @@ const Section = ({ id, children, className }: { id: string, children: React.Reac
         setInView(entry.isIntersecting);
       },
       {
-        threshold: 0.5, // Trigger when 50% of the section is visible
+        threshold: 0.5,
       }
     );
 
@@ -89,9 +89,13 @@ const AboutMeSection = () => (
 export function HomeView({ name }: HomeViewProps) {
   return (
     <div className="h-screen w-full snap-y snap-mandatory overflow-y-scroll overflow-x-hidden">
-      <Section id="home" className="p-0">
-         <HeroSection name={name} />
-      </Section>
+      <section id="home" className="h-screen w-full flex flex-col items-center justify-center snap-start relative">
+        <div className="absolute inset-0 w-full h-full bg-black">
+            <div className="absolute inset-0 bg-grid-pattern opacity-30 animate-grid-pan" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
+        <HeroSection name={name} />
+      </section>
       
       <Section id="music">
         <MusicShowcase />

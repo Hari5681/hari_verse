@@ -34,6 +34,7 @@ function MainContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { theme, currentSong } = useMusicPlayer();
   const isRedirectPage = pathname.startsWith('/redirect');
+  const isHomePage = pathname === '/';
 
 
   useEffect(() => {
@@ -71,12 +72,12 @@ function MainContent({ children }: { children: React.ReactNode }) {
       
       {!isRedirectPage && <Header />}
       
-      <main className={cn("relative z-10 flex-grow", { 'pb-16': !isRedirectPage })}>
+      <main className={cn("relative z-10 flex-grow", { 'pb-16': !isRedirectPage && !isHomePage })}>
         {children}
       </main>
       
       <div className="relative z-10">
-        {!isRedirectPage && !currentSong && <Footer />}
+        {!isRedirectPage && !isHomePage && !currentSong && <Footer />}
         {!isRedirectPage && <GlobalPlayer />}
       </div>
 
