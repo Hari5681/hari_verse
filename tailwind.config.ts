@@ -137,6 +137,10 @@ const config = {
           "50%": {
             "box-shadow": "0 0 35px hsl(var(--primary)/0.5)",
           },
+        },
+        "grid-pan": {
+            "0%": { backgroundPosition: "0% 0%" },
+            "100%": { backgroundPosition: "100% 100%" },
         }
       },
       animation: {
@@ -152,6 +156,7 @@ const config = {
         bar3: 'bar3 1.2s infinite ease-in-out',
         "shimmer": "shimmer 4s infinite linear",
         "pulse-glow": "pulse-glow 3s infinite ease-in-out",
+        "grid-pan": "grid-pan 30s linear infinite",
       },
     },
   },

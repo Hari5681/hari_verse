@@ -69,7 +69,7 @@ export default function AiToolsPage() {
   return (
     <div className="min-h-screen bg-background text-foreground p-4 pt-20">
       <div className="fixed inset-0 -z-10 bg-ai-tools-bg bg-cover bg-center" />
-      <div className="fixed inset-0 -z-10 bg-grid-pattern opacity-30" />
+      <div className="fixed inset-0 -z-10 bg-grid-pattern opacity-30 animate-grid-pan" />
       <div className="fixed inset-0 -z-10 bg-black/80 backdrop-blur-sm" />
 
       {/* Hero Section */}
