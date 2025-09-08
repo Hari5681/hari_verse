@@ -6,6 +6,7 @@ import { ArrowUpRight } from 'lucide-react';
 import type { AITool } from '@/lib/ai-tools';
 import { cn } from '@/lib/utils';
 import { ToolLogo } from './ToolLogo';
+import React, { useRef, useState } from 'react';
 
 interface AIToolCardProps {
     tool: AITool & { category: string };
@@ -13,12 +14,44 @@ interface AIToolCardProps {
 }
 
 export function AIToolCard({ tool, index }: AIToolCardProps) {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [style, setStyle] = useState({});
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!cardRef.current) return;
+        const { left, top, width, height } = cardRef.current.getBoundingClientRect();
+        const x = (e.clientX - left - width / 2) / 25;
+        const y = (e.clientY - top - height / 2) / 25;
+        const xPercentage = e.clientX - left;
+        const yPercentage = e.clientY - top;
+
+        setStyle({
+            transform: `perspective(500px) rotateX(${-y}deg) rotateY(${x}deg) scale3d(1.05, 1.05, 1.05)`,
+            '--mouse-x': `${xPercentage}px`,
+            '--mouse-y': `${yPercentage}px`,
+        });
+    };
+
+    const handleMouseLeave = () => {
+        setStyle({
+            transform: 'perspective(500px) rotateX(0) rotateY(0) scale3d(1, 1, 1)',
+        });
+    };
+
     return (
         <div 
-            className="animate-fade-in-up" 
+            className="animate-fade-in-up h-full" 
             style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'both' }}
         >
-            <Card className="group h-full flex flex-col justify-between p-4 bg-background/50 hover:bg-card transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20">
+            <Card 
+                ref={cardRef}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                style={style as React.CSSProperties}
+                className="group relative h-full flex flex-col justify-between p-4 bg-background/50 transition-transform duration-300 ease-out will-change-transform"
+            >
+                <div className="absolute inset-0 bg-grid-pattern opacity-0 transition-opacity duration-300 group-hover:opacity-10"></div>
+                <div className="mouse-orb"></div>
               <div className="flex-grow">
                 <CardHeader className="p-0 flex-row items-center gap-4">
                   <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20">
@@ -41,4 +74,3 @@ export function AIToolCard({ tool, index }: AIToolCardProps) {
         </div>
     );
 }
-

@@ -83,13 +83,13 @@ export default function AiToolsPage() {
 
       {/* Hero Section */}
       <header className="text-center my-8 md:my-16 animate-fade-in-down">
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
           Discover The Next Generation of AI Tools
         </h1>
-        <p className="mt-3 text-lg text-muted-foreground max-w-3xl mx-auto">
+        <p className="mt-3 text-lg text-muted-foreground max-w-3xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
           Explore a curated list of AI tools for creativity, productivity, development, and more.
         </p>
-        <div className="mt-8 max-w-2xl mx-auto relative">
+        <div className="mt-8 max-w-2xl mx-auto relative animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input
             type="text"
@@ -149,7 +149,7 @@ export default function AiToolsPage() {
                     >
                       <CarouselContent className="-ml-4">
                         {category.tools.map((tool, index) => (
-                          <CarouselItem key={tool.name} className="basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/3 xl:basis-1/4 pl-4">
+                          <CarouselItem key={tool.name} className="basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/3 xl:basis-1/4 pl-4 pb-4">
                             <AIToolCard tool={{...tool, category: category.category}} index={index} />
                           </CarouselItem>
                         ))}

@@ -123,11 +123,11 @@ const config = {
           '50%': { height: '1.1rem' },
         },
         "shimmer": {
-          "0%, 100%": {
-            "background-position": "calc(-100% - var(--shimmer-width, 0px)) 0",
+          "0%": {
+            "background-position": "calc(-200% - var(--shimmer-width, 0px)) 0",
           },
-          "50%": {
-            "background-position": "calc(100% + var(--shimmer-width, 0px)) 0",
+          "100%": {
+            "background-position": "calc(200% + var(--shimmer-width, 0px)) 0",
           },
         },
         "pulse-glow": {
@@ -150,7 +150,7 @@ const config = {
         bar1: 'bar1 1.2s infinite ease-in-out',
         bar2: 'bar2 1.2s infinite ease-in-out',
         bar3: 'bar3 1.2s infinite ease-in-out',
-        "shimmer": "shimmer 3s infinite linear",
+        "shimmer": "shimmer 4s infinite linear",
         "pulse-glow": "pulse-glow 3s infinite ease-in-out",
       },
     },
