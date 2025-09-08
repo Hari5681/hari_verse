@@ -53,11 +53,8 @@ export function AIToolCard({ tool, index }: AIToolCardProps) {
                 <div className="mouse-orb"></div>
                 
                 <div className="flex-grow flex flex-col transition-transform duration-300 ease-out group-hover:-translate-y-4">
-                    <CardHeader className="p-0 flex-row items-center gap-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20">
-                        <ToolLogo toolName={tool.name} className="h-7 w-7 text-primary" />
-                      </div>
-                      <CardTitle className="text-lg font-semibold">{tool.name}</CardTitle>
+                    <CardHeader className="p-0">
+                      <CardTitle className="text-lg font-semibold truncate">{tool.name}</CardTitle>
                     </CardHeader>
                     <CardContent className="p-0 pt-3">
                       <CardDescription>{tool.description}</CardDescription>
