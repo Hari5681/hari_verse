@@ -86,22 +86,25 @@ export default function MoviesPage() {
           </p>
           <div ref={searchRef} className="mt-6 max-w-xl mx-auto relative">
             <form onSubmit={handleSearchSubmit}>
-              <div className="flex items-center gap-2">
-                  <Input 
-                  type="text"
-                  placeholder="Search for a movie..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => setShowSuggestions(true)}
-                  className="bg-background/80"
-                  />
-                  <Button type="submit" size="icon">
-                  <Search className="h-5 w-5" />
-                  </Button>
-              </div>
+                <div className="group relative">
+                    <div className="absolute -inset-0.5 bg-gradient-to-r from-primary via-purple-500 to-pink-500 rounded-full blur-md opacity-50 group-hover:opacity-75 transition-opacity duration-300 animate-pulse-glow" />
+                    <div className="relative flex items-center gap-2 bg-background rounded-full p-1">
+                        <Input 
+                        type="text"
+                        placeholder="Search for a movie..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onFocus={() => setShowSuggestions(true)}
+                        className="bg-transparent border-none focus-visible:ring-0 focus-visible:ring-offset-0 w-full"
+                        />
+                        <Button type="submit" size="icon" className="rounded-full flex-shrink-0">
+                        <Search className="h-5 w-5" />
+                        </Button>
+                    </div>
+                </div>
             </form>
             {showSuggestions && (
-                 <Card className="absolute top-full left-0 right-0 mt-2 z-20">
+                 <Card className="absolute top-full left-0 right-0 mt-2 z-20 animate-fade-in-down">
                     <ul className="p-2">
                         {suggestions.length > 0 ? (
                             suggestions.map(movie => (
