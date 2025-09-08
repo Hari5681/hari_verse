@@ -20,6 +20,7 @@ import {
   Dialog,
   DialogContent,
   DialogTrigger,
+  DialogTitle,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { cleanSongTitle, getSongImageUrl } from '@/lib/musicUtils';
@@ -142,6 +143,7 @@ export function Player() {
             boxShadow: `0 10px 50px -10px hsl(var(--dynamic-primary-h) var(--dynamic-primary-s) var(--dynamic-primary-l) / 0.5), 0 0 20px hsl(var(--dynamic-primary-h) var(--dynamic-primary-s) var(--dynamic-primary-l) / 0.2)`
         }}
       >
+        <DialogTitle className="sr-only">Now Playing: {songTitle}</DialogTitle>
         <div className="p-6 pb-2">
             <header className="flex items-center justify-between text-foreground">
                 <button onClick={() => setIsDialogOpen(false)} className='flex items-center gap-2'>
@@ -256,3 +258,5 @@ export function Player() {
     </Dialog>
   );
 }
+
+  
