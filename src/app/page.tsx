@@ -16,15 +16,15 @@ export default function Page() {
       if (visitorId) {
         try {
           const { data, error } = await supabase
-            .from('visitors')
-            .select('name')
+            .from('visitor_name')
+            .select('name_of_visitor')
             .eq('id', visitorId)
             .single();
 
           if (error) throw error;
           
           if (data) {
-            setName(data.name);
+            setName(data.name_of_visitor);
           } else {
             // ID in local storage is invalid, clear it
             localStorage.removeItem('visitorId');
@@ -43,8 +43,8 @@ export default function Page() {
   const handleNameSubmit = async (newName: string) => {
     try {
         const { data, error } = await supabase
-            .from('visitors')
-            .insert({ name: newName })
+            .from('visitor_name')
+            .insert({ name_of_visitor: newName })
             .select()
             .single();
         
@@ -52,7 +52,7 @@ export default function Page() {
 
         if (data) {
             localStorage.setItem('visitorId', data.id);
-            setName(data.name);
+            setName(data.name_of_visitor);
         }
 
     } catch(error) {
