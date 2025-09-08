@@ -12,6 +12,7 @@ import { AIToolList } from '@/components/ai/AIToolList';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const allTools = toolCategories.flatMap(category => category.tools.map(tool => ({ ...tool, category: category.category })));
 
@@ -54,7 +55,6 @@ const FilterSidebar = ({ selectedCategories, setSelectedCategories }: { selected
 export default function AiToolsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   const filteredCategories = useMemo(() => {
     return toolCategories
@@ -129,12 +129,6 @@ export default function AiToolsPage() {
                      <FilterSidebar selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} />
                   </SheetContent>
                 </Sheet>
-                <Button variant={viewMode === 'grid' ? 'secondary' : 'outline'} size="icon" onClick={() => setViewMode('grid')}>
-                  <LayoutGrid className="h-5 w-5" />
-                </Button>
-                <Button variant={viewMode === 'list' ? 'secondary' : 'outline'} size="icon" onClick={() => setViewMode('list')}>
-                  <List className="h-5 w-5" />
-                </Button>
               </div>
             </div>
 
@@ -146,19 +140,23 @@ export default function AiToolsPage() {
                     <h2 className="text-2xl font-bold">{category.category}</h2>
                   </div>
                   <Separator className="mb-6 bg-border/20"/>
-                   {viewMode === 'grid' ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                      {category.tools.map((tool, index) => (
-                        <AIToolCard key={tool.name} tool={{...tool, category: category.category}} index={index} />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {category.tools.map((tool, index) => (
-                        <AIToolList key={tool.name} tool={{...tool, category: category.category}} index={index} />
-                      ))}
-                    </div>
-                  )}
+                   <Carousel
+                      opts={{
+                          align: 'start',
+                          slidesToScroll: 'auto',
+                      }}
+                      className="w-full"
+                    >
+                      <CarouselContent className="-ml-4">
+                        {category.tools.map((tool, index) => (
+                          <CarouselItem key={tool.name} className="basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/3 xl:basis-1/4 pl-4">
+                            <AIToolCard tool={{...tool, category: category.category}} index={index} />
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                      <CarouselPrevious className="hidden md:flex" />
+                      <CarouselNext className="hidden md:flex" />
+                   </Carousel>
                 </section>
               ))}
             </div>
