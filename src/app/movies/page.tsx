@@ -133,7 +133,9 @@ export default function MoviesPage() {
           <section className="animate-fade-in-up">
             <div className='text-center'>
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight">
-                Categories
+                <span className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
+                  Categories
+                </span>
               </h2>
               <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto">
                 Browse movies by your favorite genre.
