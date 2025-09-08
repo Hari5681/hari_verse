@@ -123,7 +123,7 @@ export default function AiToolsPage() {
                       opts={{
                           align: 'start',
                           slidesToScroll: 'auto',
-                          loop: true,
+                          loop: false,
                       }}
                       className="w-full"
                     >
