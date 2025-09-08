@@ -1,230 +1,156 @@
 
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState, useMemo } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowUpRight, MessageSquare, Code, Bot, Music, Briefcase, BookOpen, Sparkles, Clapperboard, Palette, PenTool, Search, BrainCircuit, LineChart } from 'lucide-react';
-import Link from 'next/link';
+import { Input } from '@/components/ui/input';
+import { LayoutGrid, List, Search, SlidersHorizontal, X } from 'lucide-react';
+import { toolCategories, AITool } from '@/lib/ai-tools';
+import { AIToolCard } from '@/components/ai/AIToolCard';
+import { AIToolList } from '@/components/ai/AIToolList';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import React from 'react';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
+const allTools = toolCategories.flatMap(category => category.tools.map(tool => ({ ...tool, category: category.category })));
 
-const toolCategories = [
-  {
-    category: 'Conversational AI / Chatbots',
-    icon: <MessageSquare className="h-6 w-6 text-primary" />,
-    tools: [
-      { name: 'ChatGPT (OpenAI)', description: 'Conversational AI, coding help, and creativity.', link: 'https://openai.com/chatgpt' },
-      { name: 'Claude (Anthropic)', description: 'Reasoning-focused AI assistant.', link: 'https://claude.ai/' },
-      { name: 'Perplexity AI', description: 'AI search + chat with citations.', link: 'https://www.perplexity.ai/' },
-      { name: 'Character.AI', description: 'Create and chat with AI characters.', link: 'https://character.ai/' },
-    ],
-  },
-  {
-    category: 'Image Generation & Design',
-    icon: <Palette className="h-6 w-6 text-primary" />,
-    tools: [
-      { name: 'MidJourney', description: 'Artistic AI image creation.', link: 'https://www.midjourney.com/' },
-      { name: 'Stable Diffusion', description: 'Open-source image generation.', link: 'https://stability.ai/stable-diffusion' },
-      { name: 'DALL·E', description: 'Image generation from text prompts.', link: 'https://openai.com/dall-e-3' },
-      { name: 'Canva AI', description: 'AI-powered design and editing.', link: 'https://www.canva.com/ai-image-generator/' },
-      { name: 'Leonardo.AI', description: 'Game assets and creative images.', link: 'https://leonardo.ai/' },
-    ],
-  },
-  {
-    category: 'Developer Tools & Coding',
-    icon: <Code className="h-6 w-6 text-primary" />,
-    tools: [
-      { name: 'GitHub Copilot', description: 'Code suggestions in IDE.', link: 'https://github.com/features/copilot' },
-      { name: 'Replit Ghostwriter', description: 'AI coding + instant hosting.', link: 'https://replit.com/ghostwriter' },
-      { name: 'Tabnine', description: 'AI autocomplete for code.', link: 'https://www.tabnine.com/' },
-      { name: 'CodiumAI', description: 'Automated unit test generation.', link: 'https://www.codium.ai/' },
-    ],
-  },
-  {
-    category: 'Audio & Video Editing',
-    icon: <Clapperboard className="h-6 w-6 text-primary" />,
-    tools: [
-      { name: 'Descript', description: 'Audio/video editing + transcription.', link: 'https://www.descript.com/' },
-      { name: 'Runway ML', description: 'Video editing, text-to-video.', link: 'https://runwayml.com/' },
-      { name: 'Synthesia', description: 'AI video avatars.', link: 'https://www.synthesia.io/' },
-      { name: 'Voicemod AI', description: 'Real-time AI voice changer.', link: 'https://www.voicemod.net/' },
-      { name: 'Cleanvoice AI', description: 'Remove filler words from audio.', link: 'https://cleanvoice.ai/' },
-    ],
-  },
-  {
-    category: 'Research & Knowledge',
-    icon: <Search className="h-6 w-6 text-primary" />,
-    tools: [
-      { name: 'NotebookLM (Google)', description: 'Summarize & analyze PDFs, docs.', link: 'https://notebooklm.google.com/' },
-      { name: 'Elicit', description: 'AI for academic research.', link: 'https://elicit.com/' },
-      { name: 'Wolfram Alpha', description: 'AI-powered computation.', link: 'https://www.wolframalpha.com/' },
-      { name: 'Gemini (Google)', description: 'Advanced reasoning & search.', link: 'https://gemini.google.com/' },
-    ],
-  },
-  {
-    category: 'Writing & Copywriting',
-    icon: <PenTool className="h-6 w-6 text-primary" />,
-    tools: [
-      { name: 'Jasper', description: 'AI copywriting for ads & blogs.', link: 'https://www.jasper.ai/' },
-      { name: 'Copy.ai', description: 'AI for marketing content.', link: 'https://www.copy.ai/' },
-      { name: 'Writesonic', description: 'Blog writing and SEO content.', link: 'https://writesonic.com/' },
-      { name: 'Anyword', description: 'Optimized ad and sales copy.', link: 'https://anyword.com/' },
-    ],
-  },
-  {
-    category: 'Productivity & Workflow',
-    icon: <BrainCircuit className="h-6 w-6 text-primary" />,
-    tools: [
-      { name: 'Notion AI', description: 'Notes, docs, and summaries.', link: 'https://www.notion.so/product/ai' },
-      { name: 'Coda AI', description: 'Automates tasks in documents.', link: 'https://coda.io/ai' },
-      { name: 'Mem AI', description: 'AI-powered smart notes.', link: 'https://mem.ai/' },
-      { name: 'ClickUp AI', description: 'Productivity + project management.', link: 'https://clickup.com/ai' },
-    ],
-  },
-  {
-    category: 'Data & Analytics',
-    icon: <LineChart className="h-6 w-6 text-primary" />,
-    tools: [
-      { name: 'ChatGPT (Advanced Data Analysis)', description: 'Run code, analyze data.', link: 'https://openai.com/blog/chatgpt-can-now-see-hear-and-speak' },
-      { name: 'Tableau + AI', description: 'Smart dashboards with AI insights.', link: 'https://www.tableau.com/products/einstein-discovery' },
-      { name: 'Power BI + Copilot', description: 'AI in BI dashboards.', link: 'https://powerbi.microsoft.com/en-us/features/copilot/' },
-      { name: 'MonkeyLearn', description: 'AI text & data classification.', link: 'https://monkeylearn.com/' },
-    ],
-  },
-    {
-    category: 'Music & Sound',
-    icon: <Music className="h-6 w-6 text-primary" />,
-    tools: [
-      { name: 'Soundraw', description: 'AI music generation.', link: 'https://soundraw.io/' },
-      { name: 'Aiva', description: 'Compose soundtracks with AI.', link: 'https://www.aiva.ai/' },
-      { name: 'Boomy', description: 'Instant AI song creation.', link: 'https://boomy.com/' },
-      { name: 'Voicemod AI', description: 'Voice AI & sound effects.', link: 'https://www.voicemod.net/' },
-    ],
-  },
-  {
-    category: 'Business, Marketing & Sales',
-    icon: <Briefcase className="h-6 w-6 text-primary" />,
-    tools: [
-      { name: 'HubSpot AI', description: 'CRM + AI tools.', link: 'https://www.hubspot.com/artificial-intelligence' },
-      { name: 'Copy.ai', description: 'Social media + ads.', link: 'https://www.copy.ai/' },
-      { name: 'Ocoya', description: 'AI for content + scheduling.', link: 'https://www.ocoya.com/' },
-      { name: 'Lavender', description: 'AI sales email coach.', link: 'https://www.lavender.ai/' },
-    ],
-  },
-  {
-    category: 'Education & Learning',
-    icon: <BookOpen className="h-6 w-6 text-primary" />,
-    tools: [
-      { name: 'Khanmigo (Khan Academy)', description: 'AI tutor.', link: 'https://www.khanacademy.org/khan-labs' },
-      { name: 'QuillBot', description: 'Paraphrasing + grammar.', link: 'https://quillbot.com/' },
-      { name: 'Socratic (Google)', description: 'AI study helper.', link: 'https://socratic.org/' },
-      { name: 'Grammarly', description: 'AI grammar and writing assistant.', link: 'https://www.grammarly.com/' },
-    ],
-  },
-  {
-    category: 'Specialized / Other Tools',
-    icon: <Sparkles className="h-6 w-6 text-primary" />,
-    tools: [
-      { name: 'Runway Gen-2', description: 'Text-to-video.', link: 'https://runwayml.com/ai-magic-tools/gen-2/' },
-      { name: 'Beautiful.ai', description: 'Smart AI presentations.', link: 'https://www.beautiful.ai/' },
-      { name: 'Durable', description: 'AI website builder.', link: 'https://durable.co/' },
-      { name: 'Browse AI', description: 'Scrape websites with AI.', link: 'https://www.browse.ai/' },
-      { name: 'Futurepedia', description: 'AI tool directory (10k+ tools).', link: 'https://www.futurepedia.io/' },
-    ],
-  },
-];
+const FilterSidebar = ({ selectedCategories, setSelectedCategories }: { selectedCategories: string[], setSelectedCategories: (cats: string[]) => void }) => {
 
-
-const ToolCard = ({ tool }: { tool: { name: string; description: string; link: string } }) => {
-    const cardRef = React.useRef<HTMLDivElement>(null);
-
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        const card = cardRef.current;
-        if (!card) return;
-
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        card.style.setProperty('--mouse-x', `${x}px`);
-        card.style.setProperty('--mouse-y', `${y}px`);
-    };
-
-    return (
-        <div
-            ref={cardRef}
-            onMouseMove={handleMouseMove}
-            className="group relative flex flex-col h-full rounded-2xl bg-black/30 backdrop-blur-sm border border-white/10 p-1 transition-all duration-300 hover:border-white/20"
-            style={{ perspective: '800px' }}
-        >
-            <div className="card-content flex flex-col h-full rounded-[14px] bg-background/80 p-4 transition-transform duration-300 group-hover:transform-[rotateX(8deg)]">
-                <CardHeader className="p-0">
-                    <CardTitle className="text-base sm:text-lg">{tool.name}</CardTitle>
-                    <CardDescription className="text-xs sm:text-sm mt-1">{tool.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow flex items-end mt-auto p-0 pt-4">
-                    <Link href={`/redirect?url=${encodeURIComponent(tool.link)}`} target="_blank" rel="noopener noreferrer" className="w-full">
-                        <Button variant="outline" className="w-full h-9 text-xs sm:h-10 sm:text-sm bg-background/50 hover:bg-white/10 hover:text-white">
-                            Visit <ArrowUpRight className="h-4 w-4 ml-1 sm:ml-2" />
-                        </Button>
-                    </Link>
-                </CardContent>
-            </div>
-            <div className="mouse-orb"></div>
-        </div>
+  const toggleCategory = (category: string) => {
+    setSelectedCategories(
+      selectedCategories.includes(category)
+        ? selectedCategories.filter(c => c !== category)
+        : [...selectedCategories, category]
     );
+  };
+
+  return (
+    <Card className="p-4 bg-background/80 backdrop-blur-sm border-none">
+      <h3 className="text-lg font-semibold mb-4">Categories</h3>
+      <div className="space-y-2">
+        {toolCategories.map(category => (
+          <Button
+            key={category.category}
+            variant={selectedCategories.includes(category.category) ? 'secondary' : 'ghost'}
+            className="w-full justify-start"
+            onClick={() => toggleCategory(category.category)}
+          >
+            {category.icon}
+            <span className="ml-2">{category.category}</span>
+          </Button>
+        ))}
+      </div>
+      {selectedCategories.length > 0 && (
+        <Button variant="link" className="text-primary w-full mt-4" onClick={() => setSelectedCategories([])}>
+          Clear Filters
+        </Button>
+      )}
+    </Card>
+  );
 };
 
 
 export default function AiToolsPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+  const filteredTools = useMemo(() => {
+    return allTools
+      .filter(tool => {
+        const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(tool.category);
+        const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                              tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                              tool.category.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCategory && matchesSearch;
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [searchQuery, selectedCategories]);
+
   return (
-    <div className="min-h-screen bg-ai-tools-bg bg-cover bg-fixed p-4 pt-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-pattern opacity-30"></div>
-        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    <div className="min-h-screen bg-background text-foreground p-4 pt-20">
+      <div className="fixed inset-0 -z-10 bg-ai-tools-bg bg-cover bg-center" />
+      <div className="fixed inset-0 -z-10 bg-grid-pattern opacity-30" />
+      <div className="fixed inset-0 -z-10 bg-black/80 backdrop-blur-sm" />
 
-      <div className="container mx-auto relative z-10">
-        <header className="text-center mb-16 animate-fade-in-down">
-            <div className="inline-block bg-primary/10 p-4 rounded-full mb-4 animate-pulse-glow">
-                <Bot className="h-10 w-10 text-primary" />
+      {/* Hero Section */}
+      <header className="text-center my-8 md:my-16 animate-fade-in-down">
+        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
+          Discover The Next Generation of AI Tools
+        </h1>
+        <p className="mt-3 text-lg text-muted-foreground max-w-3xl mx-auto">
+          Explore a curated list of AI tools for creativity, productivity, development, and more.
+        </p>
+        <div className="mt-8 max-w-2xl mx-auto relative">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder="Search for a tool, category, or keyword..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full h-12 pl-12 pr-4 rounded-full bg-background/50 border-2 border-border focus:border-primary transition-colors"
+          />
+        </div>
+      </header>
+
+      <div className="container mx-auto max-w-screen-2xl">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Desktop Sidebar */}
+          <aside className="hidden md:block w-full md:w-64 lg:w-72 flex-shrink-0 animate-fade-in-left">
+            <div className="sticky top-20">
+              <FilterSidebar selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} />
             </div>
-            <h1 className="text-4xl sm:text-5xl font-bold tracking-tight animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
-                AI Tool Directory
-            </h1>
-            <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto">
-                A curated list of powerful AI tools to enhance your productivity, creativity, and workflow.
-            </p>
-        </header>
+          </aside>
 
-        <div className="space-y-16">
-          {toolCategories.map((category, catIndex) => (
-            <section key={category.category} className="animate-fade-in-up" style={{ animationDelay: `${catIndex * 150}ms`, animationFillMode: 'both' }}>
-              <div className="flex items-center gap-4 mb-6">
-                <div className="bg-primary/10 p-3 rounded-lg shadow-inner-glow">
-                  {category.icon}
-                </div>
-                <h2 className="text-3xl font-bold">{category.category}</h2>
+          {/* Main Content */}
+          <main className="flex-1 w-full min-w-0">
+            <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
+              <p className="text-muted-foreground mb-4 sm:mb-0">
+                Showing <span className="font-bold text-foreground">{filteredTools.length}</span> of <span className="font-bold text-foreground">{allTools.length}</span> tools
+              </p>
+              <div className="flex items-center gap-2">
+                {/* Mobile Filter Trigger */}
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" className="md:hidden">
+                      <SlidersHorizontal className="h-4 w-4 mr-2" />
+                      Filter
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left" className="w-full max-w-sm">
+                     <FilterSidebar selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories} />
+                  </SheetContent>
+                </Sheet>
+                <Button variant={viewMode === 'grid' ? 'secondary' : 'outline'} size="icon" onClick={() => setViewMode('grid')}>
+                  <LayoutGrid className="h-5 w-5" />
+                </Button>
+                <Button variant={viewMode === 'list' ? 'secondary' : 'outline'} size="icon" onClick={() => setViewMode('list')}>
+                  <List className="h-5 w-5" />
+                </Button>
               </div>
-               <Carousel
-                opts={{
-                  align: 'start',
-                  loop: false,
-                }}
-                className="w-full"
-              >
-                <CarouselContent className="-ml-4">
-                  {category.tools.map((tool) => (
-                    <CarouselItem key={tool.name} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 pl-4">
-                        <ToolCard tool={tool} />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="hidden md:flex" />
-                <CarouselNext className="hidden md:flex" />
-              </Carousel>
-            </section>
-          ))}
+            </div>
+
+            {viewMode === 'grid' ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fade-in-up">
+                {filteredTools.map((tool, index) => (
+                  <AIToolCard key={tool.name} tool={tool} index={index} />
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-4 animate-fade-in-up">
+                {filteredTools.map((tool, index) => (
+                  <AIToolList key={tool.name} tool={tool} index={index} />
+                ))}
+              </div>
+            )}
+            
+            {filteredTools.length === 0 && (
+                 <div className="text-center py-16">
+                    <h2 className="text-2xl font-semibold">No tools found</h2>
+                    <p className="text-muted-foreground mt-2">Try adjusting your search or filters.</p>
+                </div>
+            )}
+          </main>
         </div>
       </div>
     </div>

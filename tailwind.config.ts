@@ -94,7 +94,7 @@ const config = {
         "fade-in-left": {
           "0%": {
             opacity: "0",
-            transform: "translateX(20px)"
+            transform: "translateX(-20px)"
           },
           "100%": {
             opacity: "1",
