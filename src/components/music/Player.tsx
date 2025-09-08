@@ -10,7 +10,6 @@ import {
   SkipBack,
   SkipForward,
   ArrowLeft,
-  Volume2,
   MoreHorizontal,
   Shuffle,
   Repeat,
@@ -38,21 +37,11 @@ export function Player() {
     handleSeek,
   } = useMusicPlayer();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [showVolume, setShowVolume] = useState(false);
-  const [volume, setVolumeState] = useState(1);
   const [isShuffle, setIsShuffle] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
 
   if (!currentSong) {
     return null;
-  }
-
-  const handleVolumeChange = (value: number[]) => {
-    const newVolume = value[0] / 100;
-    setVolumeState(newVolume);
-    if (audioRef.current) {
-        audioRef.current.volume = newVolume;
-    }
   }
   
   const handleShuffleClick = (e: React.MouseEvent) => {
@@ -155,27 +144,6 @@ export function Player() {
                     className="rounded-2xl shadow-lg object-cover"
                     data-ai-hint="song album cover"
                 />
-                <div className='absolute bottom-4 right-4'>
-                    <div className="relative">
-                        <button 
-                            onClick={() => setShowVolume(!showVolume)}
-                            className='w-10 h-10 bg-background/50 backdrop-blur-sm rounded-full flex items-center justify-center text-foreground'
-                        >
-                            <Volume2 size={20}/>
-                        </button>
-                        {showVolume && (
-                           <div className="absolute bottom-12 right-0 w-28 p-2 bg-background/70 backdrop-blur-md rounded-lg">
-                             <Slider
-                                value={[volume * 100]}
-                                max={100}
-                                step={1}
-                                onValueChange={handleVolumeChange}
-                                className="w-full"
-                             />
-                           </div>
-                        )}
-                    </div>
-                </div>
             </div>
         </main>
         
