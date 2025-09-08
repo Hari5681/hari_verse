@@ -2,19 +2,16 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { LayoutGrid, List, Search, SlidersHorizontal, X } from 'lucide-react';
-import { toolCategories, AITool } from '@/lib/ai-tools';
+import { Search, SlidersHorizontal } from 'lucide-react';
+import { toolCategories } from '@/lib/ai-tools';
 import { AIToolCard } from '@/components/ai/AIToolCard';
-import { AIToolList } from '@/components/ai/AIToolList';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-
-const allTools = toolCategories.flatMap(category => category.tools.map(tool => ({ ...tool, category: category.category })));
+import Autoplay from 'embla-carousel-autoplay';
 
 const FilterSidebar = ({ selectedCategories, setSelectedCategories }: { selectedCategories: string[], setSelectedCategories: (cats: string[]) => void }) => {
 
@@ -141,7 +138,9 @@ export default function AiToolsPage() {
                       opts={{
                           align: 'start',
                           slidesToScroll: 'auto',
+                          loop: true,
                       }}
+                      plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}
                       className="w-full"
                     >
                       <CarouselContent className="-ml-4">

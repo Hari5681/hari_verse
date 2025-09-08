@@ -4,7 +4,6 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button';
 import { ArrowUpRight } from 'lucide-react';
 import type { AITool } from '@/lib/ai-tools';
-import { cn } from '@/lib/utils';
 import { ToolLogo } from './ToolLogo';
 import React, { useRef, useState } from 'react';
 
@@ -26,7 +25,7 @@ export function AIToolCard({ tool, index }: AIToolCardProps) {
         const yPercentage = e.clientY - top;
 
         setStyle({
-            transform: `perspective(500px) rotateX(${-y}deg) rotateY(${x}deg) scale3d(1.05, 1.05, 1.05)`,
+            transform: `perspective(1000px) rotateX(${-y}deg) rotateY(${x}deg) scale3d(1.05, 1.05, 1.05)`,
             '--mouse-x': `${xPercentage}px`,
             '--mouse-y': `${yPercentage}px`,
         });
@@ -34,7 +33,7 @@ export function AIToolCard({ tool, index }: AIToolCardProps) {
 
     const handleMouseLeave = () => {
         setStyle({
-            transform: 'perspective(500px) rotateX(0) rotateY(0) scale3d(1, 1, 1)',
+            transform: 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)',
         });
     };
 
@@ -48,7 +47,7 @@ export function AIToolCard({ tool, index }: AIToolCardProps) {
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
                 style={style as React.CSSProperties}
-                className="group relative h-full flex flex-col justify-between p-4 bg-background/50 transition-transform duration-300 ease-out will-change-transform"
+                className="group relative h-full flex flex-col justify-between p-4 bg-background/50 transition-transform duration-300 ease-out will-change-transform card-content"
             >
                 <div className="absolute inset-0 bg-grid-pattern opacity-0 transition-opacity duration-300 group-hover:opacity-10"></div>
                 <div className="mouse-orb"></div>
