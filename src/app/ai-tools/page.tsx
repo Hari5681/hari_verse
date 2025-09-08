@@ -11,6 +11,7 @@ import { AIToolCard } from '@/components/ai/AIToolCard';
 import { AIToolList } from '@/components/ai/AIToolList';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import { Separator } from '@/components/ui/separator';
 
 const allTools = toolCategories.flatMap(category => category.tools.map(tool => ({ ...tool, category: category.category })));
 
@@ -55,17 +56,24 @@ export default function AiToolsPage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  const filteredTools = useMemo(() => {
-    return allTools
-      .filter(tool => {
-        const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(tool.category);
-        const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                              tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                              tool.category.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesCategory && matchesSearch;
+  const filteredCategories = useMemo(() => {
+    return toolCategories
+      .map(category => {
+        const filteredTools = category.tools.filter(tool => {
+            const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                  tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                  category.category.toLowerCase().includes(searchQuery.toLowerCase());
+            return matchesSearch;
+        });
+        return { ...category, tools: filteredTools };
       })
-      .sort((a, b) => a.name.localeCompare(b.name));
+      .filter(category => {
+          const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(category.category);
+          return matchesCategory && category.tools.length > 0;
+      });
   }, [searchQuery, selectedCategories]);
+
+  const totalFilteredTools = filteredCategories.reduce((sum, cat) => sum + cat.tools.length, 0);
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4 pt-20">
@@ -106,7 +114,7 @@ export default function AiToolsPage() {
           <main className="flex-1 w-full min-w-0">
             <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
               <p className="text-muted-foreground mb-4 sm:mb-0">
-                Showing <span className="font-bold text-foreground">{filteredTools.length}</span> of <span className="font-bold text-foreground">{allTools.length}</span> tools
+                Showing <span className="font-bold text-foreground">{totalFilteredTools}</span> of <span className="font-bold text-foreground">{allTools.length}</span> tools
               </p>
               <div className="flex items-center gap-2">
                 {/* Mobile Filter Trigger */}
@@ -130,21 +138,32 @@ export default function AiToolsPage() {
               </div>
             </div>
 
-            {viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-fade-in-up">
-                {filteredTools.map((tool, index) => (
-                  <AIToolCard key={tool.name} tool={tool} index={index} />
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-4 animate-fade-in-up">
-                {filteredTools.map((tool, index) => (
-                  <AIToolList key={tool.name} tool={tool} index={index} />
-                ))}
-              </div>
-            )}
+            <div className="space-y-12">
+              {filteredCategories.map(category => (
+                <section key={category.category} className="animate-fade-in-up">
+                  <div className="flex items-center gap-3 mb-4">
+                    {category.icon}
+                    <h2 className="text-2xl font-bold">{category.category}</h2>
+                  </div>
+                  <Separator className="mb-6 bg-border/20"/>
+                   {viewMode === 'grid' ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {category.tools.map((tool, index) => (
+                        <AIToolCard key={tool.name} tool={{...tool, category: category.category}} index={index} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {category.tools.map((tool, index) => (
+                        <AIToolList key={tool.name} tool={{...tool, category: category.category}} index={index} />
+                      ))}
+                    </div>
+                  )}
+                </section>
+              ))}
+            </div>
             
-            {filteredTools.length === 0 && (
+            {totalFilteredTools === 0 && (
                  <div className="text-center py-16">
                     <h2 className="text-2xl font-semibold">No tools found</h2>
                     <p className="text-muted-foreground mt-2">Try adjusting your search or filters.</p>
