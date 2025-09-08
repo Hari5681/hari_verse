@@ -4,13 +4,13 @@
 import React, { useState, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 import { toolCategories } from '@/lib/ai-tools';
 import { AIToolCard } from '@/components/ai/AIToolCard';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import Autoplay from "embla-carousel-autoplay";
 
 const FilterSidebar = ({ selectedCategories, setSelectedCategories }: { selectedCategories: string[], setSelectedCategories: (cats: string[]) => void }) => {
 
@@ -49,25 +49,21 @@ const FilterSidebar = ({ selectedCategories, setSelectedCategories }: { selected
 
 
 export default function AiToolsPage() {
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const filteredCategories = useMemo(() => {
     return toolCategories
       .map(category => {
         const filteredTools = category.tools.filter(tool => {
-            const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                  tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                  category.category.toLowerCase().includes(searchQuery.toLowerCase());
-            return matchesSearch;
+            const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(category.category);
+            return matchesCategory;
         });
         return { ...category, tools: filteredTools };
       })
       .filter(category => {
-          const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(category.category);
-          return matchesCategory && category.tools.length > 0;
+          return category.tools.length > 0;
       });
-  }, [searchQuery, selectedCategories]);
+  }, [selectedCategories]);
 
   const totalFilteredTools = filteredCategories.reduce((sum, cat) => sum + cat.tools.length, 0);
 
@@ -85,16 +81,6 @@ export default function AiToolsPage() {
         <p className="mt-3 text-lg text-muted-foreground max-w-3xl mx-auto animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
           Explore a curated list of AI tools for creativity, productivity, development, and more.
         </p>
-        <div className="mt-8 max-w-2xl mx-auto relative animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-          <Input
-            type="text"
-            placeholder="Search for a tool, category, or keyword..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-12 pl-12 pr-4 rounded-full bg-background/50 border-2 border-border focus:border-primary transition-colors"
-          />
-        </div>
       </header>
 
       <div className="container mx-auto max-w-screen-2xl">
@@ -139,6 +125,7 @@ export default function AiToolsPage() {
                           slidesToScroll: 'auto',
                           loop: true,
                       }}
+                      plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}
                       className="w-full"
                     >
                       <CarouselContent className="-ml-4">
