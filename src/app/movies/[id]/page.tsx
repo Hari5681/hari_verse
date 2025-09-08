@@ -292,8 +292,8 @@ export default function MovieDetailPage() {
                             </CarouselItem>
                             ))}
                         </CarouselContent>
-                        <CarouselPrevious className="hidden md:flex" />
-                        <CarouselNext className="hidden md:flex" />
+                        <CarouselPrevious className="transition-opacity disabled:opacity-0" />
+                        <CarouselNext className="transition-opacity disabled:opacity-0" />
                     </Carousel>
                 </section>
             )}
@@ -336,8 +336,8 @@ export default function MovieDetailPage() {
                             </CarouselItem>
                         ))}
                         </CarouselContent>
-                        <CarouselPrevious className="hidden md:flex" />
-                        <CarouselNext className="hidden md:flex" />
+                        <CarouselPrevious className="transition-opacity disabled:opacity-0" />
+                        <CarouselNext className="transition-opacity disabled:opacity-0" />
                     </Carousel>
                 </section>
             </div>
