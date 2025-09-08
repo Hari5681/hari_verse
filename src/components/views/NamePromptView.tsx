@@ -11,11 +11,14 @@ type NamePromptViewProps = {
 
 export function NamePromptView({ onSubmit }: NamePromptViewProps) {
   const [name, setName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (name.trim()) {
-      onSubmit(name.trim());
+    if (name.trim() && !isSubmitting) {
+      setIsSubmitting(true);
+      await onSubmit(name.trim());
+      // No need to set isSubmitting back to false, as the component will unmount
     }
   };
 
@@ -40,8 +43,8 @@ export function NamePromptView({ onSubmit }: NamePromptViewProps) {
             />
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full">
-              Continue
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? 'Saving...' : 'Continue'}
             </Button>
           </CardFooter>
         </form>
