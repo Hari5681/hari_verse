@@ -109,8 +109,8 @@ export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, wit
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-                <CarouselPrevious className="hidden md:flex"/>
-                <CarouselNext className="hidden md:flex"/>
+                <CarouselPrevious className="transition-opacity disabled:opacity-0" />
+                <CarouselNext className="transition-opacity disabled:opacity-0" />
             </Carousel>
         )}
 
