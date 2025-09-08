@@ -14,15 +14,6 @@ import { cn } from '@/lib/utils';
 
 const inter = Inter({ subsets: ['latin'] });
 
-// Conditionally import redirect.css
-if (typeof window !== 'undefined') {
-    const currentPath = window.location.pathname;
-    if (currentPath.startsWith('/redirect')) {
-        import('./redirect/redirect.css');
-    }
-}
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -58,6 +49,13 @@ function MainContent({ children }: { children: React.ReactNode }) {
       root.style.setProperty('--dynamic-primary-l', '59.8%');
     }
   }, [theme]);
+  
+  useEffect(() => {
+    // Conditionally import redirect.css on the client side
+    if (isRedirectPage) {
+        import('./redirect/redirect.css');
+    }
+  }, [isRedirectPage]);
 
   return (
     <div className="relative flex min-h-screen flex-col">
