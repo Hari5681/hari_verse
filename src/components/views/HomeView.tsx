@@ -6,18 +6,60 @@ import { CtaSection } from './home/CtaSection';
 import { MusicShowcase } from './home/MusicShowcase';
 import { MoviesShowcase } from './home/MoviesShowcase';
 import { FeaturedAiTools } from './home/FeaturedAiTools';
-import { Separator } from '@/components/ui/separator';
-import { User, Github, Linkedin, Instagram, Mail, Globe } from 'lucide-react';
+import { User, Globe } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import React, { useRef, useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 type HomeViewProps = {
   name: string;
 };
 
+const Section = ({ id, children, className }: { id: string, children: React.ReactNode, className?: string }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+      },
+      {
+        threshold: 0.5, // Trigger when 50% of the section is visible
+      }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, []);
+  
+  return (
+      <section
+          ref={ref}
+          id={id}
+          className={cn(
+              "h-screen w-full flex flex-col items-center justify-center p-4 snap-start transition-opacity duration-1000 ease-in-out",
+              inView ? "opacity-100" : "opacity-0",
+              className
+          )}
+      >
+          <div className={cn("transition-transform duration-1000 ease-out", inView ? "translate-y-0" : "translate-y-10")}>
+             {children}
+          </div>
+      </section>
+  )
+};
+
 const AboutMeSection = () => (
-  <section id="about" className="w-full py-16 sm:py-24 animate-fade-in-up">
     <div className="container mx-auto">
        <Card className="w-full max-w-3xl mx-auto text-center bg-card/50 backdrop-blur-sm">
         <CardHeader>
@@ -41,49 +83,35 @@ const AboutMeSection = () => (
         </CardFooter>
       </Card>
     </div>
-  </section>
 );
 
 
 export function HomeView({ name }: HomeViewProps) {
   return (
-    <div className="flex min-h-screen w-full flex-col items-center bg-background">
-      <HeroSection name={name} />
+    <div className="h-screen w-full snap-y snap-mandatory overflow-y-scroll overflow-x-hidden">
+      <Section id="home" className="p-0">
+         <HeroSection name={name} />
+      </Section>
       
-      <div id="music" className="w-full pt-16">
+      <Section id="music">
         <MusicShowcase />
-      </div>
+      </Section>
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <Separator className="my-16 bg-border/50" />
-      </div>
-      
-      <div id="movies" className="w-full">
+      <Section id="movies">
          <MoviesShowcase />
-      </div>
+      </Section>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <Separator className="my-16 bg-border/50" />
-      </div>
-
-       <div id="ai-tools" className="w-full">
+       <Section id="ai-tools">
          <FeaturedAiTools />
-      </div>
+      </Section>
       
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <Separator className="my-16 bg-border/50" />
-      </div>
-      
-      <AboutMeSection />
+      <Section id="about">
+        <AboutMeSection />
+      </Section>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <Separator className="my-16 bg-border/50" />
-      </div>
-
-      <div id="contact" className="w-full">
+      <Section id="contact">
         <CtaSection />
-      </div>
-
+      </Section>
     </div>
   );
 }
