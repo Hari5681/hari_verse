@@ -41,12 +41,6 @@ const FilterSidebar = ({ activeCategories, onApply }: { activeCategories: string
 
   return (
     <div className="flex flex-col h-full">
-       <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-lg">
-            <Search className="h-5 w-5 text-primary" />
-            Filter Tools
-          </DialogTitle>
-       </DialogHeader>
        <div className="flex-grow my-4">
           <div className="flex flex-wrap gap-2">
             {displayCategories.map(category => {
@@ -128,6 +122,12 @@ export default function AiToolsPage() {
           {/* Desktop Sidebar */}
           <aside className="hidden md:block w-full md:w-64 lg:w-72 flex-shrink-0 animate-fade-in-left">
             <Card className="sticky top-20 p-4 bg-black/30 backdrop-blur-lg border border-white/10 shadow-lg">
+               <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2 text-lg">
+                    <Search className="h-5 w-5 text-primary" />
+                    Filter Tools
+                  </DialogTitle>
+               </DialogHeader>
               <FilterSidebar activeCategories={activeFilters} onApply={setActiveFilters} />
             </Card>
           </aside>
@@ -145,6 +145,12 @@ export default function AiToolsPage() {
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="w-full max-w-sm bg-black/30 backdrop-blur-lg border border-white/10 shadow-lg">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2 text-lg">
+                            <Search className="h-5 w-5 text-primary" />
+                            Filter Tools
+                        </DialogTitle>
+                    </DialogHeader>
                      <FilterSidebar activeCategories={activeFilters} onApply={setActiveFilters} />
                   </DialogContent>
                 </Dialog>
