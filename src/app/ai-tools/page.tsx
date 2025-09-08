@@ -11,7 +11,6 @@ import { AIToolCard } from '@/components/ai/AIToolCard';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import Autoplay from 'embla-carousel-autoplay';
 
 const FilterSidebar = ({ selectedCategories, setSelectedCategories }: { selectedCategories: string[], setSelectedCategories: (cats: string[]) => void }) => {
 
@@ -130,7 +129,7 @@ export default function AiToolsPage() {
               {filteredCategories.map(category => (
                 <section key={category.category} className="animate-fade-in-up">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="text-primary w-6 h-6">{category.icon}</div>
+                    <div className="text-primary w-8 h-8">{category.icon}</div>
                     <h2 className="text-xl sm:text-2xl font-bold">{category.category}</h2>
                   </div>
                   <Separator className="mb-6 bg-border/20"/>
@@ -140,7 +139,6 @@ export default function AiToolsPage() {
                           slidesToScroll: 'auto',
                           loop: true,
                       }}
-                      plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}
                       className="w-full"
                     >
                       <CarouselContent className="-ml-4">
