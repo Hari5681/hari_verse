@@ -88,17 +88,17 @@ export function FeaturedArtists() {
   }
 
   return (
-    <section className="animate-fade-in-up">
+    <section className="animate-fade-in-up w-full">
         <Carousel 
             opts={{ align: "start", loop: false }} 
             className="w-full"
         >
             <CarouselContent className="-ml-4">
                 {artists.map((artist) => (
-                    <CarouselItem key={artist.name} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6 pl-4 pb-4">
+                    <CarouselItem key={artist.name} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 pl-4 pb-4">
                         <Link href={`/music/artist/${encodeURIComponent(artist.name)}`} passHref>
                             <div className="group flex flex-col items-center text-center gap-2 cursor-pointer">
-                                <div className="relative w-32 h-32 md:w-40 md:h-40">
+                                <div className="relative w-28 h-28 md:w-40 md:h-40">
                                     <Image 
                                         src={artist.imageUrl} 
                                         layout="fill" 
@@ -114,8 +114,8 @@ export function FeaturedArtists() {
                     </CarouselItem>
                 ))}
             </CarouselContent>
-            <CarouselPrevious className="hidden md:flex"/>
-            <CarouselNext className="hidden md:flex"/>
+            <CarouselPrevious className="hidden sm:flex"/>
+            <CarouselNext className="hidden sm:flex"/>
         </Carousel>
     </section>
   );
