@@ -47,28 +47,30 @@ export function AIToolCard({ tool, index }: AIToolCardProps) {
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
                 style={style as React.CSSProperties}
-                className="group relative h-full flex flex-col justify-between p-4 bg-background/50 transition-transform duration-300 ease-out will-change-transform card-content"
+                className="group relative h-full flex flex-col justify-between p-4 bg-background/50 transition-transform duration-300 ease-out will-change-transform card-content overflow-hidden"
             >
                 <div className="absolute inset-0 bg-grid-pattern opacity-0 transition-opacity duration-300 group-hover:opacity-10"></div>
                 <div className="mouse-orb"></div>
-              <div className="flex-grow">
-                <CardHeader className="p-0 flex-row items-center gap-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20">
-                    <ToolLogo toolName={tool.name} className="h-7 w-7 text-primary" />
-                  </div>
-                  <CardTitle className="text-lg font-semibold">{tool.name}</CardTitle>
-                </CardHeader>
-                <CardContent className="p-0 pt-3">
-                  <CardDescription>{tool.description}</CardDescription>
-                </CardContent>
-              </div>
-              <div className="mt-4">
-                <Link href={`/redirect?url=${encodeURIComponent(tool.link)}`} target="_blank" rel="noopener noreferrer" className="w-full">
-                    <Button variant="outline" className="w-full bg-background/50 hover:bg-white/10 hover:text-white">
-                        Visit <ArrowUpRight className="h-4 w-4 ml-2" />
-                    </Button>
-                </Link>
-              </div>
+                
+                <div className="flex-grow flex flex-col transition-transform duration-300 ease-out group-hover:-translate-y-4">
+                    <CardHeader className="p-0 flex-row items-center gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20">
+                        <ToolLogo toolName={tool.name} className="h-7 w-7 text-primary" />
+                      </div>
+                      <CardTitle className="text-lg font-semibold">{tool.name}</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0 pt-3">
+                      <CardDescription>{tool.description}</CardDescription>
+                    </CardContent>
+                </div>
+                
+                <div className="absolute bottom-0 left-0 right-0 p-4 transition-all duration-300 ease-out transform translate-y-full group-hover:translate-y-0">
+                    <Link href={`/redirect?url=${encodeURIComponent(tool.link)}`} target="_blank" rel="noopener noreferrer" className="w-full">
+                        <Button variant="outline" className="w-full bg-background/50 hover:bg-white/10 hover:text-white">
+                            Visit <ArrowUpRight className="h-4 w-4 ml-2" />
+                        </Button>
+                    </Link>
+                </div>
             </Card>
         </div>
     );
