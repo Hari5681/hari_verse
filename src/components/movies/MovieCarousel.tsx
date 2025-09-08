@@ -70,13 +70,19 @@ export function MovieCarousel({ title, subtitle, endpoint, language, sortBy, wit
 
   const hasTitle = title && subtitle;
 
+  const emojiRegex = /(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)/u;
+  const match = title.match(emojiRegex);
+  const emoji = match ? match[0] : '';
+  const textTitle = title.replace(emojiRegex, '').trim();
+
   return (
     <section className="animate-fade-in-up">
         {hasTitle && (
             <div className="mb-6">
                 <h2 className="text-3xl font-bold">
+                    {emoji && <span className="inline-block animate-pulse-glow mr-2">{emoji}</span>}
                     <span className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
-                        {title}
+                        {textTitle}
                     </span>
                 </h2>
                 <p className="text-muted-foreground">{subtitle}</p>
