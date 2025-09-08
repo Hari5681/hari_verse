@@ -12,6 +12,7 @@ import { ArrowRight, Search, View } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import React from 'react';
 
 export default function MoviesPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -92,17 +93,16 @@ export default function MoviesPage() {
                 {genres.map((genre, index) => (
                   <CarouselItem key={genre.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
                     <Link href={`/movies/category/${genre.name.toLowerCase()}`} passHref>
-                      <Card 
-                        className="group flex flex-col justify-between h-40 overflow-hidden rounded-lg bg-card text-card-foreground shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-primary/20 hover:border-primary/50"
-                        style={{ animationDelay: `${index * 100}ms` }}
-                      >
-                        <CardHeader>
-                          <CardTitle className="text-xl font-bold flex items-center justify-between">
-                            <span>{genre.name}</span>
-                            <ArrowRight className="h-5 w-5 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
-                          </CardTitle>
-                        </CardHeader>
-                      </Card>
+                       <Card className="group relative flex flex-col justify-between h-40 overflow-hidden rounded-lg bg-card text-card-foreground shadow-lg transition-all duration-300 ease-in-out hover:shadow-primary/20 hover:border-primary/50 card-content will-change-transform">
+                          <div className="absolute inset-0 bg-grid-pattern opacity-0 transition-opacity duration-300 group-hover:opacity-10"></div>
+                          <div className="mouse-orb"></div>
+                          <CardHeader className="transition-transform duration-300 group-hover:-translate-y-2">
+                              <CardTitle className="text-xl font-bold flex items-center justify-between">
+                                  <span>{genre.name}</span>
+                                  <ArrowRight className="h-5 w-5 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
+                              </CardTitle>
+                          </CardHeader>
+                       </Card>
                     </Link>
                   </CarouselItem>
                 ))}
