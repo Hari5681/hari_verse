@@ -269,7 +269,10 @@ export default function MusicPage() {
 
                 <div className="mt-12 text-center text-muted-foreground animate-fade-in-up" style={{ animationDelay: '500ms' }}>
                     <p className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
-                        Music updates in progress… Please stay tuned!
+                        Music updates in progress…
+                    </p>
+                    <p className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
+                        Please stay tuned!
                     </p>
                 </div>
             </div>
