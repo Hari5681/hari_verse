@@ -12,7 +12,68 @@ import { Separator } from '@/components/ui/separator';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { cn } from '@/lib/utils';
 
-const FilterSidebar = ({ activeCategories, onApply }: { activeCategories: string[], onApply: (cats: string[]) => void }) => {
+const FilterButtons = ({ selectedCategories, onToggle }: { selectedCategories: string[], onToggle: (cat: string | null) => void }) => {
+    const allCategoriesOption = { category: 'All', icon: <Search className="w-full h-full" /> };
+    const displayCategories = [allCategoriesOption, ...toolCategories];
+
+    return (
+        <div className="flex flex-wrap gap-2">
+            {displayCategories.map(category => {
+                const isSelected = category.category === 'All'
+                    ? selectedCategories.length === 0
+                    : selectedCategories.includes(category.category);
+                
+                return (
+                  <Button
+                    key={category.category}
+                    variant={'ghost'}
+                    size="sm"
+                    className={cn(
+                        "rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-foreground/80 transition-all duration-300",
+                        "hover:bg-white/10 hover:text-white hover:border-white/20",
+                        isSelected && "bg-primary/20 border-primary/50 text-primary shadow-[0_0_15px_hsl(var(--primary)/0.5)]"
+                    )}
+                    onClick={() => onToggle(category.category === 'All' ? null : category.category)}
+                  >
+                    {category.category}
+                  </Button>
+                );
+            })}
+        </div>
+    );
+};
+
+const FilterFooter = ({ isDialog, onApply, onCancel }: { isDialog: boolean, onApply: () => void, onCancel: () => void }) => {
+    if (isDialog) {
+        return (
+            <DialogFooter className="mt-auto pt-4 border-t border-border/20">
+                <DialogClose asChild>
+                    <Button variant="ghost" onClick={onCancel}>Cancel</Button>
+                </DialogClose>
+                <DialogClose asChild>
+                    <Button onClick={onApply}>
+                      <Check className="h-4 w-4 mr-2" />
+                      Apply
+                    </Button>
+                </DialogClose>
+            </DialogFooter>
+        );
+    }
+
+    return (
+        <div className="mt-auto pt-4 border-t border-border/20 flex flex-col gap-2">
+            <Button onClick={onApply}>
+                <Check className="h-4 w-4 mr-2" />
+                Apply
+            </Button>
+            <Button variant="ghost" onClick={onCancel}>
+                Cancel
+            </Button>
+        </div>
+    );
+};
+
+const FilterSidebar = ({ activeCategories, onApply, isDialog = false }: { activeCategories: string[], onApply: (cats: string[]) => void, isDialog?: boolean }) => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>(activeCategories);
   
   useEffect(() => {
@@ -34,49 +95,17 @@ const FilterSidebar = ({ activeCategories, onApply }: { activeCategories: string
   const handleApply = () => {
     onApply(selectedCategories);
   };
+
+  const handleCancel = () => {
+    setSelectedCategories(activeCategories);
+  };
   
-  const allCategoriesOption = { category: 'All', icon: <Search className="w-full h-full" /> };
-  const displayCategories = [allCategoriesOption, ...toolCategories];
-
-
   return (
     <div className="flex flex-col h-full">
        <div className="flex-grow my-4">
-          <div className="flex flex-wrap gap-2">
-            {displayCategories.map(category => {
-                const isSelected = category.category === 'All'
-                    ? selectedCategories.length === 0
-                    : selectedCategories.includes(category.category);
-                
-                return (
-                  <Button
-                    key={category.category}
-                    variant={'ghost'}
-                    size="sm"
-                    className={cn(
-                        "rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-foreground/80 transition-all duration-300",
-                        "hover:bg-white/10 hover:text-white hover:border-white/20",
-                        isSelected && "bg-primary/20 border-primary/50 text-primary shadow-[0_0_15px_hsl(var(--primary)/0.5)]"
-                    )}
-                    onClick={() => toggleCategory(category.category === 'All' ? null : category.category)}
-                  >
-                    {category.category}
-                  </Button>
-                );
-            })}
-          </div>
+            <FilterButtons selectedCategories={selectedCategories} onToggle={toggleCategory} />
        </div>
-       <DialogFooter className="mt-auto pt-4 border-t border-border/20">
-            <DialogClose asChild>
-                <Button variant="ghost" onClick={() => setSelectedCategories(activeCategories)}>Cancel</Button>
-            </DialogClose>
-            <DialogClose asChild>
-                <Button onClick={handleApply}>
-                  <Check className="h-4 w-4 mr-2" />
-                  Apply
-                </Button>
-            </DialogClose>
-       </DialogFooter>
+       <FilterFooter isDialog={isDialog} onApply={handleApply} onCancel={handleCancel} />
     </div>
   );
 };
@@ -84,6 +113,7 @@ const FilterSidebar = ({ activeCategories, onApply }: { activeCategories: string
 
 export default function AiToolsPage() {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   const filteredCategories = useMemo(() => {
     return toolCategories
@@ -100,6 +130,11 @@ export default function AiToolsPage() {
   }, [activeFilters]);
 
   const totalFilteredTools = filteredCategories.reduce((sum, cat) => sum + cat.tools.length, 0);
+  
+  const handleApplyFilters = (categories: string[]) => {
+      setActiveFilters(categories);
+      setIsMobileFilterOpen(false); // Close dialog on apply
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4 pt-20">
@@ -128,7 +163,7 @@ export default function AiToolsPage() {
                     Filter Tools
                   </CardTitle>
                </CardHeader>
-              <FilterSidebar activeCategories={activeFilters} onApply={setActiveFilters} />
+              <FilterSidebar activeCategories={activeFilters} onApply={handleApplyFilters} isDialog={false} />
             </Card>
           </aside>
 
@@ -137,7 +172,7 @@ export default function AiToolsPage() {
             <div className="flex flex-col sm:flex-row justify-end items-center mb-6">
               <div className="flex items-center gap-2">
                 {/* Mobile Filter Trigger */}
-                <Dialog>
+                <Dialog open={isMobileFilterOpen} onOpenChange={setIsMobileFilterOpen}>
                   <DialogTrigger asChild>
                     <Button variant="outline" className="md:hidden">
                       <SlidersHorizontal className="h-4 w-4 mr-2" />
@@ -151,7 +186,7 @@ export default function AiToolsPage() {
                             Filter Tools
                         </DialogTitle>
                     </DialogHeader>
-                     <FilterSidebar activeCategories={activeFilters} onApply={setActiveFilters} />
+                     <FilterSidebar activeCategories={activeFilters} onApply={handleApplyFilters} isDialog={true} />
                   </DialogContent>
                 </Dialog>
               </div>
