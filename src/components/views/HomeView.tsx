@@ -24,10 +24,12 @@ const Section = ({ id, children, className }: { id: string, children: React.Reac
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setInView(entry.isIntersecting);
+        if (entry.isIntersecting) {
+            setInView(true);
+        }
       },
       {
-        threshold: 0.5,
+        threshold: 0.2, // Trigger when 20% of the section is visible
       }
     );
 
@@ -47,12 +49,12 @@ const Section = ({ id, children, className }: { id: string, children: React.Reac
           ref={ref}
           id={id}
           className={cn(
-              "h-screen w-full flex flex-col items-center justify-center p-4 snap-start transition-opacity duration-1000 ease-in-out",
+              "w-full flex flex-col items-center justify-center p-4 md:h-screen md:snap-start transition-opacity duration-1000 ease-in-out py-16 md:py-4",
               inView ? "opacity-100" : "opacity-0",
               className
           )}
       >
-          <div className={cn("transition-transform duration-1000 ease-out", inView ? "translate-y-0" : "translate-y-10")}>
+          <div className={cn("transition-transform duration-1000 ease-out w-full", inView ? "translate-y-0" : "translate-y-10")}>
              {children}
           </div>
       </section>
@@ -88,7 +90,7 @@ const AboutMeSection = () => (
 
 export function HomeView({ name }: HomeViewProps) {
   return (
-    <div className="h-screen w-full snap-y snap-mandatory overflow-y-scroll overflow-x-hidden">
+    <div className="w-full md:h-screen md:snap-y md:snap-mandatory md:overflow-y-scroll md:overflow-x-hidden">
       <section id="home" className="h-screen w-full flex flex-col items-center justify-center snap-start relative">
         <div className="absolute inset-0 w-full h-full bg-black">
             <div className="absolute inset-0 bg-grid-pattern opacity-30 animate-grid-pan" />
@@ -111,10 +113,6 @@ export function HomeView({ name }: HomeViewProps) {
       
       <Section id="about">
         <AboutMeSection />
-      </Section>
-
-      <Section id="contact">
-        <CtaSection />
       </Section>
     </div>
   );

@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Mail, Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/lib/supabase';
 
 export default function ContactPage() {
   const [name, setName] = useState('');
@@ -17,16 +18,17 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // TODO: Implement backend logic (e.g., send email, save to database)
-    console.log({ name, email, message });
+    try {
+      const { error } = await supabase
+        .from('contacts')
+        .insert({ name, email, message });
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
+      if (error) throw error;
+      
       toast({
         title: "Message Sent!",
         description: "Thanks for your feedback. I'll get back to you soon.",
@@ -35,7 +37,16 @@ export default function ContactPage() {
       setName('');
       setEmail('');
       setMessage('');
-    }, 1000);
+    } catch (error: any) {
+        toast({
+            variant: 'destructive',
+            title: "Something went wrong.",
+            description: "Could not send your message. Please try again.",
+        });
+        console.error("Error saving contact message:", error);
+    } finally {
+        setIsSubmitting(false);
+    }
   };
 
 
