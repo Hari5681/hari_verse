@@ -5,8 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { getArtistImageUrl, getArtistFromTitle } from '@/lib/musicUtils';
-import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
 import { AlertTriangle } from 'lucide-react';
 
 interface Song {
@@ -60,7 +58,7 @@ export function FeaturedArtists() {
                 if (bIndex > -1) return 1;
                 return a.name.localeCompare(b.name);
             });
-            setArtists(sortedArtists);
+            setArtists(sortedArtists.slice(0, 10)); // Limit to 10 featured artists
         }
       } catch (err: any) {
         setError(err.message);
@@ -72,12 +70,6 @@ export function FeaturedArtists() {
   if (error) {
      return (
         <section className="animate-fade-in-up">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-                <div>
-                    <h2 className="text-3xl font-bold">🎧 Featured Artists</h2>
-                    <p className="text-muted-foreground mt-1">Handpicked sounds for every mood.</p>
-                </div>
-            </div>
             <div className="flex flex-col items-center justify-center rounded-lg bg-destructive/10 p-6 text-center text-destructive-foreground">
                 <AlertTriangle className="h-10 w-10 text-destructive" />
                 <h3 className="mt-4 text-lg font-semibold">Could Not Load Artists</h3>
@@ -88,27 +80,22 @@ export function FeaturedArtists() {
   }
   
   if (artists.length === 0 && !error) {
-      return null; // Don't render the section if there are no artists to show
+      return (
+        <div className="flex justify-center items-center h-40">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      );
   }
 
   return (
     <section className="animate-fade-in-up">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-            <div>
-                <h2 className="text-3xl font-bold">🎧 Featured Artists</h2>
-                <p className="text-muted-foreground mt-1">Handpicked sounds for every mood.</p>
-            </div>
-            <Link href="/music" passHref className="mt-4 sm:mt-0">
-                <Button variant="ghost">Discover More Music <ArrowRight className="ml-2 h-4 w-4" /></Button>
-            </Link>
-        </div>
         <Carousel 
             opts={{ align: "start", loop: false }} 
             className="w-full"
         >
             <CarouselContent className="-ml-4">
                 {artists.map((artist) => (
-                    <CarouselItem key={artist.name} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6 pl-4">
+                    <CarouselItem key={artist.name} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/6 pl-4 pb-4">
                         <Link href={`/music/artist/${encodeURIComponent(artist.name)}`} passHref>
                             <div className="group flex flex-col items-center text-center gap-2 cursor-pointer">
                                 <div className="relative w-32 h-32 md:w-40 md:h-40">
