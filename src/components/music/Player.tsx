@@ -10,9 +10,9 @@ import {
   SkipBack,
   SkipForward,
   ArrowLeft,
-  MoreHorizontal,
   Shuffle,
   Repeat,
+  Download,
 } from 'lucide-react';
 import {
   Dialog,
@@ -63,6 +63,8 @@ export function Player() {
     const seconds = Math.floor(secs % 60);
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
+  
+  const downloadUrl = `/api/music/stream?key=${encodeURIComponent(currentSong.key)}`;
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -129,9 +131,9 @@ export function Player() {
                     <ArrowLeft className="h-5 w-5" />
                     <span className="font-semibold text-sm">Library</span>
                 </button>
-                <button>
-                    <MoreHorizontal className="h-5 w-5" />
-                </button>
+                <a href={downloadUrl} download={songTitle} className="text-muted-foreground hover:text-primary">
+                    <Download className="h-5 w-5" />
+                </a>
             </header>
         </div>
         
