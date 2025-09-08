@@ -29,7 +29,9 @@ export default function MoviesPage() {
       <div className="container mx-auto">
         <header className="text-center mb-12 animate-fade-in-down">
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
-            Movie Discovery
+             <span className="animate-shimmer bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-[length:200%_100%] bg-clip-text text-transparent">
+                Movie Discovery
+             </span>
           </h1>
           <p className="mt-3 text-lg text-muted-foreground max-w-2xl mx-auto">
             Find popular hits, top-rated gems, and the latest releases — or search for your favorites.
