@@ -7,6 +7,7 @@ import { ArrowUpRight, MessageSquare, Code, Bot, Music, Briefcase, BookOpen, Spa
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import React from 'react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 
 const toolCategories = [
@@ -205,11 +206,23 @@ export default function AiToolsPage() {
                 </div>
                 <h2 className="text-3xl font-bold">{category.category}</h2>
               </div>
-               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+               <Carousel
+                opts={{
+                  align: 'start',
+                  loop: false,
+                }}
+                className="w-full"
+              >
+                <CarouselContent className="-ml-4">
                   {category.tools.map((tool) => (
-                    <ToolCard key={tool.name} tool={tool} />
+                    <CarouselItem key={tool.name} className="basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 pl-4">
+                        <ToolCard tool={tool} />
+                    </CarouselItem>
                   ))}
-                </div>
+                </CarouselContent>
+                <CarouselPrevious className="hidden md:flex" />
+                <CarouselNext className="hidden md:flex" />
+              </Carousel>
             </section>
           ))}
         </div>
@@ -217,5 +230,3 @@ export default function AiToolsPage() {
     </div>
   );
 }
-
-    
