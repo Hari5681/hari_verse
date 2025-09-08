@@ -112,10 +112,7 @@ export default function AiToolsPage() {
 
           {/* Main Content */}
           <main className="flex-1 w-full min-w-0">
-            <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-              <p className="text-muted-foreground mb-4 sm:mb-0">
-                Showing <span className="font-bold text-foreground">{totalFilteredTools}</span> of <span className="font-bold text-foreground">{allTools.length}</span> tools
-              </p>
+            <div className="flex flex-col sm:flex-row justify-end items-center mb-6">
               <div className="flex items-center gap-2">
                 {/* Mobile Filter Trigger */}
                 <Sheet>
