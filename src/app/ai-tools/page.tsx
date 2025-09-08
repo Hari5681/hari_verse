@@ -4,7 +4,7 @@
 import React, { useState, useMemo } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal, Search } from 'lucide-react';
 import { toolCategories } from '@/lib/ai-tools';
 import { AIToolCard } from '@/components/ai/AIToolCard';
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -14,40 +14,50 @@ import { cn } from '@/lib/utils';
 
 const FilterSidebar = ({ selectedCategories, setSelectedCategories }: { selectedCategories: string[], setSelectedCategories: (cats: string[]) => void }) => {
 
-  const toggleCategory = (category: string) => {
-    setSelectedCategories(
-      selectedCategories.includes(category)
-        ? selectedCategories.filter(c => c !== category)
-        : [...selectedCategories, category]
-    );
+  const toggleCategory = (category: string | null) => {
+    if (category === null) {
+      setSelectedCategories([]);
+    } else {
+      setSelectedCategories(
+        selectedCategories.includes(category)
+          ? selectedCategories.filter(c => c !== category)
+          : [...selectedCategories, category]
+      );
+    }
   };
 
+  const allCategoriesOption = { category: 'All', icon: <Search className="w-full h-full" /> };
+  const displayCategories = [allCategoriesOption, ...toolCategories];
+
+
   return (
-    <Card className="p-4 bg-background/80 backdrop-blur-sm border-none shadow-inner-glow transition-shadow hover:shadow-primary/20">
-      <h3 className="text-lg font-semibold mb-4 animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
-          Categories
-      </h3>
-      <div className="space-y-2">
-        {toolCategories.map(category => (
-          <Button
-            key={category.category}
-            variant={selectedCategories.includes(category.category) ? 'secondary' : 'ghost'}
-            className={cn(
-                "w-full justify-start transition-all duration-300 ease-in-out",
-                "hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-1"
-            )}
-            onClick={() => toggleCategory(category.category)}
-          >
-            {category.icon}
-            <span className="ml-2">{category.category}</span>
-          </Button>
-        ))}
+    <Card className="p-4 bg-black/30 backdrop-blur-lg border border-white/10 shadow-lg">
+       <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <Search className="h-5 w-5 text-primary" />
+            Filter Tools
+       </h3>
+      <div className="flex flex-wrap gap-2">
+        {displayCategories.map(category => {
+            const isSelected = category.category === 'All'
+                ? selectedCategories.length === 0
+                : selectedCategories.includes(category.category);
+            
+            return (
+              <Button
+                key={category.category}
+                variant={'ghost'}
+                className={cn(
+                    "rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-foreground/80 transition-all duration-300",
+                    "hover:bg-white/10 hover:text-white hover:border-white/20",
+                    isSelected && "bg-primary/20 border-primary/50 text-primary shadow-[0_0_15px_hsl(var(--primary)/0.5)]"
+                )}
+                onClick={() => toggleCategory(category.category === 'All' ? null : category.category)}
+              >
+                {category.category}
+              </Button>
+            );
+        })}
       </div>
-      {selectedCategories.length > 0 && (
-        <Button variant="link" className="text-primary w-full mt-4" onClick={() => setSelectedCategories([])}>
-          Clear Filters
-        </Button>
-      )}
     </Card>
   );
 };
