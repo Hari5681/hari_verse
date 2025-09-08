@@ -257,5 +257,3 @@ function SongListItem({ song, index, isPlaying, onPlay }: { song: Song; index: n
         </div>
     );
 }
-
-    

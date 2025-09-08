@@ -353,10 +353,3 @@ function SongCard({ song, currentSong, onPlay, onPause }: { song: Song; currentS
         </div>
     );
 }
-
-    
-
-    
-
-
-

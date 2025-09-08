@@ -13,11 +13,12 @@ import {
   Shuffle,
   Repeat,
   Download,
+  Heart,
+  Volume2
 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
-  DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
@@ -39,6 +40,10 @@ export function Player() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isShuffle, setIsShuffle] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [volume, setVolume] = useState(1);
+  const [showVolume, setShowVolume] = useState(false);
+
 
   if (!currentSong) {
     return null;
@@ -52,6 +57,19 @@ export function Player() {
   const handleRepeatClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsRepeat(!isRepeat);
+  };
+  
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsLiked(!isLiked);
+  };
+
+  const handleVolumeChange = (value: number[]) => {
+      if (audioRef.current) {
+          const newVolume = value[0];
+          audioRef.current.volume = newVolume;
+          setVolume(newVolume);
+      }
   };
 
   const imageUrl = getSongImageUrl(currentSong.artist, currentSong.key, 500);
@@ -124,16 +142,15 @@ export function Player() {
             boxShadow: `0 10px 50px -10px hsl(var(--dynamic-primary-h) var(--dynamic-primary-s) var(--dynamic-primary-l) / 0.5), 0 0 20px hsl(var(--dynamic-primary-h) var(--dynamic-primary-s) var(--dynamic-primary-l) / 0.2)`
         }}
       >
-        <DialogTitle className="sr-only">Now Playing: {songTitle} by {currentSong.artist}</DialogTitle>
         <div className="p-6 pb-2">
             <header className="flex items-center justify-between text-foreground">
                 <button onClick={() => setIsDialogOpen(false)} className='flex items-center gap-2'>
                     <ArrowLeft className="h-5 w-5" />
                     <span className="font-semibold text-sm">Library</span>
                 </button>
-                <a href={downloadUrl} download={songTitle} className="text-muted-foreground hover:text-primary">
+                <button className="text-muted-foreground hover:text-primary">
                     <Download className="h-5 w-5" />
-                </a>
+                </button>
             </header>
         </div>
         
@@ -150,11 +167,37 @@ export function Player() {
         </main>
         
         <footer className="px-6 pb-8 pt-4">
-            <div className="text-center mb-6">
-                <h2 className="text-2xl font-bold truncate text-foreground">
-                    {songTitle}
-                </h2>
-                <p className="text-sm text-muted-foreground uppercase tracking-widest truncate">{currentSong.artist}</p>
+            <div className="flex justify-between items-center mb-6">
+                 <button 
+                    onClick={handleLikeClick}
+                    className={cn("text-muted-foreground transition-colors hover:text-primary", {"text-primary": isLiked})}
+                >
+                    <Heart className={cn("h-6 w-6", { "fill-current": isLiked })} />
+                </button>
+                <div className="text-center">
+                    <h2 className="text-2xl font-bold truncate text-foreground">
+                        {songTitle}
+                    </h2>
+                    <p className="text-sm text-muted-foreground uppercase tracking-widest truncate">{currentSong.artist}</p>
+                </div>
+                 <div className="relative">
+                    <button
+                        onClick={() => setShowVolume(!showVolume)}
+                        className="text-muted-foreground transition-colors hover:text-primary"
+                    >
+                        <Volume2 className="h-6 w-6" />
+                    </button>
+                    {showVolume && (
+                       <div className="absolute bottom-full right-1/2 translate-x-1/2 mb-2 p-2 bg-secondary rounded-lg w-28">
+                           <Slider
+                               value={[volume]}
+                               max={1}
+                               step={0.01}
+                               onValueChange={handleVolumeChange}
+                            />
+                       </div>
+                    )}
+                </div>
             </div>
 
             <div className="space-y-2">
