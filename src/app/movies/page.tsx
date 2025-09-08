@@ -73,7 +73,7 @@ export default function MoviesPage() {
           <section className="animate-fade-in-up">
             <div className='text-center'>
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight">
-                <span className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
+                <span className="animate-shimmer bg-gradient-to-r from-blue-500 via-sky-300 to-blue-500 bg-[length:200%_100%] bg-clip-text text-transparent">
                   Categories
                 </span>
               </h2>
@@ -93,9 +93,9 @@ export default function MoviesPage() {
                 {genres.map((genre, index) => (
                   <CarouselItem key={genre.id} className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
                     <Link href={`/movies/category/${genre.name.toLowerCase()}`} passHref>
-                       <Card className="group relative flex flex-col justify-between h-40 overflow-hidden rounded-lg bg-card text-card-foreground shadow-lg transition-all duration-300 ease-in-out hover:shadow-primary/20 hover:border-primary/50 card-content will-change-transform">
+                       <Card className="group relative flex flex-col justify-between h-40 overflow-hidden rounded-lg bg-card text-card-foreground shadow-lg transition-all duration-300 ease-in-out hover:shadow-blue-500/20 hover:border-blue-500/50 card-content will-change-transform">
                           <div className="absolute inset-0 bg-grid-pattern opacity-0 transition-opacity duration-300 group-hover:opacity-10"></div>
-                          <div className="mouse-orb"></div>
+                          <div className="mouse-orb" style={{ background: 'radial-gradient(circle at center, hsl(217, 91%, 60%, 0.2) 0%, transparent 70%)' }}></div>
                           <CardHeader className="transition-transform duration-300 group-hover:-translate-y-2">
                               <CardTitle className="text-xl font-bold flex items-center justify-between">
                                   <span>{genre.name}</span>
@@ -109,9 +109,9 @@ export default function MoviesPage() {
                 <CarouselItem className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5">
                     <Link href="/movies/categories" passHref>
                       <Card 
-                        className="group flex flex-col justify-center items-center text-center h-40 overflow-hidden rounded-lg bg-card text-card-foreground shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-primary/20 hover:border-primary/50"
+                        className="group flex flex-col justify-center items-center text-center h-40 overflow-hidden rounded-lg bg-card text-card-foreground shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-blue-500/20 hover:border-blue-500/50"
                       >
-                         <View className="h-8 w-8 text-primary transition-transform duration-300 group-hover:scale-110" />
+                         <View className="h-8 w-8 text-blue-500 transition-transform duration-300 group-hover:scale-110" />
                          <p className="font-bold mt-2 text-lg">View All</p>
                       </Card>
                     </Link>
