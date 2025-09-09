@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { HomeView } from '@/components/views/HomeView';
+import { HomeView } from '@/components/views/home/HomeView';
 import { NamePromptView } from '@/components/views/NamePromptView';
 import { supabase } from '@/lib/supabase';
 
@@ -56,6 +56,7 @@ export default function Page() {
 
     } catch(error) {
         console.error("Error saving visitor:", error);
+        // Fallback for when insert fails but we still want to proceed.
         localStorage.setItem('userName', newName);
         setName(newName);
     }
