@@ -29,9 +29,10 @@ const Section = React.forwardRef<HTMLDivElement, { id: string; children: React.R
             ([entry]) => {
                 if (entry.isIntersecting) {
                     setInView(true);
-                } else {
-                    // Optional: set inView to false when it scrolls out of view
-                    // setInView(false); 
+                    // Optional: Unobserve after the animation has played
+                    if (internalRef.current) {
+                      observer.unobserve(internalRef.current);
+                    }
                 }
             },
             { threshold: 0.2 }
@@ -54,7 +55,7 @@ const Section = React.forwardRef<HTMLDivElement, { id: string; children: React.R
         id={id}
         data-inview={inView}
         className={cn(
-          "w-full flex flex-col items-center justify-center p-4 min-h-screen md:snap-start transition-all duration-1000 ease-out py-16 md:py-4 data-[inview=false]:opacity-0 data-[inview=false]:translate-y-10 data-[inview=true]:opacity-100 data-[inview=true]:translate-y-0",
+          "w-full flex flex-col items-center justify-center p-4 min-h-screen md:snap-start transition-all duration-1000 ease-out py-16 md:py-4 data-[inview=false]:opacity-0 data-[inview=false]:-translate-y-4 data-[inview=false]:scale-95 data-[inview=true]:opacity-100 data-[inview=true]:translate-y-0 data-[inview=true]:scale-100",
           className
         )}
       >
