@@ -24,9 +24,8 @@ const Section = ({ id, children, className }: { id: string, children: React.Reac
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-            setInView(true);
-        }
+        // Set inView to true when intersecting, and false when not
+        setInView(entry.isIntersecting);
       },
       {
         threshold: 0.2, // Trigger when 20% of the section is visible
