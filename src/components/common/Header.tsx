@@ -47,7 +47,7 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
         <Link href="/" className={cn(
           "text-2xl font-bold tracking-tight text-primary transition-all duration-300 ease-in-out",
-          isHomePage ? (isScrolled ? "opacity-100" : "opacity-0 -translate-x-4") : "opacity-100"
+          isHomePage ? (isScrolled ? "opacity-100" : "opacity-0 -translate-x-4") : "opacity-0 -translate-x-4"
         )}>
            HariVerse
         </Link>
