@@ -93,7 +93,7 @@ export function FeaturedAiTools() {
                Find the best free AI tools for productivity, design, coding, and more.
             </p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
+        <div className="grid grid-cols-2 gap-8 max-w-3xl mx-auto">
             {featuredTools.map((tool) => (
                 <div key={tool.name}>
                     <ToolCard tool={tool} />
