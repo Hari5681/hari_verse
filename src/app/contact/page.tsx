@@ -23,7 +23,7 @@ export default function ContactPage() {
 
     try {
       const { error } = await supabase
-        .from('contect') 
+        .from('contact') 
         .insert({ name: name, email: email, comment: message });
 
       if (error) {
