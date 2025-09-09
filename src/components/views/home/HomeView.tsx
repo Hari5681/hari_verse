@@ -1,3 +1,4 @@
+
 'use client';
 
 import { HeroSection } from './HeroSection';
@@ -41,7 +42,7 @@ const AnimatedSection = React.forwardRef<HTMLDivElement, { id: string; children:
 
         return () => {
             if (internalRef.current) {
-                observer.unobserve(internalRef.current);
+                observer.unobserve(internal-ref.current);
             }
         };
     }, []);
@@ -51,7 +52,7 @@ const AnimatedSection = React.forwardRef<HTMLDivElement, { id: string; children:
         ref={internalRef}
         id={id}
         className={cn(
-          "w-full flex flex-col items-center justify-center p-4 min-h-screen md:snap-start py-16 md:py-4 transition-all duration-1000 ease-out",
+          "w-full flex flex-col items-center justify-center py-16 md:py-24 transition-all duration-1000 ease-out",
           inView ? "opacity-100 translate-x-0 translate-y-0" : "opacity-0",
           inView ? "" : animationClass,
           className
@@ -94,8 +95,8 @@ const AboutMeSection = () => (
 
 export function HomeView({ name }: HomeViewProps) {
   return (
-    <div className="w-full md:h-screen md:snap-y md:snap-mandatory md:overflow-y-scroll md:overflow-x-hidden">
-      <section id="home" className="h-screen w-full flex flex-col items-center justify-center relative md:snap-start">
+    <div className="w-full">
+      <section id="home" className="h-screen w-full flex flex-col items-center justify-center relative">
         <div className="absolute inset-0 w-full h-full bg-black">
             <div className="absolute inset-0 bg-grid-pattern opacity-30 animate-grid-pan" />
         </div>
