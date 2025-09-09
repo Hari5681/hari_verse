@@ -15,16 +15,14 @@ export default function Page() {
       const visitorId = localStorage.getItem('visitorId');
       if (visitorId) {
         try {
+          // Use RPC to call a database function to fetch the name
           const { data, error } = await supabase
-            .from('visitor_name')
-            .select('name_of_visitor')
-            .eq('id', visitorId)
-            .single();
+            .rpc('get_visitor_name', { p_visitor_id: visitorId });
 
           if (error) throw error;
           
           if (data) {
-            setName(data.name_of_visitor);
+            setName(data);
           } else {
             // ID in local storage is invalid, clear it
             localStorage.removeItem('visitorId');
