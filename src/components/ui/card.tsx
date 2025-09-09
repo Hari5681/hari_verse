@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
@@ -60,43 +62,6 @@ const CardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
-  const cardRef = React.useRef<HTMLDivElement>(null);
-  const [style, setStyle] = React.useState({});
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!cardRef.current) return;
-      const { left, top, width, height } = cardRef.current.getBoundingClientRect();
-      const x = (e.clientX - left - width / 2) / 15;
-      const y = (e.clientY - top - height / 2) / 15;
-      const xPercentage = e.clientX - left;
-      const yPercentage = e.clientY - top;
-
-      setStyle({
-          transform: `perspective(1000px) rotateX(${-y}deg) rotateY(${x}deg) scale3d(1.05, 1.05, 1.05)`,
-          '--mouse-x': `${xPercentage}px`,
-          '--mouse-y': `${yPercentage}px`,
-      });
-  };
-
-  const handleMouseLeave = () => {
-      setStyle({
-          transform: 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)',
-      });
-  };
-
-  if (className?.includes('card-content')) {
-      return (
-          <div
-              ref={cardRef}
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              style={style as React.CSSProperties}
-              className={cn("p-6 pt-0", className)}
-              {...props}
-          />
-      )
-  }
-
   return <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
 })
 CardContent.displayName = "CardContent"
