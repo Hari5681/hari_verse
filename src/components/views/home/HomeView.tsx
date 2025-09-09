@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import React, { useRef, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { ScrollToTopButton } from '@/components/common/ScrollToTopButton';
 
 type HomeViewProps = {
   name: string;
@@ -125,6 +126,8 @@ export function HomeView({ name }: HomeViewProps) {
       <AnimatedSection id="about" animationClass="translate-y-20">
         <AboutMeSection />
       </AnimatedSection>
+
+      <ScrollToTopButton />
     </div>
   );
 }
