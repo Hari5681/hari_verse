@@ -21,6 +21,11 @@ export function HeroSection({ name }: { name: string }) {
         <p className="mt-6 max-w-3xl text-lg sm:text-xl text-foreground/80 text-shadow animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
           Dive into HariVerse — where your favorite songs, top movies, and cutting-edge AI tools come together. Start exploring now!
         </p>
+        <div className="mt-8 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+            <Link href="/about-me">
+                <Button size="lg">Learn More About Me</Button>
+            </Link>
+        </div>
       </div>
       <button
         onClick={handleScrollDown}
