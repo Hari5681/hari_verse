@@ -10,7 +10,7 @@ export function MoviesShowcase() {
         <section className="container mx-auto px-0 sm:px-6 lg:px-8">
              <div className="text-center mb-12 px-4 animate-fade-in-up">
                 <h2 className="text-4xl font-bold sm:text-5xl tracking-tight">
-                    <span className="animate-shimmer bg-gradient-to-r from-purple-500 via-foreground to-purple-500 bg-[length:200%_100%] bg-clip-text text-transparent">
+                    <span className="animate-shimmer bg-gradient-to-r from-red-500 via-foreground to-red-500 bg-[length:200%_100%] bg-clip-text text-transparent">
                         Your Movie World
                     </span>
                 </h2>
