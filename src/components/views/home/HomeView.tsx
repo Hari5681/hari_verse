@@ -18,12 +18,44 @@ type HomeViewProps = {
 
 const Section = React.forwardRef<HTMLDivElement, { id: string; children: React.ReactNode; className?: string }>(
   ({ id, children, className }, ref) => {
+    const [inView, setInView] = useState(false);
+    const internalRef = useRef<HTMLDivElement | null>(null);
+
+    // This allows the parent to forward a ref AND we can use our own for the observer
+    React.useImperativeHandle(ref, () => internalRef.current!);
+
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setInView(true);
+                } else {
+                    // Optional: set inView to false when it scrolls out of view
+                    // setInView(false); 
+                }
+            },
+            { threshold: 0.2 }
+        );
+
+        if (internalRef.current) {
+            observer.observe(internalRef.current);
+        }
+
+        return () => {
+            if (internalRef.current) {
+                observer.unobserve(internalRef.current);
+            }
+        };
+    }, []);
+
     return (
       <section
-        ref={ref}
+        ref={internalRef}
         id={id}
+        data-inview={inView}
         className={cn(
-          "w-full flex flex-col items-center justify-center p-4 min-h-[60vh] md:min-h-screen transition-all duration-1000 ease-out py-16 md:py-4 data-[inview=false]:opacity-0 data-[inview=false]:translate-y-16 data-[inview=false]:scale-95 data-[inview=true]:opacity-100 data-[inview=true]:translate-y-0 data-[inview=true]:scale-100",
+          "w-full flex flex-col items-center justify-center p-4 min-h-screen md:snap-start transition-all duration-1000 ease-out py-16 md:py-4 data-[inview=false]:opacity-0 data-[inview=false]:translate-y-10 data-[inview=true]:opacity-100 data-[inview=true]:translate-y-0",
           className
         )}
       >
@@ -63,40 +95,9 @@ const AboutMeSection = () => (
 
 
 export function HomeView({ name }: HomeViewProps) {
-  const sectionsRef = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.setAttribute('data-inview', 'true');
-          }
-        });
-      },
-      {
-        threshold: 0.2,
-      }
-    );
-
-    sectionsRef.current.forEach((section) => {
-      if (section) {
-        observer.observe(section);
-      }
-    });
-
-    return () => {
-      sectionsRef.current.forEach((section) => {
-        if (section) {
-          observer.unobserve(section);
-        }
-      });
-    };
-  }, []);
-  
   return (
-    <div className="w-full">
-      <section id="home" className="h-screen w-full flex flex-col items-center justify-center relative">
+    <div className="w-full md:h-screen md:snap-y md:snap-mandatory md:overflow-y-scroll md:overflow-x-hidden">
+      <section id="home" className="h-screen w-full flex flex-col items-center justify-center relative md:snap-start">
         <div className="absolute inset-0 w-full h-full bg-black">
             <div className="absolute inset-0 bg-grid-pattern opacity-30 animate-grid-pan" />
         </div>
@@ -104,23 +105,21 @@ export function HomeView({ name }: HomeViewProps) {
         <HeroSection name={name} />
       </section>
       
-      <div className='space-y-16 md:space-y-0'>
-        <Section id="music" ref={el => sectionsRef.current[0] = el}>
-          <MusicShowcase />
-        </Section>
-        
-        <Section id="movies" ref={el => sectionsRef.current[1] = el}>
-           <MoviesShowcase />
-        </Section>
+      <Section id="music">
+        <MusicShowcase />
+      </Section>
+      
+      <Section id="movies">
+         <MoviesShowcase />
+      </Section>
 
-         <Section id="ai-tools" ref={el => sectionsRef.current[2] = el}>
-           <FeaturedAiTools />
-        </Section>
-        
-        <Section id="about" ref={el => sectionsRef.current[3] = el}>
-          <AboutMeSection />
-        </Section>
-      </div>
+       <Section id="ai-tools">
+         <FeaturedAiTools />
+      </Section>
+      
+      <Section id="about">
+        <AboutMeSection />
+      </Section>
     </div>
   );
 }
