@@ -19,23 +19,22 @@ export default function AboutMePage() {
         </CardHeader>
         <CardContent className="text-left text-base text-foreground/80 space-y-4 px-8 pb-8">
           <p>
-            Hi, I’m Hari Krishna, a 3rd-year ECE student at Chaitanya Engineering College, Kommadi. I’m an App & Web Developer who loves building creative digital experiences.
+            I’m passionate about building digital spaces that feel more than just functional — I want them to be fun, interactive, and creative. For me, coding isn’t just about writing lines of code, it’s about bringing ideas to life in a way people can enjoy and connect with.
           </p>
           <p>
-            I’ve been working on projects like HariVerse, where I combine Android app development, web design, animations, and AI tools to create something unique.
+            One of my favorite creations is HariVerse — my own little universe where music, movies, and AI tools come together. It started as an experiment, but it’s grown into a project where I explore design, animations, and technology all at once.
           </p>
-          <div>
-            <h4 className="font-semibold text-foreground mb-2">💡 My interests:</h4>
-            <ul className="list-none space-y-2 text-foreground/80">
-              <li>📱 App Development (Android Studio, Jetpack Compose, Kotlin)</li>
-              <li>🌐 Web Development (creative portfolio sites, interactive designs)</li>
-              <li>🤖 AI Tools & APIs</li>
-              <li>🎶 Music-based apps & platforms</li>
-            </ul>
-          </div>
-          <p>
-            My goal is to keep learning, experimenting, and developing apps & websites that are not just functional but also fun to use.
+           <p>
+            I’m constantly curious and love experimenting with new tools, APIs, and creative concepts. Whether it’s building an app, designing a website, or playing around with AI, I see every project as a chance to learn and level up.
           </p>
+           <p>
+            At the end of the day, my goal is simple:
+          </p>
+          <ul className="list-none space-y-2 text-foreground/80 pl-4">
+            <li>👉 Keep creating.</li>
+            <li>👉 Keep experimenting.</li>
+            <li>👉 And keep building things that make people say, “Whoa, that’s cool.”</li>
+          </ul>
         </CardContent>
         <CardFooter className="flex flex-col items-center gap-6 border-t border-border/20 pt-6">
             <Link href={`/redirect?url=${encodeURIComponent("https://www.hariportfolio.xyz")}`} target="_blank" rel="noopener noreferrer">
