@@ -17,61 +17,49 @@ type HomeViewProps = {
   name: string;
 };
 
-const AnimatedSection = React.forwardRef<HTMLDivElement, { id: string; children: React.ReactNode; className?: string, animationClass: string }>(
-  ({ id, children, className, animationClass }, ref) => {
-    const [inView, setInView] = useState(false);
-    const internalRef = useRef<HTMLDivElement | null>(null);
+const Section = ({ id, children, className }: { id: string, children: React.ReactNode, className?: string }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
 
-    React.useImperativeHandle(ref, () => internalRef.current!);
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setInView(true);
-                    if (internalRef.current) {
-                      observer.unobserve(internalRef.current);
-                    }
-                }
-            },
-            { threshold: 0.2 }
-        );
-
-        if (internalRef.current) {
-            observer.observe(internalRef.current);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+            setInView(true);
         }
-
-        return () => {
-            if (internalRef.current) {
-                // This condition is to prevent error `DOMException: The node to be unobserved is not being observed.`
-                // The error occurs when the component is unmounted before the observer is disconnected.
-                // It is safe to ignore this error as it does not affect the functionality.
-                // For more info, see: https://github.com/w3c/IntersectionObserver/issues/114
-                try {
-                    observer.unobserve(internalRef.current);
-                } catch (e) {}
-            }
-        };
-    }, []);
-
-    return (
-      <section
-        ref={internalRef}
-        id={id}
-        className={cn(
-          "w-full flex flex-col items-center justify-center py-16 md:py-24 transition-all duration-1000 ease-out",
-          inView ? "opacity-100 translate-x-0 translate-y-0" : "opacity-0",
-          inView ? "" : animationClass,
-          className
-        )}
-      >
-        {children}
-      </section>
+      },
+      {
+        threshold: 0.2, // Trigger when 20% of the section is visible
+      }
     );
-  }
-);
-AnimatedSection.displayName = "AnimatedSection";
 
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, []);
+  
+  return (
+      <section
+          ref={ref}
+          id={id}
+          className={cn(
+              "w-full flex flex-col items-center justify-center p-4 md:h-screen md:snap-start transition-opacity duration-1000 ease-in-out py-16 md:py-4",
+              inView ? "opacity-100" : "opacity-0",
+              className
+          )}
+      >
+          <div className={cn("transition-transform duration-1000 ease-out w-full", inView ? "translate-y-0" : "translate-y-10")}>
+             {children}
+          </div>
+      </section>
+  )
+};
 
 const AboutMeSection = () => (
     <div className="container mx-auto">
@@ -102,8 +90,8 @@ const AboutMeSection = () => (
 
 export function HomeView({ name }: HomeViewProps) {
   return (
-    <div className="w-full">
-      <section id="home" className="h-screen w-full flex flex-col items-center justify-center relative">
+    <div className="w-full md:h-screen md:snap-y md:snap-mandatory md:overflow-y-scroll md:overflow-x-hidden">
+      <section id="home" className="h-screen w-full flex flex-col items-center justify-center snap-start relative">
         <div className="absolute inset-0 w-full h-full bg-black">
             <div className="absolute inset-0 bg-grid-pattern opacity-30 animate-grid-pan" />
         </div>
@@ -111,21 +99,21 @@ export function HomeView({ name }: HomeViewProps) {
         <HeroSection name={name} />
       </section>
       
-      <AnimatedSection id="music" animationClass="-translate-x-20">
+      <Section id="music">
         <MusicShowcase />
-      </AnimatedSection>
+      </Section>
       
-      <AnimatedSection id="movies" animationClass="translate-x-20">
+      <Section id="movies">
          <MoviesShowcase />
-      </AnimatedSection>
+      </Section>
 
-       <AnimatedSection id="ai-tools" animationClass="translate-y-20">
+       <Section id="ai-tools">
          <FeaturedAiTools />
-      </AnimatedSection>
+      </Section>
       
-      <AnimatedSection id="about" animationClass="translate-y-20">
+      <Section id="about">
         <AboutMeSection />
-      </AnimatedSection>
+      </Section>
 
       <ScrollToTopButton />
     </div>
