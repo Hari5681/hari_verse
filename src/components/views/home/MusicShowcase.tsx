@@ -1,9 +1,7 @@
-
 'use client';
 
 import { FeaturedArtists } from './FeaturedArtists';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export function MusicShowcase() {
@@ -16,15 +14,14 @@ export function MusicShowcase() {
                     </span>
                 </h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-                    Explore curated playlists and stream music from your favorite artists. Handpicked sounds for every mood.
+                    Stream your favorite tracks, explore curated playlists, and enjoy nonstop music.
                 </p>
             </div>
             <FeaturedArtists />
              <div className="text-center mt-12">
                 <Link href="/music" passHref>
                     <Button size="lg">
-                        Go to Music Player
-                        <ArrowRight className="ml-2 h-4 w-4" />
+                        🎵 Go to Music Player
                     </Button>
                 </Link>
             </div>

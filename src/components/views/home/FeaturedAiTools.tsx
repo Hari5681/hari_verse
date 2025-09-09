@@ -1,9 +1,8 @@
-
 'use client';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, MessageSquare, Code, Clapperboard, Palette, Bot } from 'lucide-react';
+import { MessageSquare, Code, Palette, Clapperboard } from 'lucide-react';
 import React from 'react';
 
 const featuredTools = [
@@ -39,11 +38,11 @@ export function FeaturedAiTools() {
         <div className="text-center mb-12">
             <h2 className="text-4xl font-bold sm:text-5xl tracking-tight">
                 <span className="animate-shimmer bg-gradient-to-r from-primary via-foreground to-primary bg-[length:200%_100%] bg-clip-text text-transparent">
-                    Explore AI Tools
+                    AI Tools Showcase
                 </span>
             </h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-               Boost your creativity and productivity with a curated collection of powerful AI tools.
+               Find the best free AI tools for productivity, design, coding, and more.
             </p>
         </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -66,8 +65,7 @@ export function FeaturedAiTools() {
       <div className="text-center mt-12">
         <Link href="/ai-tools" passHref>
             <Button size="lg">
-                Browse All Tools 
-                <ArrowRight className="ml-2 h-4 w-4" />
+                🤖 Browse AI Tools
             </Button>
         </Link>
       </div>
