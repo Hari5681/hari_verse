@@ -15,21 +15,18 @@ type HomeViewProps = {
   name: string;
 };
 
-const Section = React.forwardRef<HTMLDivElement, { id: string; children: React.ReactNode; className?: string }>(
-  ({ id, children, className }, ref) => {
+const AnimatedSection = React.forwardRef<HTMLDivElement, { id: string; children: React.ReactNode; className?: string, animationClass: string }>(
+  ({ id, children, className, animationClass }, ref) => {
     const [inView, setInView] = useState(false);
     const internalRef = useRef<HTMLDivElement | null>(null);
 
-    // This allows the parent to forward a ref AND we can use our own for the observer
     React.useImperativeHandle(ref, () => internalRef.current!);
-
 
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
                     setInView(true);
-                    // Optional: Unobserve after the animation has played
                     if (internalRef.current) {
                       observer.unobserve(internalRef.current);
                     }
@@ -53,9 +50,10 @@ const Section = React.forwardRef<HTMLDivElement, { id: string; children: React.R
       <section
         ref={internalRef}
         id={id}
-        data-inview={inView}
         className={cn(
-          "w-full flex flex-col items-center justify-center p-4 min-h-screen md:snap-start transition-all duration-1000 ease-out py-16 md:py-4 data-[inview=false]:opacity-0 data-[inview=false]:-translate-y-4 data-[inview=false]:scale-95 data-[inview=true]:opacity-100 data-[inview=true]:translate-y-0 data-[inview=true]:scale-100",
+          "w-full flex flex-col items-center justify-center p-4 min-h-screen md:snap-start py-16 md:py-4 transition-all duration-1000 ease-out",
+          inView ? "opacity-100 translate-x-0 translate-y-0" : "opacity-0",
+          inView ? "" : animationClass,
           className
         )}
       >
@@ -64,7 +62,7 @@ const Section = React.forwardRef<HTMLDivElement, { id: string; children: React.R
     );
   }
 );
-Section.displayName = "Section";
+AnimatedSection.displayName = "AnimatedSection";
 
 
 const AboutMeSection = () => (
@@ -105,21 +103,21 @@ export function HomeView({ name }: HomeViewProps) {
         <HeroSection name={name} />
       </section>
       
-      <Section id="music">
+      <AnimatedSection id="music" animationClass="-translate-x-20">
         <MusicShowcase />
-      </Section>
+      </AnimatedSection>
       
-      <Section id="movies">
+      <AnimatedSection id="movies" animationClass="translate-x-20">
          <MoviesShowcase />
-      </Section>
+      </AnimatedSection>
 
-       <Section id="ai-tools">
+       <AnimatedSection id="ai-tools" animationClass="translate-y-20">
          <FeaturedAiTools />
-      </Section>
+      </AnimatedSection>
       
-      <Section id="about">
+      <AnimatedSection id="about" animationClass="translate-y-20">
         <AboutMeSection />
-      </Section>
+      </AnimatedSection>
     </div>
   );
 }
