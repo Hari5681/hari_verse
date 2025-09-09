@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState } from 'react';
@@ -23,14 +22,13 @@ export default function ContactPage() {
     setIsSubmitting(true);
 
     try {
-      // Using a remote procedure call (RPC) to a database function
-      const { error } = await supabase.rpc('add_contact_form_entry', {
-        p_name: name,
-        p_email: email,
-        p_comment: message,
-      });
+      const { error } = await supabase
+        .from('contect') 
+        .insert({ name: name, email: email, comment: message });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
       
       toast({
         title: "Message Sent!",
