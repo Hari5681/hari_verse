@@ -21,6 +21,7 @@ const config = {
     extend: {
       backgroundImage: {
           'ai-tools-bg': "url('https://raw.githubusercontent.com/Hari5681/hariverse-assets/main/assets/wallpapers/ai-tools-bg.jpg')",
+          'gradient-radial': 'radial-gradient(ellipse at center, var(--tw-gradient-stops))',
       },
       colors: {
         border: "hsl(var(--border))",

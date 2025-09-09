@@ -49,12 +49,12 @@ const Section = ({ id, children, className }: { id: string, children: React.Reac
           ref={ref}
           id={id}
           className={cn(
-              "w-full flex flex-col items-center justify-center p-4 h-screen snap-start transition-opacity duration-1000 ease-in-out py-16 md:py-4",
+              "w-full flex flex-col items-center justify-center p-4 h-screen snap-start transition-opacity duration-1000 ease-in-out py-16 md:py-4 relative overflow-hidden",
               inView ? "opacity-100" : "opacity-0",
               className
           )}
       >
-          <div className={cn("transition-transform duration-1000 ease-out w-full", inView ? "translate-y-0" : "translate-y-10")}>
+          <div className={cn("transition-transform duration-1000 ease-out w-full z-10", inView ? "translate-y-0" : "translate-y-10")}>
              {children}
           </div>
       </section>
@@ -99,15 +99,15 @@ export function HomeView({ name }: HomeViewProps) {
         <HeroSection name={name} />
       </section>
       
-      <Section id="music">
+      <Section id="music" className="bg-gradient-radial from-primary/5 to-transparent">
         <MusicShowcase />
       </Section>
       
-      <Section id="movies">
+      <Section id="movies" className="bg-gradient-radial from-purple-500/5 to-transparent">
          <MoviesShowcase />
       </Section>
 
-       <Section id="ai-tools">
+       <Section id="ai-tools" className="bg-gradient-radial from-blue-500/5 to-transparent">
          <FeaturedAiTools />
       </Section>
       
