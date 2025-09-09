@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button';
 import { ArrowUpRight, MessageSquare, Code, Palette, Clapperboard } from 'lucide-react';
 import React, { useRef, useState } from 'react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const featuredTools = [
   { 
@@ -85,7 +86,7 @@ export function FeaturedAiTools() {
     <section className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
             <h2 className="text-4xl font-bold sm:text-5xl tracking-tight">
-                <span className="animate-shimmer bg-gradient-to-r from-blue-500 via-foreground to-blue-500 bg-[length:200%_100%] bg-clip-text text-transparent">
+                <span className="animate-shimmer bg-gradient-to-r from-red-500 via-foreground to-red-500 bg-[length:200%_100%] bg-clip-text text-transparent">
                     AI Tools Showcase
                 </span>
             </h2>
@@ -93,11 +94,25 @@ export function FeaturedAiTools() {
                Find the best free AI tools for productivity, design, coding, and more.
             </p>
         </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
-        {featuredTools.map((tool) => (
-             <ToolCard key={tool.name} tool={tool} />
-        ))}
-      </div>
+        <Carousel
+            opts={{
+                align: 'start',
+                loop: true,
+            }}
+            className="w-full max-w-sm sm:max-w-xl mx-auto"
+        >
+            <CarouselContent>
+                {featuredTools.map((tool) => (
+                    <CarouselItem key={tool.name} className="sm:basis-1/2">
+                        <div className="p-1">
+                            <ToolCard tool={tool} />
+                        </div>
+                    </CarouselItem>
+                ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+        </Carousel>
       <div className="text-center mt-12">
         <Link href="/ai-tools" passHref>
             <Button size="lg">
