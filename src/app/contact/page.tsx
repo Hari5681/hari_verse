@@ -23,11 +23,10 @@ export default function ContactPage() {
     setIsSubmitting(true);
 
     try {
-      // We will call a database function (Remote Procedure Call)
-      const { error } = await supabase.rpc('add_contact_message', {
-        contact_name: name,
-        contact_email: email,
-        contact_message: message,
+      const { error } = await supabase.from('contect_me').insert({
+        name: name,
+        email: email,
+        message: message,
       });
 
       if (error) throw error;
@@ -44,7 +43,6 @@ export default function ContactPage() {
         toast({
             variant: 'destructive',
             title: "Something went wrong.",
-            // The new error might be more descriptive
             description: error.message || "Could not send your message. Please try again.",
         });
         console.error("Error saving contact message:", error);

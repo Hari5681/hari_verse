@@ -15,16 +15,17 @@ export default function Page() {
       const visitorId = localStorage.getItem('visitorId');
       if (visitorId) {
         try {
-          // Use RPC to call a database function to fetch the name
           const { data, error } = await supabase
-            .rpc('get_visitor_name', { p_visitor_id: visitorId });
+            .from('visitor_name')
+            .select('name_of_visitor')
+            .eq('id', visitorId)
+            .single();
 
           if (error) throw error;
           
           if (data) {
-            setName(data);
+            setName(data.name_of_visitor);
           } else {
-            // ID in local storage is invalid, clear it
             localStorage.removeItem('visitorId');
           }
         } catch (error) {
@@ -55,7 +56,6 @@ export default function Page() {
 
     } catch(error) {
         console.error("Error saving visitor:", error);
-        // Fallback to localStorage if Supabase fails
         localStorage.setItem('userName', newName);
         setName(newName);
     }
