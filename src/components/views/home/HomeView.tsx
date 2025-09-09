@@ -42,7 +42,13 @@ const AnimatedSection = React.forwardRef<HTMLDivElement, { id: string; children:
 
         return () => {
             if (internalRef.current) {
-                observer.unobserve(internal-ref.current);
+                // This condition is to prevent error `DOMException: The node to be unobserved is not being observed.`
+                // The error occurs when the component is unmounted before the observer is disconnected.
+                // It is safe to ignore this error as it does not affect the functionality.
+                // For more info, see: https://github.com/w3c/IntersectionObserver/issues/114
+                try {
+                    observer.unobserve(internalRef.current);
+                } catch (e) {}
             }
         };
     }, []);
