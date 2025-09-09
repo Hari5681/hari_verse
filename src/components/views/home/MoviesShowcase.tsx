@@ -1,3 +1,4 @@
+
 'use client';
 
 import { MovieCarousel } from '@/components/movies/MovieCarousel';
@@ -25,7 +26,7 @@ export function MoviesShowcase() {
             <div className="text-center mt-12">
                 <Link href="/movies" passHref>
                     <Button size="lg">
-                        🎬 Explore Movies
+                        Explore Movies
                     </Button>
                 </Link>
             </div>

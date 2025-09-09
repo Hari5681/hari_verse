@@ -1,3 +1,4 @@
+
 'use client';
 
 import { FeaturedArtists } from './FeaturedArtists';
@@ -21,7 +22,7 @@ export function MusicShowcase() {
              <div className="text-center mt-12">
                 <Link href="/music" passHref>
                     <Button size="lg">
-                        🎵 Go to Music Player
+                        Go to Music Player
                     </Button>
                 </Link>
             </div>

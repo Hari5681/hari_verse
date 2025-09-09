@@ -1,3 +1,4 @@
+
 'use client';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -65,7 +66,7 @@ export function FeaturedAiTools() {
       <div className="text-center mt-12">
         <Link href="/ai-tools" passHref>
             <Button size="lg">
-                🤖 Browse AI Tools
+                Browse AI Tools
             </Button>
         </Link>
       </div>
