@@ -19,18 +19,6 @@ const featuredTools = [
     icon: <Palette className="h-8 w-8 text-primary" />,
     link: '/ai-tools'
   },
-  { 
-    name: 'GitHub Copilot', 
-    description: 'Your AI pair programmer for faster, better coding.', 
-    icon: <Code className="h-8 w-8 text-primary" />,
-    link: '/ai-tools'
-  },
-  { 
-    name: 'Runway ML', 
-    description: 'Create and edit videos with powerful AI magic tools.', 
-    icon: <Clapperboard className="h-8 w-8 text-primary" />,
-    link: '/ai-tools'
-  },
 ];
 
 const ToolCard = ({ tool }: { tool: typeof featuredTools[0] }) => {
