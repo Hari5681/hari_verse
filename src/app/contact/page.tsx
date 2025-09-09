@@ -23,10 +23,10 @@ export default function ContactPage() {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase.from('contect_me').insert({
+      const { error } = await supabase.from('contect').insert({
         name: name,
         email: email,
-        message: message,
+        comment: message,
       });
 
       if (error) throw error;
