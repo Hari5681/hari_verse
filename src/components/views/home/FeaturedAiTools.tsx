@@ -5,7 +5,6 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/com
 import { Button } from '@/components/ui/button';
 import { ArrowUpRight, MessageSquare, Code, Palette, Clapperboard } from 'lucide-react';
 import React, { useRef, useState } from 'react';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const featuredTools = [
   { 
@@ -94,25 +93,13 @@ export function FeaturedAiTools() {
                Find the best free AI tools for productivity, design, coding, and more.
             </p>
         </div>
-        <Carousel
-            opts={{
-                align: 'start',
-                loop: true,
-            }}
-            className="w-full max-w-sm sm:max-w-xl mx-auto"
-        >
-            <CarouselContent>
-                {featuredTools.map((tool) => (
-                    <CarouselItem key={tool.name} className="sm:basis-1/2">
-                        <div className="p-1">
-                            <ToolCard tool={tool} />
-                        </div>
-                    </CarouselItem>
-                ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-        </Carousel>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
+            {featuredTools.map((tool) => (
+                <div key={tool.name}>
+                    <ToolCard tool={tool} />
+                </div>
+            ))}
+        </div>
       <div className="text-center mt-12">
         <Link href="/ai-tools" passHref>
             <Button size="lg">
