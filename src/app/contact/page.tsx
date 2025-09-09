@@ -23,10 +23,11 @@ export default function ContactPage() {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase.from('contect').insert({
-        name: name,
-        email: email,
-        comment: message,
+      // Using a remote procedure call (RPC) to a database function
+      const { error } = await supabase.rpc('add_contact_form_entry', {
+        p_name: name,
+        p_email: email,
+        p_comment: message,
       });
 
       if (error) throw error;
