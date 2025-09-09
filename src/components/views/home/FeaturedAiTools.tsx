@@ -48,7 +48,7 @@ export function FeaturedAiTools() {
         </div>
       <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {featuredTools.map((tool, index) => (
-            <Card key={tool.name} className="group h-full flex flex-col justify-between p-4 sm:p-6 bg-card/50 hover:bg-card transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20">
+            <Card key={tool.name} className="group h-full flex flex-col justify-between p-4 sm:p-6 bg-card/50 hover:bg-card transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20 card-lift">
               <div>
                 <div className="mb-4 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full bg-primary/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20">
                   {tool.icon}

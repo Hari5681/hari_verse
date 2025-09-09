@@ -1,11 +1,11 @@
 
 'use client';
 
-import { HeroSection } from './home/HeroSection';
-import { CtaSection } from './home/CtaSection';
-import { MusicShowcase } from './home/MusicShowcase';
-import { MoviesShowcase } from './home/MoviesShowcase';
-import { FeaturedAiTools } from './home/FeaturedAiTools';
+import { HeroSection } from './HeroSection';
+import { CtaSection } from './CtaSection';
+import { MusicShowcase } from './MusicShowcase';
+import { MoviesShowcase } from './MoviesShowcase';
+import { FeaturedAiTools } from './FeaturedAiTools';
 import { User } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,10 +26,11 @@ const Section = ({ id, children, className }: { id: string, children: React.Reac
       ([entry]) => {
         if (entry.isIntersecting) {
             setInView(true);
+            observer.unobserve(entry.target); // Animate only once
         }
       },
       {
-        threshold: 0.2, // Trigger when 20% of the section is visible
+        threshold: 0.1, // Trigger when 10% of the section is visible for earlier animation
       }
     );
 
@@ -49,14 +50,12 @@ const Section = ({ id, children, className }: { id: string, children: React.Reac
           ref={ref}
           id={id}
           className={cn(
-              "w-full flex flex-col items-center justify-center p-4 md:h-screen md:snap-start transition-opacity duration-1000 ease-in-out py-16 md:py-4",
-              inView ? "opacity-100" : "opacity-0",
+              "w-full flex flex-col items-center justify-center p-4 md:h-screen md:snap-start transition-all duration-1000 ease-out py-16 md:py-4",
+              inView ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-16 scale-95",
               className
           )}
       >
-          <div className={cn("transition-transform duration-1000 ease-out w-full", inView ? "translate-y-0" : "translate-y-10")}>
-             {children}
-          </div>
+          {children}
       </section>
   )
 };
@@ -113,10 +112,6 @@ export function HomeView({ name }: HomeViewProps) {
       
       <Section id="about">
         <AboutMeSection />
-      </Section>
-
-      <Section id="contact">
-        <CtaSection />
       </Section>
     </div>
   );
