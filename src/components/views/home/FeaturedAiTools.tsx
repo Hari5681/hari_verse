@@ -106,7 +106,7 @@ export function FeaturedAiTools() {
             </p>
         </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {featuredTools.map((tool, index) => (
+        {featuredTools.map((tool) => (
              <ToolCard key={tool.name} tool={tool} />
         ))}
       </div>
