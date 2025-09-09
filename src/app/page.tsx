@@ -12,6 +12,14 @@ export default function Page() {
 
   useEffect(() => {
     const checkVisitor = async () => {
+      // First, check for a name stored locally as a fallback
+      const localName = localStorage.getItem('visitorName');
+      if (localName) {
+        setName(localName);
+        setIsLoading(false);
+        return;
+      }
+
       const visitorId = localStorage.getItem('visitorId');
       if (visitorId) {
         try {
@@ -25,7 +33,9 @@ export default function Page() {
           
           if (data) {
             setName(data.name_of_visitor);
+            localStorage.setItem('visitorName', data.name_of_visitor); // Sync to local fallback
           } else {
+            // Visitor ID is invalid, remove it
             localStorage.removeItem('visitorId');
           }
         } catch (error) {
@@ -40,6 +50,10 @@ export default function Page() {
   }, []);
 
   const handleNameSubmit = async (newName: string) => {
+    // Optimistically set the name for a faster UI response
+    setName(newName);
+    localStorage.setItem('visitorName', newName);
+
     try {
         const { data, error } = await supabase
             .from('visitor_name')
@@ -51,14 +65,11 @@ export default function Page() {
 
         if (data) {
             localStorage.setItem('visitorId', data.id);
-            setName(data.name_of_visitor);
         }
 
     } catch(error) {
         console.error("Error saving visitor:", error);
-        // Fallback for when insert fails but we still want to proceed.
-        localStorage.setItem('userName', newName);
-        setName(newName);
+        // The name is already saved in localStorage as a fallback.
     }
   };
 
