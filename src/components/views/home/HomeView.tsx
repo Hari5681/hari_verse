@@ -73,9 +73,18 @@ const AboutMeSection = () => (
           </CardDescription>
         </CardHeader>
         <CardContent className="text-left text-base text-foreground/80 space-y-4 px-8 pb-8">
-          <p>
-            Hi, I’m Hari Krishna, a 3rd-year ECE student at Chaitanya Engineering College, Kommadi. I’m an App & Web Developer who loves building creative digital experiences.
-          </p>
+            <p>
+                Hey, I’m Hari Krishna
+            </p>
+            <p>
+                I’m the kind of guy who loves turning random ideas into apps and websites — sometimes they’re useful, sometimes they’re just fun experiments, but they always teach me something new. My digital playground is HariVerse, where I mix music, movies, and AI tools into one creative hub.
+            </p>
+            <p>
+                I enjoy exploring new tech, adding a pinch of design magic, and seeing how far I can push an idea before it turns into something cool. Half the time I’m coding, the other half I’m just saying “wait… what if I tried this?”
+            </p>
+            <p>
+                At the end of the day, I’m here to keep learning, keep creating, and hopefully make things that surprise people — in a good way.
+            </p>
         </CardContent>
         <CardFooter className="flex flex-col items-center gap-6 border-t border-border/20 pt-6">
             <Link href="/about-me">
