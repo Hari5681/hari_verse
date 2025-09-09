@@ -83,7 +83,7 @@ export function FeaturedArtists() {
 
   return (
     <section className="animate-fade-in-up w-full">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-xl mx-auto">
+        <div className="grid grid-cols-2 gap-8 max-w-xl mx-auto">
             {artists.map((artist) => (
                 <Link key={artist.name} href={`/music/artist/${encodeURIComponent(artist.name)}`} passHref>
                     <div className="group flex flex-col items-center text-center gap-2 cursor-pointer">
