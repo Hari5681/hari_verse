@@ -18,23 +18,18 @@ export default function AboutMePage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="text-left text-base text-foreground/80 space-y-4 px-8 pb-8">
-          <p>
-            I’m passionate about building digital spaces that feel more than just functional — I want them to be fun, interactive, and creative. For me, coding isn’t just about writing lines of code, it’s about bringing ideas to life in a way people can enjoy and connect with.
-          </p>
-          <p>
-            One of my favorite creations is HariVerse — my own little universe where music, movies, and AI tools come together. It started as an experiment, but it’s grown into a project where I explore design, animations, and technology all at once.
-          </p>
-           <p>
-            I’m constantly curious and love experimenting with new tools, APIs, and creative concepts. Whether it’s building an app, designing a website, or playing around with AI, I see every project as a chance to learn and level up.
-          </p>
-           <p>
-            At the end of the day, my goal is simple:
-          </p>
-          <ul className="list-none space-y-2 text-foreground/80 pl-4">
-            <li>👉 Keep creating.</li>
-            <li>👉 Keep experimenting.</li>
-            <li>👉 And keep building things that make people say, “Whoa, that’s cool.”</li>
-          </ul>
+            <p>
+                Hey, I’m Hari Krishna
+            </p>
+            <p>
+                I’m the kind of guy who loves turning random ideas into apps and websites — sometimes they’re useful, sometimes they’re just fun experiments, but they always teach me something new. My digital playground is HariVerse, where I mix music, movies, and AI tools into one creative hub.
+            </p>
+            <p>
+                I enjoy exploring new tech, adding a pinch of design magic, and seeing how far I can push an idea before it turns into something cool. Half the time I’m coding, the other half I’m just saying “wait… what if I tried this?”
+            </p>
+            <p>
+                At the end of the day, I’m here to keep learning, keep creating, and hopefully make things that surprise people — in a good way.
+            </p>
         </CardContent>
         <CardFooter className="flex flex-col items-center gap-6 border-t border-border/20 pt-6">
             <Link href={`/redirect?url=${encodeURIComponent("https://www.hariportfolio.xyz")}`} target="_blank" rel="noopener noreferrer">
