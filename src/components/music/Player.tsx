@@ -207,7 +207,7 @@ export function Player() {
                 value={[progress]}
                 max={duration || 1}
                 step={1}
-                onValueChange={handleSeek}
+                onValueChange={(value) => handleSeek(value)}
                 className="w-full"
               />
               <div className="flex justify-between text-xs text-muted-foreground">
@@ -258,5 +258,3 @@ export function Player() {
     </Dialog>
   );
 }
-
-  
