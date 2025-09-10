@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useRef, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useRef, useState, useEffect, useCallback, useMemo } from 'react';
 import { getArtistTheme, ArtistTheme } from '@/lib/musicUtils';
 
 interface Song {
@@ -45,6 +45,12 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
   
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  const streamUrl = useMemo(() => {
+    if (!currentSong?.key) return '';
+    return `/api/music/stream?key=${encodeURIComponent(currentSong.key)}`;
+  }, [currentSong?.key]);
+
+
   const playSong = useCallback((song: Song, newPlaylist: Song[] = []) => {
     setCurrentSong(song);
     setTheme(getArtistTheme(song.artist));
@@ -56,8 +62,7 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
   }, [playlist]);
   
   useEffect(() => {
-    if (audioRef.current && currentSong?.key) {
-        const streamUrl = `/api/music/stream?key=${encodeURIComponent(currentSong.key)}`;
+    if (audioRef.current && streamUrl) {
         if (audioRef.current.src !== streamUrl) {
           audioRef.current.src = streamUrl;
           audioRef.current.load(); 
@@ -72,7 +77,7 @@ export const MusicPlayerProvider = ({ children }: { children: React.ReactNode })
         audioRef.current.pause();
         audioRef.current.src = '';
     }
-  }, [currentSong]);
+  }, [streamUrl, currentSong]);
 
 
   const pauseSong = () => {
