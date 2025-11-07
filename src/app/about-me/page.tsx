@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { User, Github, Linkedin, Instagram, Mail, Globe, Rocket } from 'lucide-react';
+import { User, Github, Linkedin, Instagram, Mail, Globe } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
@@ -19,16 +19,22 @@ export default function AboutMePage() {
         </CardHeader>
         <CardContent className="text-center text-base text-foreground/80 space-y-4 px-8 pb-8">
             <p>
-                Hey! I’m Bothsa Hari Krishna, a tech enthusiast who loves creating, designing, and experimenting with new ideas. I enjoy building Android apps, exploring AI and IoT, and bringing creative thoughts to life through code.
+                I’m someone who loves bringing ideas to life — whether it’s an app, a website, or just a random concept that pops into my head at 2 AM. Some of them turn into full projects, others stay as fun experiments, but every single one teaches me something new.
             </p>
             <p>
-                I’m always curious, always learning, and constantly working on cool projects like HariVerse — my personal creative space.
+                I built HariVerse, my own digital space where I blend tech, creativity, music, and AI into one world. It’s more than a project — it’s my little universe where imagination has no limits.
+            </p>
+            <p>
+                I’m the kind of person who enjoys exploring new tools, breaking things just to fix them better, and adding a bit of design magic to everything I make. I believe that great things are built when curiosity meets passion.
+            </p>
+            <p>
+                At the end of the day, I’m just here to keep learning, keep building, and create stuff that makes people smile or think “whoa, that’s cool.”
             </p>
              <p className="font-semibold">
-                Check out my portfolio 👉 <Link href={`/redirect?url=${encodeURIComponent("https://www.hariportfolio.xyz")}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">hariportfolio.xyz</Link>
+                Check out my world 🌐 — <Link href={`/redirect?url=${encodeURIComponent("https://www.hariportfolio.xyz")}`} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">hariportfolio.xyz</Link>
             </p>
             <blockquote className="mt-6 border-l-2 border-primary pl-6 italic text-foreground/90">
-                “Dream. Build. Evolve.” <Rocket className="inline-block h-5 w-5 ml-1" />
+                “It’s not about being perfect — it’s about being curious enough to keep creating.”
             </blockquote>
         </CardContent>
         <CardFooter className="flex flex-col items-center gap-4 border-t border-border/20 pt-6">
