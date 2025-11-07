@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -20,6 +19,7 @@ const navLinks = [
   { href: '/music', label: 'Music' },
   { href: '/movies', label: 'Movies' },
   { href: '/ai-tools', label: 'AI Tools' },
+  { href: '/chat', label: 'Chat' },
   { href: '/quiz', label: 'Quiz' },
   { href: '/about-me', label: 'About Me' },
   { href: '/contact', 'label': 'Contact' },
