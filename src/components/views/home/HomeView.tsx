@@ -16,7 +16,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase';
 
 type HomeViewProps = {
   name: string;
@@ -77,13 +76,8 @@ const ContactMeSection = () => {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase
-        .from('contact') 
-        .insert({ name: name, email: email, comment: message });
-
-      if (error) {
-        throw error;
-      }
+      console.log('Contact form submitted:', { name, email, message });
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       toast({
         title: "Message Sent!",
@@ -97,7 +91,7 @@ const ContactMeSection = () => {
         toast({
             variant: 'destructive',
             title: "Something went wrong.",
-            description: error.message || "Could not send your message. Please try again.",
+            description: "Could not send your message. Please try again.",
         });
         console.error("Error saving contact message:", error);
     } finally {

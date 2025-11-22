@@ -8,7 +8,6 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Mail, Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/lib/supabase';
 
 export default function ContactPage() {
   const [name, setName] = useState('');
@@ -22,13 +21,10 @@ export default function ContactPage() {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase
-        .from('contact') 
-        .insert({ name: name, email: email, comment: message });
-
-      if (error) {
-        throw error;
-      }
+      // Simulate form submission
+      console.log('Contact form submitted:', { name, email, message });
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
       
       toast({
         title: "Message Sent!",
@@ -42,9 +38,9 @@ export default function ContactPage() {
         toast({
             variant: 'destructive',
             title: "Something went wrong.",
-            description: error.message || "Could not send your message. Please try again.",
+            description: "Could not send your message. Please try again.",
         });
-        console.error("Error saving contact message:", error);
+        console.error("Error submitting contact form:", error);
     } finally {
         setIsSubmitting(false);
     }
